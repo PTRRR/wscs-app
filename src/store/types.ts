@@ -1,5 +1,6 @@
 export type CartItem = {
 	productId: string | number;
+	variationId: string | number;
 	quantity: number;
 	price: number;
 };

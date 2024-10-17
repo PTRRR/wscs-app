@@ -26,7 +26,7 @@
 		</a>
 
 		{#each getFirstProductVariation(product) as variation}
-			<AddToCartButton productId={variation.id} />
+			<AddToCartButton productId={product.id} variationId={variation.id} />
 		{/each}
 	</div>
 {/each}

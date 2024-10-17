@@ -1,8 +1,9 @@
-import { findProducts } from '../utilities/api';
+import { WSCS } from '../utilities/api';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ params }) => {
-	const res = await findProducts();
+export const load: PageServerLoad = async () => {
+	const api = new WSCS();
+	const res = await api.findProducts();
 
 	return {
 		products: res.docs

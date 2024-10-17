@@ -1,4 +1,4 @@
-import { get, readable, writable, type Writable } from 'svelte/store';
+import { readable, writable, type Writable } from 'svelte/store';
 import { getContext, hasContext, setContext } from 'svelte';
 import type { Cart, CartItem } from './types';
 import type { PartialBy } from '../utilities/types';
@@ -52,7 +52,9 @@ export const useCart = () => {
 	const removeFromCart = (cartItem: PartialBy<CartItem, 'price' | 'quantity'>) => {
 		cart.update((cart) => ({
 			...cart,
-			items: cart.items.filter((item) => item.productId !== cartItem.productId)
+			items: cart.items.filter(
+				(item) => item.productId !== cartItem.productId || item.variationId !== cartItem.variationId
+			)
 		}));
 	};
 
