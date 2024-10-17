@@ -6,6 +6,8 @@ import type { PartialBy } from '../utilities/types';
 const STORE_PREFIX = 'WSCS';
 const STORE_VERSION = 'v1.0.0';
 
+const getStoreName = (name: string) => `${STORE_PREFIX}-${name}-${STORE_VERSION}`;
+
 export const useSharedStore = <T, A>(name: string, fn: (value?: A) => T, defaultValue?: A) => {
 	if (hasContext(name)) {
 		return getContext<T>(name);
@@ -16,20 +18,20 @@ export const useSharedStore = <T, A>(name: string, fn: (value?: A) => T, default
 };
 
 export const useWritable = <T>(name: string, value: T, persist: boolean = false) => {
-	const sharedStore = useSharedStore(`${name}-${STORE_VERSION}`, writable, value) as Writable<T>;
+	const storeName = getStoreName(name);
+	const sharedStore = useSharedStore(storeName, writable, value) as Writable<T>;
 
 	if (typeof window !== 'undefined' && persist) {
-		const storageValueKey = `${STORE_PREFIX}-${name}-${STORE_VERSION}`;
-		const storedValue = window.localStorage.getItem(storageValueKey);
+		const storedValue = window.localStorage.getItem(storeName);
 		if (!storedValue) {
-			window.localStorage.setItem(storageValueKey, JSON.stringify({ value: undefined }));
+			window.localStorage.setItem(storeName, JSON.stringify({ value: undefined }));
 		} else {
 			sharedStore.set(JSON.parse(storedValue).value);
 		}
 
 		sharedStore.subscribe((value) => {
 			if (typeof value !== 'undefined') {
-				window.localStorage.setItem(storageValueKey, JSON.stringify({ value }));
+				window.localStorage.setItem(storeName, JSON.stringify({ value }));
 			}
 		});
 	}
