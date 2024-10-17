@@ -17,7 +17,11 @@
 	};
 </script>
 
-<h1>sdflkjh</h1>
+<svelte:head>
+	<title>Words, Sounds, Colors & Shapes</title>
+</svelte:head>
+
+<h1>Words, Sounds, Colors & Shapes</h1>
 
 {#each data.products as product}
 	<div class="product">

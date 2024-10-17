@@ -13,6 +13,10 @@
 	});
 </script>
 
+<svelte:head>
+	<title>{data.product.title}</title>
+</svelte:head>
+
 <h1>{data.product.title}</h1>
 
 {#each data.product.variations || [] as variation}

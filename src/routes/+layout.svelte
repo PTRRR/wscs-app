@@ -4,4 +4,5 @@
 	useCart();
 </script>
 
+<a href="/">Home</a>
 <slot />

@@ -59,6 +59,10 @@
 	});
 </script>
 
+<svelte:head>
+	<title>Checkout</title>
+</svelte:head>
+
 <h1>Checkout</h1>
 
 {#if loadingCart}
@@ -66,7 +70,7 @@
 {:else}
 	{#each products as product}
 		<div class="cart-item">
-			<p>{product.title}</p>
+			<a href={`/products/${product.id}`}>{product.title}</a>
 			{#each getVariationsForProduct(product) as variation}
 				<p>{variation.name}</p>
 			{/each}
