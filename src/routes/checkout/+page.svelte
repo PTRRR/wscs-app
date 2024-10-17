@@ -4,6 +4,9 @@
 	import { WSCS } from '../../utilities/api';
 	import type { Product, Variation } from '../../utilities/api/types';
 	import { filterDuplicate } from '../../utilities/iterables';
+	import type { PageData } from './$types';
+
+	export let data: PageData;
 
 	const { cart, removeFromCart } = useCart();
 
@@ -11,7 +14,7 @@
 	let products: Product[] = [];
 	let variations: Variation[] = [];
 
-	const api = new WSCS();
+	const api = new WSCS(data.api.baseUrl);
 
 	const getVariationsForProduct = (product: Product) => {
 		return variations.filter((it) =>

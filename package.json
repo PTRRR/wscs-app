@@ -34,6 +34,7 @@
 	"type": "module",
 	"dependencies": {
 		"path.js": "^2.0.0",
-		"qs": "^6.13.0"
+		"qs": "^6.13.0",
+		"typesense": "^1.8.2"
 	}
 }
