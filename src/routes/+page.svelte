@@ -1,9 +1,20 @@
 <script lang="ts">
+	import AddToCartButton from '../components/AddToCartButton.svelte';
+	import type { Product, Variation } from '../utilities/api/types';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
 
-	console.log(data);
+	const getFirstProductVariation = (product: Product): Variation[] => {
+		if (product.variations && product.variations?.length > 0) {
+			const variation = product.variations[0];
+			if (typeof variation !== 'number') {
+				return [variation];
+			}
+		}
+
+		return [];
+	};
 </script>
 
 <h1>sdflkjh</h1>
@@ -13,5 +24,9 @@
 		<a href={`/products/${product.id}`}>
 			<h2>{product.title}</h2>
 		</a>
+
+		{#each getFirstProductVariation(product) as variation}
+			<AddToCartButton productId={variation.id} />
+		{/each}
 	</div>
 {/each}

@@ -1,0 +1,64 @@
+import { get, readable, writable, type Writable } from 'svelte/store';
+import { getContext, hasContext, setContext } from 'svelte';
+import type { Cart, CartItem } from './types';
+import type { PartialBy } from '../utilities/types';
+
+const STORE_VERSION = 'v1.0.0';
+
+export const useSharedStore = <T, A>(name: string, fn: (value?: A) => T, defaultValue?: A) => {
+	if (hasContext(name)) {
+		return getContext<T>(name);
+	}
+	const _value = fn(defaultValue);
+	setContext(name, _value);
+	return _value;
+};
+
+export const useWritable = <T>(name: string, value: T, persist: boolean = false) => {
+	const sharedStore = useSharedStore(`${name}-${STORE_VERSION}`, writable, value) as Writable<T>;
+
+	if (typeof window !== 'undefined' && persist) {
+		const storageValueKey = `${name}-${STORE_VERSION}`;
+		const storedValue = window.localStorage.getItem(storageValueKey);
+		if (!storedValue) {
+			window.localStorage.setItem(storageValueKey, JSON.stringify({ value: undefined }));
+		} else {
+			sharedStore.set(JSON.parse(storedValue).value);
+		}
+
+		sharedStore.subscribe((value) => {
+			if (typeof value !== 'undefined') {
+				window.localStorage.setItem(storageValueKey, JSON.stringify({ value }));
+			}
+		});
+	}
+
+	return sharedStore;
+};
+export const useReadable = <T>(name: string, value: T) => useSharedStore(name, readable, value);
+
+// Stores
+
+export const useCart = () => {
+	const cart = useWritable<Cart>('cart', { items: [] }, true);
+
+	const addToCart = (cartItem: CartItem) => {
+		cart.update((cart) => ({
+			...cart,
+			items: [...cart.items, cartItem]
+		}));
+	};
+
+	const removeFromCart = (cartItem: PartialBy<CartItem, 'price' | 'quantity'>) => {
+		cart.update((cart) => ({
+			...cart,
+			items: cart.items.filter((item) => item.productId !== cartItem.productId)
+		}));
+	};
+
+	return {
+		cart,
+		addToCart,
+		removeFromCart
+	};
+};
