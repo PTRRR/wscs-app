@@ -32,6 +32,11 @@ export interface PayloadErrorResponse {
 	errors: PayloadError[];
 }
 
+export interface PayloadFindParams {
+	depth?: number;
+	query?: Record<string, { [key in QueryOperators]?: string }>;
+}
+
 export const enum QueryOperators {
 	'equals' = 'equals',
 	'not_equals' = 'not_equals',
@@ -54,10 +59,14 @@ const getAuthHeaders = (
 	'content-type': contentType
 });
 
+const getFindQuery = (params?: PayloadFindParams) => {
+	return qs.stringify({ where: params?.query, depth: params?.depth }, { addQueryPrefix: true });
+};
+
 export class WSCS {
 	constructor(private readonly baseUrl?: string) {}
 
-	async fetchPayload<T>(url: string, init?: RequestInit): Promise<T> {
+	private async fetchPayload<T>(url: string, init?: RequestInit): Promise<T> {
 		const fullPath = joinPaths(this.baseUrl || 'http://localhost:3000', url);
 		const res = await fetch(fullPath, init);
 		const json = await res.json();
@@ -68,13 +77,8 @@ export class WSCS {
 		return this.fetchPayload<Product>(`/api/products/${id}`);
 	}
 
-	findProducts(
-		query?: Record<string, { [key in QueryOperators]?: string }>
-	): Promise<PayloadListResponse<Product>> {
-		const serializedQuery = qs.stringify({ where: query }, { addQueryPrefix: true });
-		return this.fetchPayload<PayloadListResponse<Product>>(
-			`/api/products${query ? serializedQuery : ''}`
-		);
+	findProducts(params?: PayloadFindParams): Promise<PayloadListResponse<Product>> {
+		return this.fetchPayload<PayloadListResponse<Product>>(`/api/products${getFindQuery(params)}`);
 	}
 
 	createProduct(
@@ -87,12 +91,9 @@ export class WSCS {
 		});
 	}
 
-	findVariations(
-		query?: Record<string, { [key in QueryOperators]?: string }>
-	): Promise<PayloadListResponse<Variation>> {
-		const serializedQuery = qs.stringify({ where: query }, { addQueryPrefix: true });
+	findVariations(params?: PayloadFindParams): Promise<PayloadListResponse<Variation>> {
 		return this.fetchPayload<PayloadListResponse<Variation>>(
-			`/api/variations${query ? serializedQuery : ''}`
+			`/api/variations${getFindQuery(params)}`
 		);
 	}
 
@@ -110,12 +111,9 @@ export class WSCS {
 		});
 	}
 
-	findAttribute(
-		query?: Record<string, { [key in QueryOperators]?: string }>
-	): Promise<PayloadListResponse<Attribute>> {
-		const serializedQuery = qs.stringify({ where: query }, { addQueryPrefix: true });
+	findAttribute(params?: PayloadFindParams): Promise<PayloadListResponse<Attribute>> {
 		return this.fetchPayload<PayloadListResponse<Attribute>>(
-			`/api/attributes${query ? serializedQuery : ''}`
+			`/api/attributes${getFindQuery(params)}`
 		);
 	}
 
@@ -129,13 +127,8 @@ export class WSCS {
 		});
 	}
 
-	findMedias(
-		query?: Record<string, { [key in QueryOperators]?: string }>
-	): Promise<PayloadListResponse<Media>> {
-		const serializedQuery = qs.stringify({ where: query }, { addQueryPrefix: true });
-		return this.fetchPayload<PayloadListResponse<Media>>(
-			`/api/media${query ? serializedQuery : ''}`
-		);
+	findMedias(params?: PayloadFindParams): Promise<PayloadListResponse<Media>> {
+		return this.fetchPayload<PayloadListResponse<Media>>(`/api/media${getFindQuery(params)}`);
 	}
 
 	createMedia(
@@ -155,12 +148,9 @@ export class WSCS {
 		});
 	}
 
-	findCategories(
-		query?: Record<string, { [key in QueryOperators]?: string }>
-	): Promise<PayloadListResponse<Category>> {
-		const serializedQuery = qs.stringify({ where: query }, { addQueryPrefix: true });
+	findCategories(params?: PayloadFindParams): Promise<PayloadListResponse<Category>> {
 		return this.fetchPayload<PayloadListResponse<Category>>(
-			`/api/categories${query ? serializedQuery : ''}`
+			`/api/categories${getFindQuery(params)}`
 		);
 	}
 
@@ -174,11 +164,8 @@ export class WSCS {
 		});
 	}
 
-	findTags(
-		query?: Record<string, { [key in QueryOperators]?: string }>
-	): Promise<PayloadListResponse<Tag>> {
-		const serializedQuery = qs.stringify({ where: query }, { addQueryPrefix: true });
-		return this.fetchPayload<PayloadListResponse<Tag>>(`/api/tags${query ? serializedQuery : ''}`);
+	findTags(params?: PayloadFindParams): Promise<PayloadListResponse<Tag>> {
+		return this.fetchPayload<PayloadListResponse<Tag>>(`/api/tags${getFindQuery(params)}`);
 	}
 
 	createTag(
@@ -191,12 +178,9 @@ export class WSCS {
 		});
 	}
 
-	findProductTypes(
-		query?: Record<string, { [key in QueryOperators]?: string }>
-	): Promise<PayloadListResponse<ProductType>> {
-		const serializedQuery = qs.stringify({ where: query }, { addQueryPrefix: true });
+	findProductTypes(params?: PayloadFindParams): Promise<PayloadListResponse<ProductType>> {
 		return this.fetchPayload<PayloadListResponse<ProductType>>(
-			`/api/product-types${query ? serializedQuery : ''}`
+			`/api/product-types${getFindQuery(params)}`
 		);
 	}
 

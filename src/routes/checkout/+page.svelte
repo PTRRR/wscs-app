@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { useCart } from '../../store';
 	import { WSCS } from '../../utilities/api';
 	import type { Product, Variation } from '../../utilities/api/types';
@@ -6,29 +7,34 @@
 
 	const { cart } = useCart();
 
-	let loadingCart: boolean = false;
+	let mounted: boolean = false;
+	let loadingCart: boolean = true;
 	let products: Product[] = [];
 	let variations: Variation[] = [];
 
 	const api = new WSCS();
 
 	$: {
-		loadingCart = true;
-		const productIds = $cart.items.map((item) => item.productId).filter(filterDuplicate);
-		const variationIds = $cart.items.map((item) => item.variationId).filter(filterDuplicate);
+		if (mounted) {
+			loadingCart = true;
+			const productIds = $cart.items.map((item) => item.productId).filter(filterDuplicate);
+			const variationIds = $cart.items.map((item) => item.variationId).filter(filterDuplicate);
 
-		Promise.all([
-			api
-				.findVariations({
-					id: { in: variationIds.join(',') }
-				})
-				.then(({ docs }) => (variations = docs)),
-			api
-				.findProducts({
-					id: { in: productIds.join(',') }
-				})
-				.then(({ docs }) => (products = docs))
-		]).then(() => (loadingCart = false));
+			Promise.all([
+				api
+					.findVariations({
+						depth: 0,
+						query: { id: { in: variationIds.join(',') } }
+					})
+					.then(({ docs }) => (variations = docs)),
+				api
+					.findProducts({
+						depth: 0,
+						query: { id: { in: productIds.join(',') } }
+					})
+					.then(({ docs }) => (products = docs))
+			]).then(() => (loadingCart = false));
+		}
 	}
 
 	$: getVariationsForProduct = (product: Product) => {
@@ -43,6 +49,14 @@
 		getVariationsForProduct(product).reduce((acc, variation) => {
 			return (acc += variation?.price || 0);
 		}, 0);
+
+	$: total = products.reduce((acc, product) => {
+		return (acc += getProductTotal(product));
+	}, 0);
+
+	onMount(() => {
+		mounted = true;
+	});
 </script>
 
 <h1>Checkout</h1>
@@ -59,4 +73,6 @@
 			<p>Price: {getProductTotal(product)}€</p>
 		</div>
 	{/each}
+
+	<p>TOTAL: {total}€</p>
 {/if}
