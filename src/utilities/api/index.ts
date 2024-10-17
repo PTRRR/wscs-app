@@ -92,6 +92,10 @@ export const findVariations = (
 	);
 };
 
+export const findVariationById = (id: string | number): Promise<Variation> => {
+	return fetchPayload<Variation>(`/api/variations/${id}`);
+};
+
 export const createVariation = (
 	variation: Partial<Variation>
 ): Promise<PayloadCreateResponse<Partial<Variation> & Partial<PayloadErrorResponse>>> => {

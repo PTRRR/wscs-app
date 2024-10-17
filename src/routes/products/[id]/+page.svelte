@@ -3,10 +3,9 @@
 	import type { PageData } from './$types';
 	import { findProducts } from '../../../utilities/api';
 	import { joinPaths } from '../../../utilities/urls';
+	import AddToCartButton from '../../../components/AddToCartButton.svelte';
 
 	export let data: PageData;
-
-	// console.log(data.product.description);
 
 	onMount(() => {
 		findProducts().then((res) => console.log(res));
@@ -20,6 +19,10 @@
 	{#if typeof variation !== 'number'}
 		<p>{variation.name}</p>
 		<p>{variation.price}</p>
+
+		{#if typeof variation.price === 'number' && variation.price > 0}
+			<AddToCartButton productId={variation.id} price={variation.price} quantity={1} />
+		{/if}
 	{/if}
 {/each}
 
