@@ -29,7 +29,7 @@ export interface Config {
 		variations: Variation;
 		attributes: Attribute;
 		tags: Tag;
-		productTypes: ProductType;
+		'product-types': ProductType;
 		redirects: Redirect;
 		'payload-preferences': PayloadPreference;
 		'payload-migrations': PayloadMigration;
@@ -199,6 +199,14 @@ export interface Media {
 			filesize?: number | null;
 			filename?: string | null;
 		};
+		thumbnailWebp?: {
+			url?: string | null;
+			width?: number | null;
+			height?: number | null;
+			mimeType?: string | null;
+			filesize?: number | null;
+			filename?: string | null;
+		};
 		small?: {
 			url?: string | null;
 			width?: number | null;
@@ -207,7 +215,39 @@ export interface Media {
 			filesize?: number | null;
 			filename?: string | null;
 		};
+		smallWebp?: {
+			url?: string | null;
+			width?: number | null;
+			height?: number | null;
+			mimeType?: string | null;
+			filesize?: number | null;
+			filename?: string | null;
+		};
 		medium?: {
+			url?: string | null;
+			width?: number | null;
+			height?: number | null;
+			mimeType?: string | null;
+			filesize?: number | null;
+			filename?: string | null;
+		};
+		mediumWebp?: {
+			url?: string | null;
+			width?: number | null;
+			height?: number | null;
+			mimeType?: string | null;
+			filesize?: number | null;
+			filename?: string | null;
+		};
+		large?: {
+			url?: string | null;
+			width?: number | null;
+			height?: number | null;
+			mimeType?: string | null;
+			filesize?: number | null;
+			filename?: string | null;
+		};
+		largeWebp?: {
 			url?: string | null;
 			width?: number | null;
 			height?: number | null;
@@ -337,7 +377,7 @@ export interface Tag {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "productTypes".
+ * via the `definition` "product-types".
  */
 export interface ProductType {
 	id: number;

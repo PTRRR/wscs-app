@@ -10,6 +10,8 @@
 
 	export let data: PageData;
 
+	console.log(data);
+
 	let searchSesult: Product[] = [];
 	$: products = searchSesult.length > 0 ? searchSesult : data.products;
 
@@ -68,7 +70,12 @@
 		<a href={`/products/${product.id}`}>
 			{#each getFirstProductVariation(product) as variation}
 				{#if variation.image && typeof variation.image !== 'number'}
-					<img src={variation.image.url} alt="" />
+					<img
+						src={variation.image.sizes?.smallWebp?.url ||
+							variation.image.sizes?.small?.url ||
+							variation.image.url}
+						alt={variation.image.filename}
+					/>
 				{/if}
 			{/each}
 			<h2>{product.title}</h2>

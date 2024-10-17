@@ -9,7 +9,11 @@ import {
 import type { LayoutServerLoad } from './$types';
 import { Client } from 'typesense';
 
-export const load: LayoutServerLoad = async () => {
+export const load: LayoutServerLoad = async ({ setHeaders }) => {
+	setHeaders({
+		'Cache-Control': 'public, max-age=5, stale-while-revalidate=31536000'
+	});
+
 	const client = new Client({
 		apiKey: TYPESENSE_API_KEY,
 		nodes: [
