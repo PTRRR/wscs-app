@@ -35,7 +35,8 @@ export const load: LayoutServerLoad = async () => {
 			key,
 			host: TYPESENSE_HOST,
 			port: parseInt(TYPESENSE_PORT),
-			protocol: TYPESENSE_PROTOCOL
+			protocol: TYPESENSE_PROTOCOL,
+			productsCollection: TYPESENSE_PRODUCTS_COLLECTION
 		}
 	};
 };
