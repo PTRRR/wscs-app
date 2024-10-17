@@ -1,7 +1,7 @@
-import path from 'path';
 import qs from 'qs';
 
 import type { Attribute, Category, Media, Product, ProductType, Tag, Variation } from './types';
+import { joinPaths } from '../urls';
 
 export interface PayloadListResponse<T> {
 	docs: T[];
@@ -33,7 +33,9 @@ export interface PayloadErrorResponse {
 }
 
 const fetchPayload = async <T>(url: string, init?: RequestInit): Promise<T> => {
-	const res = await fetch(path.join('http://localhost:3000', url), init);
+	const fullPath = joinPaths('http://localhost:3000', url);
+	console.log(fullPath);
+	const res = await fetch(fullPath, init);
 	const json = await res.json();
 	return json as T;
 };
@@ -60,9 +62,8 @@ enum QueryOperators {
 
 const getAuthHeaders = (
 	contentType = 'application/json'
-): { 'content-type': string; authorization: string } => ({
-	'content-type': contentType,
-	authorization: `users API-Key ${process.env.SCRIPT_PAYLOAD_API_KEY}`
+): { 'content-type': string; authorization?: string } => ({
+	'content-type': contentType
 });
 
 export const findProducts = (
@@ -132,18 +133,15 @@ export const createMedia = (
 	file: Blob
 ): Promise<PayloadCreateResponse<Partial<Media> & Partial<PayloadErrorResponse>>> => {
 	const formData = new FormData();
-	formData.set('alt', media.alt);
-	formData.set('mimeType', media.mimeType);
+	formData.set('alt', media.alt || '');
+	formData.set('mimeType', media.mimeType || '');
 	formData.set('width', (media.width || 0).toString());
 	formData.set('height', (media.height || 0).toString());
-	formData.set('file', file, media.filename);
+	formData.set('file', file, media.filename || '');
 
 	return fetchPayload('/api/media', {
 		method: 'post',
-		body: formData,
-		headers: {
-			authorization: `users API-Key ${process.env.SCRIPT_PAYLOAD_API_KEY}`
-		}
+		body: formData
 	});
 };
 
