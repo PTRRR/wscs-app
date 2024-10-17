@@ -26,13 +26,13 @@
 						depth: 0,
 						query: { id: { in: variationIds.join(',') } }
 					})
-					.then(({ docs }) => (variations = docs)),
+					.then(({ docs }) => (variations = docs || [])),
 				api
 					.findProducts({
 						depth: 0,
 						query: { id: { in: productIds.join(',') } }
 					})
-					.then(({ docs }) => (products = docs))
+					.then(({ docs }) => (products = docs || []))
 			]).then(() => (loadingCart = false));
 		}
 	}
@@ -68,6 +68,10 @@
 {#if loadingCart}
 	<span>Loading cart...</span>
 {:else}
+	{#if products.length === 0}
+		<span>Nothing in the cart</span>
+	{/if}
+
 	{#each products as product}
 		<div class="cart-item">
 			<a href={`/products/${product.id}`}>{product.title}</a>

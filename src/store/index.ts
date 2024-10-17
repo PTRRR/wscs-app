@@ -3,6 +3,7 @@ import { getContext, hasContext, setContext } from 'svelte';
 import type { Cart, CartItem } from './types';
 import type { PartialBy } from '../utilities/types';
 
+const STORE_PREFIX = 'WSCS';
 const STORE_VERSION = 'v1.0.0';
 
 export const useSharedStore = <T, A>(name: string, fn: (value?: A) => T, defaultValue?: A) => {
@@ -18,7 +19,7 @@ export const useWritable = <T>(name: string, value: T, persist: boolean = false)
 	const sharedStore = useSharedStore(`${name}-${STORE_VERSION}`, writable, value) as Writable<T>;
 
 	if (typeof window !== 'undefined' && persist) {
-		const storageValueKey = `${name}-${STORE_VERSION}`;
+		const storageValueKey = `${STORE_PREFIX}-${name}-${STORE_VERSION}`;
 		const storedValue = window.localStorage.getItem(storageValueKey);
 		if (!storedValue) {
 			window.localStorage.setItem(storageValueKey, JSON.stringify({ value: undefined }));
