@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { useCart, useUser } from '../../../store';
+	import { useLocalCart, useUser } from '../../../store';
 	import { WSCS } from '../../../utilities/api';
 	import type { Product, Variation } from '../../../utilities/api/types';
 	import { filterDuplicate } from '../../../utilities/iterables';
@@ -12,7 +12,7 @@
 	export let data: PageData;
 
 	const { query: user } = useUser();
-	const { cart, removeFromCart } = useCart();
+	const { cart, removeFromCart } = useLocalCart();
 
 	let loadingCart: boolean = true;
 	let products: Product[] = [];

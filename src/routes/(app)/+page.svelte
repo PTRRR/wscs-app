@@ -80,7 +80,7 @@
 		</a>
 
 		{#each getFirstProductVariation(product) as variation}
-			<AddToCartButton productId={product.id} variationId={variation.id} />
+			<AddToCartButton product={product.id} variation={variation.id} />
 		{/each}
 	</div>
 {/each}

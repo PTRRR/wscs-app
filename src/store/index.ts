@@ -1,9 +1,10 @@
-import { readable, writable, type Writable } from 'svelte/store';
+import { get, readable, writable, type Writable } from 'svelte/store';
 import { getContext, hasContext, setContext } from 'svelte';
-import type { Cart, CartItem } from './types';
 import type { PartialBy } from '../utilities/types';
+import type { User } from '../utilities/api/types';
 import { createQuery, QueryClient } from '@tanstack/svelte-query';
 import { WSCS } from '../utilities/api';
+import type { Cart, CartItem } from './types';
 
 const STORE_PREFIX = 'WSCS';
 const STORE_VERSION = 'v1.0.0';
@@ -61,21 +62,21 @@ export const useUser = (baseUrl?: string) => {
 	return { query, invalidate };
 };
 
-export const useCart = () => {
-	const cart = useWritable<Cart>('cart', { items: [] }, true);
+export const useLocalCart = () => {
+	const cart = useWritable<Cart>('local-cart', { items: [] }, true);
 
 	const addToCart = (cartItem: CartItem) => {
 		cart.update((cart) => ({
 			...cart,
-			items: [...cart.items, cartItem]
+			items: [...(cart?.items || []), cartItem]
 		}));
 	};
 
-	const removeFromCart = (cartItem: PartialBy<CartItem, 'price' | 'quantity'>) => {
+	const removeFromCart = (cartItem: PartialBy<CartItem, 'quantity'>) => {
 		cart.update((cart) => ({
 			...cart,
-			items: cart.items.filter(
-				(item) => item.productId !== cartItem.productId || item.variationId !== cartItem.variationId
+			items: (cart?.items || []).filter(
+				(item) => item.product !== cartItem.product || item.variation !== cartItem.variation
 			)
 		}));
 	};

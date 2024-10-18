@@ -1,41 +1,39 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { useCart } from '../store';
+	import { useLocalCart } from '../store';
 	import type { CartItem } from '../store/types';
 	import type { PartialBy } from '../utilities/types';
 
-	export let productId: string | number;
-	export let variationId: string | number;
+	export let product: number;
+	export let variation: number;
 	export let quantity: number = 1;
-	export let price: number = 0;
 	export let goToCart: boolean = false;
 
-	const { cart, addToCart, removeFromCart } = useCart();
+	const { cart, addToCart, removeFromCart } = useLocalCart();
 
-	$: isInCart = (cartItem: PartialBy<CartItem, 'price' | 'quantity'>) =>
+	$: isInCart = (cartItem: PartialBy<CartItem, 'quantity'>) =>
 		Boolean(
 			$cart.items.find(
-				(it) => it.productId === cartItem.productId && it.variationId === cartItem.variationId
+				(it) => it.product === cartItem.product && it.variation === cartItem.variation
 			)
 		);
 
-	$: message = isInCart({ productId, variationId }) ? 'Remove from cart' : 'Add to cart';
+	$: message = isInCart({ product, variation }) ? 'Remove from cart' : 'Add to cart';
 </script>
 
 <div class="add-to-cart">
 	<button
 		class="add-to-cart__button"
 		on:click={() => {
-			isInCart({ productId, variationId })
+			isInCart({ product, variation })
 				? removeFromCart({
-						productId,
-						variationId
+						product,
+						variation
 					})
 				: addToCart({
-						productId,
-						variationId,
-						quantity,
-						price
+						product,
+						variation,
+						quantity
 					});
 
 			if (goToCart) {

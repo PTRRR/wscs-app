@@ -101,7 +101,7 @@ export class WSCS {
 		product: Partial<Product>
 	): Promise<PayloadCreateResponse<Partial<Product> & Partial<PayloadErrorResponse>>> {
 		return this.fetchPayload('/api/products', {
-			method: 'post',
+			method: 'POST',
 			body: JSON.stringify(product),
 			headers: getAuthHeaders()
 		});
@@ -121,7 +121,7 @@ export class WSCS {
 		variation: Partial<Variation>
 	): Promise<PayloadCreateResponse<Partial<Variation> & Partial<PayloadErrorResponse>>> {
 		return this.fetchPayload('/api/variations', {
-			method: 'post',
+			method: 'POST',
 			body: JSON.stringify(variation),
 			headers: getAuthHeaders()
 		});
@@ -137,7 +137,7 @@ export class WSCS {
 		attribute: Partial<Attribute>
 	): Promise<PayloadCreateResponse<Partial<Attribute> & Partial<PayloadErrorResponse>>> {
 		return this.fetchPayload('/api/attributes', {
-			method: 'post',
+			method: 'POST',
 			body: JSON.stringify(attribute),
 			headers: getAuthHeaders()
 		});
@@ -159,7 +159,7 @@ export class WSCS {
 		formData.set('file', file, media.filename || '');
 
 		return this.fetchPayload('/api/media', {
-			method: 'post',
+			method: 'POST',
 			body: formData
 		});
 	}
@@ -174,7 +174,7 @@ export class WSCS {
 		category: Partial<Category>
 	): Promise<PayloadCreateResponse<Partial<Category> & Partial<PayloadErrorResponse>>> {
 		return this.fetchPayload('/api/categories', {
-			method: 'post',
+			method: 'POST',
 			body: JSON.stringify(category),
 			headers: getAuthHeaders()
 		});
@@ -188,7 +188,7 @@ export class WSCS {
 		tag: Partial<Tag>
 	): Promise<PayloadCreateResponse<Partial<Tag> & Partial<PayloadErrorResponse>>> {
 		return this.fetchPayload('/api/tags', {
-			method: 'post',
+			method: 'POST',
 			body: JSON.stringify(tag),
 			headers: getAuthHeaders()
 		});
@@ -204,7 +204,7 @@ export class WSCS {
 		productType: Partial<ProductType>
 	): Promise<PayloadCreateResponse<Partial<ProductType> & Partial<PayloadErrorResponse>>> {
 		return this.fetchPayload('/api/product-types', {
-			method: 'post',
+			method: 'POST',
 			body: JSON.stringify(productType),
 			headers: getAuthHeaders()
 		});
@@ -212,7 +212,7 @@ export class WSCS {
 
 	login(params: { email: string; password: string }) {
 		return this.fetchPayload<{ token: string; user: User }>('/api/users/login', {
-			method: 'post',
+			method: 'POST',
 			body: JSON.stringify({
 				email: params.email,
 				password: params.password
@@ -222,7 +222,7 @@ export class WSCS {
 
 	logout() {
 		return this.fetchPayload<User>('/api/users/logout', {
-			method: 'post'
+			method: 'POST'
 		});
 	}
 
@@ -232,7 +232,20 @@ export class WSCS {
 
 	createPayementIntent() {
 		return this.fetchPayload<{ client_secret: string }>('/api/create-payment-intent', {
-			method: 'post'
+			method: 'POST'
+		});
+	}
+
+	updateCart(params: { userId: User['id']; cart: User['cart']; depth?: number }) {
+		console.log(params);
+
+		const query = qs.stringify({ depth: params?.depth || 0 }, { addQueryPrefix: true });
+
+		return this.fetchPayload<User>(`/api/users/${params.userId}${query}`, {
+			method: 'PATCH',
+			body: JSON.stringify({
+				cart: params.cart
+			})
 		});
 	}
 }

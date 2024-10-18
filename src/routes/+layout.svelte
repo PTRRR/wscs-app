@@ -9,11 +9,8 @@
 </script>
 
 <script lang="ts">
-	import { useCart } from '../store';
 	import { QueryClient, QueryClientProvider } from '@tanstack/svelte-query';
 	import { browser } from '$app/environment';
-
-	useCart();
 </script>
 
 <QueryClientProvider client={queryClient}>

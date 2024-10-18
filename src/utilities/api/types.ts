@@ -13,6 +13,7 @@
 export type CartItems =
 	| {
 			product?: (number | null) | Product;
+			variation?: (number | null) | Variation;
 			quantity?: number | null;
 			id?: string | null;
 	  }[]

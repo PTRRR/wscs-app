@@ -25,12 +25,7 @@
 		<p>{variation.price}</p>
 
 		{#if typeof variation.price === 'number' && variation.price > 0}
-			<AddToCartButton
-				productId={data.product.id}
-				variationId={variation.id}
-				price={variation.price}
-				quantity={1}
-			/>
+			<AddToCartButton product={data.product.id} variation={variation.id} quantity={1} />
 		{/if}
 	{/if}
 {/each}
