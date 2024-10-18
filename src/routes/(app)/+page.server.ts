@@ -7,9 +7,13 @@ export const load: PageServerLoad = async ({ parent }) => {
 	} = await parent();
 
 	const api = new WSCS(baseUrl);
-	const res = await api.findProducts();
+	const res = await api.findProducts({
+		query: {
+			_status: { equals: 'published' }
+		}
+	});
 
 	return {
-		products: res.docs
+		products: res.docs || []
 	};
 };
