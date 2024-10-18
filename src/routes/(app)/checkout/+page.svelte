@@ -47,8 +47,8 @@
 
 		const unsubscribe = cart.subscribe((cart) => {
 			loadingCart = true;
-			const productIds = cart.items.map((item) => item.productId).filter(filterDuplicate);
-			const variationIds = cart.items.map((item) => item.variationId).filter(filterDuplicate);
+			const productIds = cart.items.map((item) => item.product).filter(filterDuplicate);
+			const variationIds = cart.items.map((item) => item.variation).filter(filterDuplicate);
 
 			Promise.all([
 				api.findVariations({
@@ -89,7 +89,7 @@
 					{#key variation.id}
 						<p>{variation.name}</p>
 						<button
-							on:click={() => removeFromCart({ productId: product.id, variationId: variation.id })}
+							on:click={() => removeFromCart({ product: product.id, variation: variation.id })}
 						>
 							Remove from cart
 						</button>
