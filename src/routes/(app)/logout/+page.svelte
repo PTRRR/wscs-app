@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { PageData } from './$types';
-	import { WSCS } from '../../utilities/api';
+	import { WSCS } from '../../../utilities/api';
 
 	export let data: PageData;
-	const api = new WSCS(data.api.baseUrl, data.api.token);
+	const api = new WSCS(data.api.baseUrl);
 
 	onMount(() => {
 		api.logout().finally(() => (window.location.href = window.location.origin));

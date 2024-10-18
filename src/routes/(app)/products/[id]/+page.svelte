@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { PageData } from './$types';
-	import { WSCS } from '../../../utilities/api';
-	import AddToCartButton from '../../../components/AddToCartButton.svelte';
+	import { WSCS } from '../../../../utilities/api';
+	import AddToCartButton from '../../../../components/AddToCartButton.svelte';
 
 	export let data: PageData;
 

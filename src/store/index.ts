@@ -2,7 +2,8 @@ import { readable, writable, type Writable } from 'svelte/store';
 import { getContext, hasContext, setContext } from 'svelte';
 import type { Cart, CartItem } from './types';
 import type { PartialBy } from '../utilities/types';
-import type { User } from '../utilities/api/types';
+import { createQuery, QueryClient } from '@tanstack/svelte-query';
+import { WSCS } from '../utilities/api';
 
 const STORE_PREFIX = 'WSCS';
 const STORE_VERSION = 'v1.0.0';
@@ -43,9 +44,21 @@ export const useReadable = <T>(name: string, value: T) => useSharedStore(name, r
 
 // Stores
 
-export const useUser = () => {
-	const user = useWritable<User | undefined>('user', undefined, false);
-	return { user };
+export const useUser = (baseUrl?: string) => {
+	const api = new WSCS(baseUrl);
+	const key = 'user';
+
+	const query = createQuery({
+		queryKey: [key],
+		queryFn: () => api.me(),
+		refetchInterval: 30000
+	});
+
+	const invalidate = (queryClient: QueryClient) => {
+		queryClient.invalidateQueries({ queryKey: [key] });
+	};
+
+	return { query, invalidate };
 };
 
 export const useCart = () => {

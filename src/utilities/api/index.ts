@@ -73,22 +73,17 @@ const getFindQuery = (params?: PayloadFindParams) => {
 };
 
 export class WSCS {
-	constructor(
-		private readonly baseUrl?: string,
-		private readonly token?: string
-	) {}
+	constructor(private readonly baseUrl?: string) {}
 
 	private async fetchPayload<T>(url: string, init?: RequestInit): Promise<T> {
 		const fullPath = joinPaths(this.baseUrl || 'http://localhost:3000', url);
 		const res = await fetch(fullPath, {
 			credentials: 'include',
-			headers: this.token
-				? {
-						Autorization: `Bearer ${this.token}`,
-						...(init?.headers || {})
-					}
-				: init?.headers,
-			...init
+			...init,
+			headers: {
+				'Content-Type': 'application/json',
+				...(init?.headers || {})
+			}
 		});
 		const json = await res.json();
 		return json as T;
@@ -216,11 +211,8 @@ export class WSCS {
 	}
 
 	login(params: { email: string; password: string }) {
-		return this.fetchPayload<User>('/api/users/login', {
+		return this.fetchPayload<{ token: string; user: User }>('/api/users/login', {
 			method: 'post',
-			headers: {
-				'Content-Type': 'application/json'
-			},
 			body: JSON.stringify({
 				email: params.email,
 				password: params.password
@@ -230,10 +222,7 @@ export class WSCS {
 
 	logout() {
 		return this.fetchPayload<User>('/api/users/logout', {
-			method: 'post',
-			headers: {
-				'Content-Type': 'application/json'
-			}
+			method: 'post'
 		});
 	}
 

@@ -1,4 +1,4 @@
-import { WSCS } from '../../../utilities/api';
+import { WSCS } from '../../../../utilities/api';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ params, parent }) => {

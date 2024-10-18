@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Client } from 'typesense';
-	import AddToCartButton from '../components/AddToCartButton.svelte';
-	import type { Product, Variation } from '../utilities/api/types';
+	import AddToCartButton from '../../components/AddToCartButton.svelte';
+	import type { Product, Variation } from '../../utilities/api/types';
 	import type { PageData } from './$types';
 
 	type Hit<T> = {

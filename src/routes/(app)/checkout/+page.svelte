@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { useCart } from '../../store';
-	import { WSCS } from '../../utilities/api';
-	import type { Product, Variation } from '../../utilities/api/types';
-	import { filterDuplicate } from '../../utilities/iterables';
+	import { useCart } from '../../../store';
+	import { WSCS } from '../../../utilities/api';
+	import type { Product, Variation } from '../../../utilities/api/types';
+	import { filterDuplicate } from '../../../utilities/iterables';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
