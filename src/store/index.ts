@@ -2,6 +2,7 @@ import { readable, writable, type Writable } from 'svelte/store';
 import { getContext, hasContext, setContext } from 'svelte';
 import type { Cart, CartItem } from './types';
 import type { PartialBy } from '../utilities/types';
+import type { User } from '../utilities/api/types';
 
 const STORE_PREFIX = 'WSCS';
 const STORE_VERSION = 'v1.0.0';
@@ -41,6 +42,11 @@ export const useWritable = <T>(name: string, value: T, persist: boolean = false)
 export const useReadable = <T>(name: string, value: T) => useSharedStore(name, readable, value);
 
 // Stores
+
+export const useUser = () => {
+	const user = useWritable<User | undefined>('user', undefined, false);
+	return { user };
+};
 
 export const useCart = () => {
 	const cart = useWritable<Cart>('cart', { items: [] }, true);

@@ -1,6 +1,15 @@
 import qs from 'qs';
 
-import type { Attribute, Category, Media, Product, ProductType, Tag, Variation } from './types';
+import type {
+	Attribute,
+	Category,
+	Media,
+	Product,
+	ProductType,
+	Tag,
+	User,
+	Variation
+} from './types';
 import { joinPaths } from '../urls';
 
 export interface PayloadListResponse<T> {
@@ -64,11 +73,23 @@ const getFindQuery = (params?: PayloadFindParams) => {
 };
 
 export class WSCS {
-	constructor(private readonly baseUrl?: string) {}
+	constructor(
+		private readonly baseUrl?: string,
+		private readonly token?: string
+	) {}
 
 	private async fetchPayload<T>(url: string, init?: RequestInit): Promise<T> {
 		const fullPath = joinPaths(this.baseUrl || 'http://localhost:3000', url);
-		const res = await fetch(fullPath, init);
+		const res = await fetch(fullPath, {
+			credentials: 'include',
+			headers: this.token
+				? {
+						Autorization: `Bearer ${this.token}`,
+						...(init?.headers || {})
+					}
+				: init?.headers,
+			...init
+		});
 		const json = await res.json();
 		return json as T;
 	}
@@ -192,5 +213,31 @@ export class WSCS {
 			body: JSON.stringify(productType),
 			headers: getAuthHeaders()
 		});
+	}
+
+	login(params: { email: string; password: string }) {
+		return this.fetchPayload<User>('/api/users/login', {
+			method: 'post',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				email: params.email,
+				password: params.password
+			})
+		});
+	}
+
+	logout() {
+		return this.fetchPayload<User>('/api/users/logout', {
+			method: 'post',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+	}
+
+	me() {
+		return this.fetchPayload<{ user?: User }>('/api/users/me');
 	}
 }

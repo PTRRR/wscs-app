@@ -9,7 +9,9 @@ import {
 import type { LayoutServerLoad } from './$types';
 import { Client } from 'typesense';
 
-export const load: LayoutServerLoad = async ({ setHeaders }) => {
+export const load: LayoutServerLoad = async ({ setHeaders, cookies }) => {
+	const token = cookies.get('payload-token');
+
 	setHeaders({
 		'Cache-Control': 'public, max-age=5, stale-while-revalidate=31536000'
 	});
@@ -33,7 +35,8 @@ export const load: LayoutServerLoad = async ({ setHeaders }) => {
 
 	return {
 		api: {
-			baseUrl: BASE_API_URL
+			baseUrl: BASE_API_URL,
+			token
 		},
 		typesense: {
 			key,
