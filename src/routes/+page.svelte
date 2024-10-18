@@ -10,8 +10,6 @@
 
 	export let data: PageData;
 
-	console.log(data);
-
 	let searchSesult: Product[] = [];
 	$: products = searchSesult.length > 0 ? searchSesult : data.products;
 
