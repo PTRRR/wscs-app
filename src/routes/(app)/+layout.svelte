@@ -1,7 +1,10 @@
 <script lang="ts">
 	import { useUser } from '../../store';
+	import type { LayoutData } from './$types';
 
-	const { query: user } = useUser();
+	export let data: LayoutData;
+
+	const { query: user } = useUser(data.api.baseUrl);
 </script>
 
 <a href="/">Home</a>

@@ -6,7 +6,7 @@
 
 	export let data: PageData;
 
-	const { query: user, invalidate: invalidateUser } = useUser();
+	const { query: user, invalidate: invalidateUser } = useUser(data.api.baseUrl);
 
 	const api = new WSCS(data.api.baseUrl);
 
