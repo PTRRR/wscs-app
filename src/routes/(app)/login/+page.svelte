@@ -14,7 +14,7 @@
 	let password: string = '';
 </script>
 
-{#if $user.isLoading || $user.isPending || $user.isRefetching}
+{#if $user.isLoading || $user.isPending}
 	<h1>Loading...</h1>
 {:else if $user.isSuccess && $user.data.user}
 	<h1>Already logged in: {$user.data.user.name || $user.data.user.email}</h1>

@@ -8,6 +8,7 @@
 </script>
 
 <a href="/">Home</a>
+<a href="/checkout">Checkout</a>
 <a href="/login">Login</a>
 
 {#if $user.isSuccess && $user.data.user}

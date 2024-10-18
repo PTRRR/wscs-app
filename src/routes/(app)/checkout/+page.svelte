@@ -1,13 +1,17 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { useCart } from '../../../store';
+	import { useCart, useUser } from '../../../store';
 	import { WSCS } from '../../../utilities/api';
 	import type { Product, Variation } from '../../../utilities/api/types';
 	import { filterDuplicate } from '../../../utilities/iterables';
 	import type { PageData } from './$types';
+	import { loadStripe, type Stripe } from '@stripe/stripe-js';
+	import { Elements, PaymentElement, LinkAuthenticationElement } from 'svelte-stripe';
+	import type { StripeElements } from '@stripe/stripe-js/dist/stripe-js';
 
 	export let data: PageData;
 
+	const { query: user } = useUser();
 	const { cart, removeFromCart } = useCart();
 
 	let loadingCart: boolean = true;
@@ -33,7 +37,14 @@
 		return (acc += getProductTotal(product));
 	}, 0);
 
+	let elements: StripeElements;
+	let stripe: Stripe | null = null;
+	let clientSecret: string | undefined = undefined;
+
 	onMount(() => {
+		loadStripe(data.stripe.publicKey).then((res) => (stripe = res));
+		api.createPayementIntent().then((res) => (clientSecret = res.client_secret));
+
 		const unsubscribe = cart.subscribe((cart) => {
 			loadingCart = true;
 			const productIds = cart.items.map((item) => item.productId).filter(filterDuplicate);
@@ -94,4 +105,34 @@
 	<span>Loading cart...</span>
 {:else}
 	<p>TOTAL: {total}€</p>
+{/if}
+
+{#if stripe && clientSecret}
+	<form
+		on:submit|preventDefault={async () => {
+			console.log('kjhslkjfhdlkjh');
+			if (stripe && elements) {
+				const result = await stripe.confirmPayment({
+					elements,
+					redirect: 'if_required'
+				});
+
+				console.log(result);
+			}
+		}}
+	>
+		<Elements {stripe} {clientSecret} bind:elements>
+			<LinkAuthenticationElement />
+			<PaymentElement
+				options={{
+					defaultValues: {
+						billingDetails: {
+							email: $user.data?.user?.email
+						}
+					}
+				}}
+			/>
+		</Elements>
+		<button type="submit">Pay</button>
+	</form>
 {/if}

@@ -6,6 +6,7 @@ import {
 	TYPESENSE_PROTOCOL,
 	TYPESENSE_PRODUCTS_COLLECTION
 } from '$env/static/private';
+import { PUBLIC_STRIPE_KEY } from '$env/static/public';
 import type { LayoutServerLoad } from './$types';
 import { Client } from 'typesense';
 
@@ -32,6 +33,9 @@ export const load: LayoutServerLoad = async ({ setHeaders, cookies }) => {
 	});
 
 	return {
+		stripe: {
+			publicKey: PUBLIC_STRIPE_KEY
+		},
 		api: {
 			baseUrl: BASE_API_URL
 		},

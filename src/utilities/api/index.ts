@@ -229,4 +229,10 @@ export class WSCS {
 	me() {
 		return this.fetchPayload<{ user?: User }>('/api/users/me');
 	}
+
+	createPayementIntent() {
+		return this.fetchPayload<{ client_secret: string }>('/api/create-payment-intent', {
+			method: 'post'
+		});
+	}
 }
