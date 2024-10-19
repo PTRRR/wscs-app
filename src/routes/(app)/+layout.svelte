@@ -30,9 +30,7 @@
 					remoteItem.product === localItem.product && remoteItem.variation === localItem.variation
 			);
 
-			if (remoteItem) {
-				remoteItem.quantity = remoteItem.quantity + localItem.quantity;
-			} else {
+			if (!remoteItem) {
 				mergedItems.push(localItem);
 			}
 		});
@@ -47,8 +45,12 @@
 			const user = $user.data?.user;
 
 			if (user && isCartInitialized) {
+				console.log('caaaaart', cart);
 				if (debounceCartUpdate) clearTimeout(debounceCartUpdate);
-				debounceCartUpdate = setTimeout(() => api.updateCart({ userId: user.id, cart }), 500);
+				debounceCartUpdate = setTimeout(
+					() => api.updateCart({ userId: user.id, cart }).then((res) => console.log(res)),
+					500
+				);
 			}
 		});
 

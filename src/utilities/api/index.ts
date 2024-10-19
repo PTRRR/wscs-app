@@ -4,6 +4,7 @@ import type {
 	Attribute,
 	Category,
 	Media,
+	Order,
 	Product,
 	ProductType,
 	Tag,
@@ -11,6 +12,7 @@ import type {
 	Variation
 } from './types';
 import { joinPaths } from '../urls';
+import type { Cart } from '../../store/types';
 
 export interface PayloadListResponse<T> {
 	docs: T[];
@@ -75,17 +77,27 @@ const getFindQuery = (params?: PayloadFindParams) => {
 export class WSCS {
 	constructor(private readonly baseUrl?: string) {}
 
-	private async fetchPayload<T>(url: string, init?: RequestInit): Promise<T> {
+	private async fetchPayload<T>(url: string, init?: RequestInit, timeout = 10000): Promise<T> {
+		const abortController = new AbortController();
 		const fullPath = joinPaths(this.baseUrl || 'http://localhost:3000', url);
+
+		const abortTimeout = setTimeout(() => {
+			abortController.abort();
+		}, timeout);
+
 		const res = await fetch(fullPath, {
 			credentials: 'include',
 			...init,
+			signal: abortController.signal,
 			headers: {
 				'Content-Type': 'application/json',
 				...(init?.headers || {})
 			}
 		});
+
 		const json = await res.json();
+		clearTimeout(abortTimeout);
+
 		return json as T;
 	}
 
@@ -246,6 +258,13 @@ export class WSCS {
 			body: JSON.stringify({
 				cart: params.cart
 			})
+		});
+	}
+
+	createOrder(order: Pick<Order, 'orderedBy' | 'items' | 'total' | 'stripePaymentIntentID'>) {
+		return this.fetchPayload<Order>('/api/orders', {
+			method: 'POST',
+			body: JSON.stringify(order)
 		});
 	}
 }

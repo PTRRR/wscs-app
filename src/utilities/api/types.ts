@@ -398,6 +398,7 @@ export interface Order {
 	items?:
 		| {
 				product: number | Product;
+				variation: number | Variation;
 				price?: number | null;
 				quantity?: number | null;
 				id?: string | null;

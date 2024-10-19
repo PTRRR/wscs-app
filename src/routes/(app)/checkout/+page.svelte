@@ -8,6 +8,7 @@
 	import { loadStripe, type Stripe } from '@stripe/stripe-js';
 	import { Elements, PaymentElement, LinkAuthenticationElement } from 'svelte-stripe';
 	import type { StripeElements } from '@stripe/stripe-js/dist/stripe-js';
+	import { goto } from '$app/navigation';
 
 	export let data: PageData;
 
@@ -110,14 +111,39 @@
 {#if stripe && clientSecret}
 	<form
 		on:submit|preventDefault={async () => {
-			console.log('kjhslkjfhdlkjh');
-			if (stripe && elements) {
-				const result = await stripe.confirmPayment({
-					elements,
-					redirect: 'if_required'
-				});
+			try {
+				const userData = $user.data?.user;
+				if (stripe && elements && userData) {
+					const result = await stripe.confirmPayment({
+						elements,
+						redirect: 'if_required'
+					});
 
-				console.log(result);
+					if (result.error) {
+						console.log(result.error);
+						return;
+					} else {
+						result.paymentIntent;
+					}
+
+					if (result.paymentIntent?.status === 'succeeded') {
+						await api.createOrder({
+							total,
+							stripePaymentIntentID: result.paymentIntent.id,
+							items: $cart.items.map((it) => ({
+								product: it.product,
+								variation: it.variation,
+								quantity: it.quantity,
+								price: variations.find((v) => v.id === it.variation)?.price || 0
+							}))
+						});
+
+						$cart = { items: [] };
+						goto('/payment-confirmation');
+					}
+				}
+			} catch (error) {
+				console.log(error);
 			}
 		}}
 	>
