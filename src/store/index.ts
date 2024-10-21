@@ -45,7 +45,7 @@ export const useReadable = <T>(name: string, value: T) => useSharedStore(name, r
 
 // Stores
 
-export const useUser = (baseUrl?: string) => {
+export const useUser = (baseUrl: string) => {
 	const api = new WSCS(baseUrl);
 	const key = 'user';
 

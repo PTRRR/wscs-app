@@ -12,7 +12,7 @@
 
 	export let data: PageData;
 
-	const { query: user } = useUser();
+	const { query: user } = useUser(data.api.baseUrl);
 	const { cart, removeFromCart } = useLocalCart();
 
 	let loadingCart: boolean = true;
