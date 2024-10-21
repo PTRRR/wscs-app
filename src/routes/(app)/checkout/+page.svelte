@@ -18,6 +18,7 @@
 	let loadingCart: boolean = true;
 	let products: Product[] = [];
 	let variations: Variation[] = [];
+	let processing: boolean = false;
 
 	const api = new WSCS(data.api.baseUrl);
 
@@ -108,7 +109,7 @@
 	<p>TOTAL: {total}€</p>
 {/if}
 
-{#if stripe && clientSecret}
+{#if stripe && clientSecret && !processing}
 	<form
 		on:submit|preventDefault={async () => {
 			try {
@@ -122,32 +123,21 @@
 					if (result.error) {
 						console.log(result.error);
 						return;
-					} else {
-						result.paymentIntent;
 					}
 
 					if (result.paymentIntent?.status === 'succeeded') {
-						await api.createOrder({
-							total,
-							stripePaymentIntentID: result.paymentIntent.id,
-							items: $cart.items.map((it) => ({
-								product: it.product,
-								variation: it.variation,
-								quantity: it.quantity,
-								price: variations.find((v) => v.id === it.variation)?.price || 0
-							}))
-						});
-
 						$cart = { items: [] };
 						goto('/payment-confirmation');
 					}
 				}
 			} catch (error) {
 				console.log(error);
+			} finally {
+				processing = false;
 			}
 		}}
 	>
-		<Elements {stripe} {clientSecret} bind:elements>
+		<Elements {stripe} {clientSecret} theme="flat" bind:elements>
 			<LinkAuthenticationElement />
 			<PaymentElement
 				options={{
@@ -161,4 +151,6 @@
 		</Elements>
 		<button type="submit">Pay</button>
 	</form>
+{:else if stripe && clientSecret && !processing}
+	<p>Processing payment...</p>
 {/if}
