@@ -52,7 +52,8 @@ export const useUser = (baseUrl: string) => {
 	const query = createQuery({
 		queryKey: [key],
 		queryFn: () => api.me(),
-		refetchInterval: 30000
+		refetchInterval: 30000,
+		refetchOnWindowFocus: true
 	});
 
 	const invalidate = (queryClient: QueryClient) => {
