@@ -97,6 +97,10 @@ export class WSCS {
 		const json = await res.json();
 		clearTimeout(abortTimeout);
 
+		if (res.status > 399 || json.error) {
+			throw new Error(`${res.status}: ${json.error || res.statusText}`);
+		}
+
 		return json as T;
 	}
 
@@ -237,6 +241,17 @@ export class WSCS {
 		});
 	}
 
+	createUser(params: { email: string; password: string; passwordConfirg: string }) {
+		return this.fetchPayload<{ message: string; doc: User }>('/api/users', {
+			method: 'POST',
+			body: JSON.stringify({
+				email: params.email,
+				password: params.password,
+				passwordConfirg: params.passwordConfirg
+			})
+		});
+	}
+
 	me() {
 		return this.fetchPayload<{ user?: User }>('/api/users/me');
 	}
@@ -248,8 +263,6 @@ export class WSCS {
 	}
 
 	updateCart(params: { userId: User['id']; cart: User['cart']; depth?: number }) {
-		console.log(params);
-
 		const query = qs.stringify({ depth: params?.depth || 0 }, { addQueryPrefix: true });
 
 		return this.fetchPayload<User>(`/api/users/${params.userId}${query}`, {

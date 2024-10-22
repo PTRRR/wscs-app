@@ -41,17 +41,18 @@
 	onMount(() => {
 		let debounceCartUpdate: NodeJS.Timeout | undefined = undefined;
 
+		let lastCart: Cart | undefined = undefined;
+
 		cart.subscribe((cart) => {
+			if (JSON.stringify(lastCart) === JSON.stringify(cart)) return;
 			const user = $user.data?.user;
 
 			if (user && isCartInitialized) {
-				console.log('caaaaart', cart);
 				if (debounceCartUpdate) clearTimeout(debounceCartUpdate);
-				debounceCartUpdate = setTimeout(
-					() => api.updateCart({ userId: user.id, cart }).then((res) => console.log(res)),
-					500
-				);
+				debounceCartUpdate = setTimeout(() => api.updateCart({ userId: user.id, cart }), 500);
 			}
+
+			lastCart = cart;
 		});
 
 		user.subscribe(async ({ data }) => {
@@ -59,9 +60,6 @@
 
 			if (user && !isCartInitialized) {
 				const merged = mergeCarts($cart, user.cart);
-
-				console.log(merged);
-
 				$cart = merged;
 
 				api
@@ -79,9 +77,10 @@
 
 <a href="/">Home</a>
 <a href="/checkout">Checkout</a>
-<a href="/login">Login</a>
 
 {#if $user.isSuccess && $user.data.user}
 	<a href="/logout">Logout</a>
+{:else}
+	<a href="/login">Login</a>
 {/if}
 <slot />

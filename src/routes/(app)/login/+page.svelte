@@ -33,8 +33,10 @@
 				.finally(() => invalidateUser(queryClient));
 		}}
 	>
-		<input type="text" placeholder="email" bind:value={email} />
+		<input type="email" placeholder="email" bind:value={email} />
 		<input type="password" placeholder="password" bind:value={password} />
 		<button type="submit">Submit</button>
 	</form>
 {/if}
+
+<a href="/signup">Sign up</a>

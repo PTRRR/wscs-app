@@ -13,7 +13,7 @@
 	export let data: PageData;
 
 	const { query: user } = useUser(data.api.baseUrl);
-	const { cart, removeFromCart } = useLocalCart();
+	const { cart } = useLocalCart();
 
 	let loadingCart: boolean = true;
 	let products: Product[] = [];
@@ -42,10 +42,14 @@
 	let elements: StripeElements;
 	let stripe: Stripe | null = null;
 	let clientSecret: string | undefined = undefined;
+	let paymentIntentError: boolean = false;
 
 	onMount(() => {
 		loadStripe(data.stripe.publicKey).then((res) => (stripe = res));
-		api.createPayementIntent().then((res) => (clientSecret = res.client_secret));
+		api
+			.createPayementIntent()
+			.then((res) => (clientSecret = res.client_secret))
+			.catch(() => (paymentIntentError = true));
 
 		const unsubscribe = cart.subscribe((cart) => {
 			loadingCart = true;
@@ -93,11 +97,6 @@
 					{#each getVariationsForProduct(product) as variation}
 						{#key variation.id}
 							<p>{variation.name}</p>
-							<button
-								on:click={() => removeFromCart({ product: product.id, variation: variation.id })}
-							>
-								Remove from cart
-							</button>
 						{/key}
 					{/each}
 					<p>Price: {getProductTotal(product)}€</p>
@@ -112,7 +111,7 @@
 		<p>TOTAL: {total}€</p>
 	{/if}
 
-	{#if stripe && clientSecret && !processing}
+	{#if stripe && clientSecret && !processing && !paymentIntentError}
 		<form
 			on:submit|preventDefault={async () => {
 				try {
@@ -154,6 +153,8 @@
 			</Elements>
 			<button type="submit">Pay</button>
 		</form>
+	{:else if paymentIntentError}
+		<p>There was an error creating the payment. Please try again later.</p>
 	{:else if stripe && clientSecret && !processing}
 		<p>Processing payment...</p>
 	{/if}
