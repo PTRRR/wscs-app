@@ -10,7 +10,7 @@ import { PUBLIC_STRIPE_KEY } from '$env/static/public';
 import type { LayoutServerLoad } from './$types';
 import { Client } from 'typesense';
 
-export const load: LayoutServerLoad = async ({ setHeaders, cookies }) => {
+export const load: LayoutServerLoad = async ({ setHeaders }) => {
 	setHeaders({
 		'Cache-Control': 'public, max-age=5, stale-while-revalidate=31536000'
 	});

@@ -12,7 +12,6 @@ import type {
 	Variation
 } from './types';
 import { joinPaths } from '../urls';
-import type { Cart } from '../../store/types';
 
 export interface PayloadListResponse<T> {
 	docs: T[];
