@@ -43,6 +43,8 @@ export interface PayloadErrorResponse {
 }
 
 export interface PayloadFindParams {
+	limit?: number;
+	page?: number;
 	depth?: number;
 	query?: Record<string, { [key in QueryOperators]?: string }>;
 }
@@ -70,7 +72,10 @@ const getAuthHeaders = (
 });
 
 const getFindQuery = (params?: PayloadFindParams) => {
-	return qs.stringify({ where: params?.query, depth: params?.depth }, { addQueryPrefix: true });
+	return qs.stringify(
+		{ where: params?.query, depth: params?.depth, limit: params?.limit, page: params?.page },
+		{ addQueryPrefix: true }
+	);
 };
 
 export class WSCS {
