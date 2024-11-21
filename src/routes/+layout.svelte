@@ -16,3 +16,11 @@
 <QueryClientProvider client={queryClient}>
 	<slot />
 </QueryClientProvider>
+
+<style>
+	:global(html, body) {
+		min-height: 100%;
+		margin: 0;
+		padding: 0;
+	}
+</style>

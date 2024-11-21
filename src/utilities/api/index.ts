@@ -3,6 +3,7 @@ import qs from 'qs';
 import type {
 	Attribute,
 	Category,
+	Entity,
 	Media,
 	Order,
 	Product,
@@ -283,5 +284,9 @@ export class WSCS {
 			method: 'POST',
 			body: JSON.stringify(order)
 		});
+	}
+
+	findEntities(params?: PayloadFindParams): Promise<PayloadListResponse<Entity>> {
+		return this.fetchPayload<PayloadListResponse<Entity>>(`/api/entities${getFindQuery(params)}`);
 	}
 }

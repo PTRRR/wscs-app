@@ -5,6 +5,8 @@
 	import { WSCS } from '../../utilities/api';
 	import type { User } from '../../utilities/api/types';
 	import type { Cart, CartItem } from '../../store/types';
+	import MainMenu from '../../components/MainMenu.svelte';
+	import EntitiesHeader from '../../components/EntitiesHeader.svelte';
 
 	export let data: LayoutData;
 
@@ -45,11 +47,11 @@
 
 		cart.subscribe((cart) => {
 			if (JSON.stringify(lastCart) === JSON.stringify(cart)) return;
-			const user = $user.data?.user;
+			const userData = $user.data?.user;
 
-			if (user && isCartInitialized) {
+			if (userData && isCartInitialized) {
 				if (debounceCartUpdate) clearTimeout(debounceCartUpdate);
-				debounceCartUpdate = setTimeout(() => api.updateCart({ userId: user.id, cart }), 500);
+				debounceCartUpdate = setTimeout(() => api.updateCart({ userId: userData.id, cart }), 500);
 			}
 
 			lastCart = cart;
@@ -75,12 +77,6 @@
 	});
 </script>
 
-<a href="/">Home</a>
-<a href="/checkout">Checkout</a>
-
-{#if $user.isSuccess && $user.data.user}
-	<a href="/logout">Logout</a>
-{:else}
-	<a href="/login">Login</a>
-{/if}
+<MainMenu />
+<EntitiesHeader entities={data.entities} />
 <slot />

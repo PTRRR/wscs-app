@@ -47,8 +47,6 @@
 	<title>Words, Sounds, Colors & Shapes</title>
 </svelte:head>
 
-<h1>Words, Sounds, Colors & Shapes</h1>
-
 <input
 	type="text"
 	placeholder="Search"
