@@ -1,7 +1,7 @@
 <script lang="ts">
 </script>
 
-<div class="main-menu">
+<header class="main-menu">
 	<div class="main-menu__section main-menu__search">
 		<input type="text" value="search" />
 	</div>
@@ -9,7 +9,7 @@
 		<a href="/">Words, Sounds, Colors & Shapes</a>
 	</div>
 	<div class="main-menu__section main-menu__radio">radio</div>
-</div>
+</header>
 
 <style lang="scss">
 	.main-menu {

@@ -79,4 +79,5 @@
 
 <MainMenu />
 <EntitiesHeader entities={data.entities} />
+
 <slot />

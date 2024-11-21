@@ -7,14 +7,25 @@ export const load: PageServerLoad = async ({ parent }) => {
 	} = await parent();
 
 	const api = new WSCS(baseUrl);
-	const res = await api.findProducts({
-		limit: 60,
-		query: {
-			_status: { equals: 'published' }
-		}
-	});
+
+	const [productsResponse, articlesResponse] = await Promise.all([
+		api.findProducts({
+			limit: 60,
+			query: {
+				_status: { equals: 'published' }
+			}
+		}),
+		api.findArticles({
+			sort: '-createdAt',
+			limit: 1,
+			query: {
+				_status: { equals: 'published' }
+			}
+		})
+	]);
 
 	return {
-		products: res.docs || []
+		products: productsResponse.docs || [],
+		article: (articlesResponse.docs || [])[0]
 	};
 };

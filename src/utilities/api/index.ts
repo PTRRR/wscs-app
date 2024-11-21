@@ -1,6 +1,7 @@
 import qs from 'qs';
 
 import type {
+	Article,
 	Attribute,
 	Category,
 	Entity,
@@ -47,6 +48,7 @@ export interface PayloadFindParams {
 	limit?: number;
 	page?: number;
 	depth?: number;
+	sort?: string;
 	query?: Record<string, { [key in QueryOperators]?: string }>;
 }
 
@@ -74,7 +76,13 @@ const getAuthHeaders = (
 
 const getFindQuery = (params?: PayloadFindParams) => {
 	return qs.stringify(
-		{ where: params?.query, depth: params?.depth, limit: params?.limit, page: params?.page },
+		{
+			where: params?.query,
+			depth: params?.depth,
+			limit: params?.limit,
+			page: params?.page,
+			sort: params?.sort
+		},
 		{ addQueryPrefix: true }
 	);
 };
@@ -288,5 +296,9 @@ export class WSCS {
 
 	findEntities(params?: PayloadFindParams): Promise<PayloadListResponse<Entity>> {
 		return this.fetchPayload<PayloadListResponse<Entity>>(`/api/entities${getFindQuery(params)}`);
+	}
+
+	findArticles(params?: PayloadFindParams): Promise<PayloadListResponse<Article>> {
+		return this.fetchPayload<PayloadListResponse<Article>>(`/api/articles${getFindQuery(params)}`);
 	}
 }

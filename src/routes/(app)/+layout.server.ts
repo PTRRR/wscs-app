@@ -7,13 +7,14 @@ export const load: LayoutServerLoad = async ({ parent }) => {
 	} = await parent();
 
 	const api = new WSCS(baseUrl);
-	const res = await api.findEntities({
+
+	const entitiesResponse = await api.findEntities({
 		query: {
 			_status: { equals: 'published' }
 		}
 	});
 
 	return {
-		entities: res.docs
+		entities: entitiesResponse.docs
 	};
 };

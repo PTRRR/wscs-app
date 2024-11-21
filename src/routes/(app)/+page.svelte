@@ -3,6 +3,7 @@
 	import AddToCartButton from '../../components/AddToCartButton.svelte';
 	import type { Product, Variation } from '../../utilities/api/types';
 	import type { PageData } from './$types';
+	import ArticlesHome from '../../components/ArticlesHome.svelte';
 
 	type Hit<T> = {
 		document: T;
@@ -33,8 +34,8 @@
 	};
 
 	const getFirstProductVariation = (product: Product): Variation[] => {
-		if (product.variations && product.variations?.length > 0) {
-			const variation = product.variations[0];
+		if (product.variations && (product.variations.docs || []).length > 0) {
+			const variation = (product.variations.docs || [])[0];
 			if (typeof variation !== 'number') {
 				return [variation];
 			}
@@ -46,6 +47,10 @@
 <svelte:head>
 	<title>Words, Sounds, Colors & Shapes</title>
 </svelte:head>
+
+{#if data.article}
+	<ArticlesHome article={data.article} />
+{/if}
 
 <input
 	type="text"

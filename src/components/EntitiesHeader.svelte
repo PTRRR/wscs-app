@@ -6,11 +6,11 @@
 	} = $props();
 </script>
 
-<div class="entities-header">
+<section class="entities-header">
 	{#each props.entities as entity}
 		<span>{entity.title}</span>
 	{/each}
-</div>
+</section>
 
 <style lang="scss">
 	.entities-header {
