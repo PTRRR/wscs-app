@@ -8,7 +8,7 @@ export const load: PageServerLoad = async ({ parent }) => {
 
 	const api = new WSCS(baseUrl);
 
-	const [productsResponse, articlesResponse] = await Promise.all([
+	const [productsResponse, articlesResponse, entitiesResponse] = await Promise.all([
 		api.findProducts({
 			limit: 60,
 			query: {
@@ -21,11 +21,17 @@ export const load: PageServerLoad = async ({ parent }) => {
 			query: {
 				_status: { equals: 'published' }
 			}
+		}),
+		api.findEntities({
+			query: {
+				_status: { equals: 'published' }
+			}
 		})
 	]);
 
 	return {
 		products: productsResponse.docs || [],
-		article: (articlesResponse.docs || [])[0]
+		article: (articlesResponse.docs || [])[0],
+		entities: entitiesResponse.docs || []
 	};
 };

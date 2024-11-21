@@ -32,7 +32,7 @@
 
 		&__cover {
 			width: 100%;
-			height: 56vh;
+			height: 70vh;
 			background-color: lightgray;
 
 			img {

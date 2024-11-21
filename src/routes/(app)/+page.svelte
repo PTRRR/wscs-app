@@ -4,6 +4,7 @@
 	import type { Product, Variation } from '../../utilities/api/types';
 	import type { PageData } from './$types';
 	import ArticlesHome from '../../components/ArticlesHome.svelte';
+	import EntitiesHeader from '../../components/EntitiesHeader.svelte';
 
 	type Hit<T> = {
 		document: T;
@@ -47,6 +48,8 @@
 <svelte:head>
 	<title>Words, Sounds, Colors & Shapes</title>
 </svelte:head>
+
+<EntitiesHeader entities={data.entities} />
 
 {#if data.article}
 	<ArticlesHome article={data.article} />
