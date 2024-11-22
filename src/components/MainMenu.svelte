@@ -12,7 +12,7 @@
 		<!-- svelte-ignore a11y_missing_attribute -->
 		<iframe
 			src="https://player.radioking.io/music-4-hikers/?c=%23FFFFFF&c2=%232F3542"
-			style="border-radius: 5px; width: 470px; height: 100px; "
+			style="border-radius: 5px; width: 100%; height: 100px; "
 			frameborder="0"
 		></iframe>
 	</div>
@@ -28,7 +28,10 @@
 		background-color: white;
 
 		&__section {
+			display: flex;
 			padding: 20px 0;
+			justify-content: center;
+			align-items: center;
 
 			& + & {
 				border-left: solid 1px black;
