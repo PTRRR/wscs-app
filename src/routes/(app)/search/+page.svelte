@@ -24,6 +24,15 @@
 
 <h1>{props.data.q}</h1>
 
-{#each hits as product}
-	<p>{product.title}</p>
-{/each}
+<div class="hits">
+	{#each hits as product}
+		<a href={`/products/${product.id}`}>{product.title}</a>
+	{/each}
+</div>
+
+<style lang="scss">
+	.hits {
+		display: flex;
+		flex-direction: column;
+	}
+</style>
