@@ -95,7 +95,7 @@ type Hit<T> = {
 	document: T;
 };
 
-export const useSeachEngine = (
+export const useSearchEngine = (
 	baseUrl: string,
 	collection: string,
 	typesenseConfig: TypesenseConfig

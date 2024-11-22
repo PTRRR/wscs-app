@@ -1,9 +1,29 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	let searchValue = $state<string>('');
+	let searchDebounceTimeout: NodeJS.Timeout | undefined = undefined;
 </script>
 
 <header class="main-menu">
 	<div class="main-menu__section main-menu__search">
-		<input type="text" value="search" />
+		<input
+			type="text"
+			placeholder="search"
+			bind:value={searchValue}
+			oninput={() => {
+				if (searchDebounceTimeout) {
+					clearTimeout(searchDebounceTimeout);
+				}
+				searchDebounceTimeout = setTimeout(() => {
+					goto(`/search?q=${searchValue}`, { keepFocus: true });
+				}, 200);
+			}}
+			onkeydown={(event) => {
+				if (event.key === 'Enter') {
+					goto(`/search?q=${searchValue}`, { keepFocus: true });
+				}
+			}}
+		/>
 	</div>
 	<div class="main-menu__section main-menu__title">
 		<a href="/">Words, Sounds, Colors & Shapes</a>

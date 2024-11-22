@@ -5,12 +5,12 @@
 	import HomeArticles from '../../components/HomeArticles.svelte';
 	import EntitiesHeader from '../../components/EntitiesHeader.svelte';
 	import HomeFilters from '../../components/HomeFilters.svelte';
-	import { useSeachEngine } from '../../store';
+	import { useSearchEngine } from '../../store';
 
 	const props: { data: PageData } = $props();
 	const { data } = props;
 
-	const { search } = useSeachEngine(
+	const { search } = useSearchEngine(
 		data.api.baseUrl,
 		data.typesense.productsCollection,
 		data.typesense.clientConfig

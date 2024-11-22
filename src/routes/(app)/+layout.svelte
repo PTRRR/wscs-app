@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { type Snippet } from 'svelte';
-	import { useLocalCart, useSeachEngine, useUser } from '../../store';
+	import { useLocalCart, useSearchEngine, useUser } from '../../store';
 	import type { LayoutData } from './$types';
 	import { WSCS } from '../../utilities/api';
 	import type { User } from '../../utilities/api/types';
@@ -14,7 +14,7 @@
 
 	const { data, children } = props;
 
-	const { loadSearchKey } = useSeachEngine(
+	const { loadSearchKey } = useSearchEngine(
 		data.api.baseUrl,
 		data.typesense.productsCollection,
 		data.typesense.clientConfig
