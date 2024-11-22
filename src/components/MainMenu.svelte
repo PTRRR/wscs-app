@@ -8,7 +8,14 @@
 	<div class="main-menu__section main-menu__title">
 		<a href="/">Words, Sounds, Colors & Shapes</a>
 	</div>
-	<div class="main-menu__section main-menu__radio">radio</div>
+	<div class="main-menu__section main-menu__radio">
+		<!-- svelte-ignore a11y_missing_attribute -->
+		<iframe
+			src="https://player.radioking.io/music-4-hikers/?c=%23FFFFFF&c2=%232F3542"
+			style="border-radius: 5px; width: 470px; height: 100px; "
+			frameborder="0"
+		></iframe>
+	</div>
 </header>
 
 <style lang="scss">

@@ -301,4 +301,8 @@ export class WSCS {
 	findArticles(params?: PayloadFindParams): Promise<PayloadListResponse<Article>> {
 		return this.fetchPayload<PayloadListResponse<Article>>(`/api/articles${getFindQuery(params)}`);
 	}
+
+	findArticleById(id: string | number): Promise<Article> {
+		return this.fetchPayload<Article>(`/api/articles/${id}`);
+	}
 }

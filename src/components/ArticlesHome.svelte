@@ -16,7 +16,9 @@
 		{/if}
 	</div>
 	<article class="article-home__content">
-		<div class="article-home__title">{props.article.title}</div>
+		<div class="article-home__title">
+			<a href={`/articles/${props.article.id}`}>{props.article.title}</a>
+		</div>
 		<div class="article-home__text">
 			Lorem ipsum dolor, sit amet consectetur adipisicing elit. Architecto, quas at similique
 			veritatis quaerat aliquid possimus numquam laborum eos, enim fuga voluptatibus? Suscipit vitae
