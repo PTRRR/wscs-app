@@ -1,19 +1,23 @@
-<script lang="ts">
-	type CheckboxElement = {
+<script lang="ts" module>
+	export type CheckboxElement = {
 		type: 'checkbox';
 		label?: string | null;
 		value: string | number;
 		default?: boolean;
 	};
 
-	type LinkElement = {
+	export type LinkElement = {
 		type: 'link';
 		label?: string | null;
 		url: string;
 	};
 
-	type T = CheckboxElement | LinkElement;
+	export type FilterElement = CheckboxElement | LinkElement;
 
+	type T = FilterElement;
+</script>
+
+<script lang="ts">
 	const props: {
 		radio?: boolean;
 		title?: string;
@@ -29,6 +33,16 @@
 		inputElements.forEach((input) => {
 			input.checked = false;
 		});
+	};
+
+	const handleElementClick = (index: number) => {
+		if (radio && inputElements[index].checked) {
+			deselectAll();
+			inputElements[index].checked = !inputElements[index].checked;
+		}
+
+		let selectedItems = listSelectedItemsWithDefaults();
+		onSelected?.(selectedItems);
 	};
 
 	const listSelectedItems = () => {
@@ -71,15 +85,7 @@
 				type="checkbox"
 				bind:this={inputElements[index]}
 				data-el-index={index}
-				onclick={() => {
-					if (radio && inputElements[index].checked) {
-						deselectAll();
-						inputElements[index].checked = !inputElements[index].checked;
-					}
-
-					let selectedItems = listSelectedItemsWithDefaults();
-					onSelected?.(selectedItems);
-				}}
+				onclick={() => handleElementClick(index)}
 			/>
 			<span>{filter.label || filter.value}</span>
 		{/if}

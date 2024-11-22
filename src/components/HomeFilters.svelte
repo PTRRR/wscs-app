@@ -2,12 +2,18 @@
 	import type { Brand, Entity, Filter } from '../utilities/api/types';
 	import { getApiObject } from '../utilities/api/utils';
 	import { filterNullish } from '../utilities/iterables';
-	import Filters from './Filters.svelte';
+	import Filters, { type FilterElement } from './Filters.svelte';
 
 	const props: {
 		entities: Entity[];
 		brands: Brand[];
 		filters: Filter;
+		onSelected?: (selection: {
+			entities: number[];
+			categories: string[];
+			productTypes: number[];
+			brands: number[];
+		}) => void;
 	} = $props();
 
 	const menProductTypes = (props.filters.menProductTypes || [])
@@ -26,14 +32,46 @@
 		.map(getApiObject)
 		.filter(filterNullish);
 
-	let selectedFilterCategory = $state<string | undefined>(undefined);
+	let selectedEntities = $state<number[]>([]);
+	let selectedCategories = $state<string[]>([]);
+	let selectedProductTypes = $state<number[]>([]);
+	let selectedBrands = $state<number[]>([]);
+
+	type ValueTypeMap = {
+		number: number;
+		string: string;
+	};
+
+	const getSelectedValues = <T extends keyof ValueTypeMap = 'number'>(
+		selectedItems: FilterElement[],
+		valueType: T
+	): ValueTypeMap[T][] => {
+		const selectedValues: ValueTypeMap[T][] = [];
+
+		for (const item of selectedItems) {
+			if (item.type === 'checkbox' && typeof item.value === valueType) {
+				selectedValues.push(item.value as ValueTypeMap[T]);
+			}
+		}
+
+		return selectedValues;
+	};
+
+	$effect(() => {
+		props.onSelected?.({
+			entities: selectedEntities,
+			brands: selectedBrands,
+			categories: selectedCategories,
+			productTypes: selectedProductTypes
+		});
+	});
 </script>
 
 <div class="home-filters">
 	<Filters
 		radio
 		items={props.entities.map((it) => ({ type: 'checkbox', label: it.title, value: it.id }))}
-		onSelected={(selectedItems) => console.log(selectedItems)}
+		onSelected={(items) => (selectedEntities = getSelectedValues(items, 'number'))}
 	/>
 
 	<Filters
@@ -83,60 +121,64 @@
 		]}
 		onSelected={(items) => {
 			const firstItem = items[0];
+			selectedProductTypes = [];
 
 			if (
 				typeof firstItem !== 'undefined' &&
 				firstItem.type === 'checkbox' &&
 				typeof firstItem.value === 'string'
 			) {
-				selectedFilterCategory = firstItem.value;
+				selectedCategories = [firstItem.value];
 			} else {
-				selectedFilterCategory = undefined;
+				selectedCategories = [];
 			}
 		}}
 	/>
 
-	{#if selectedFilterCategory === 'men'}
+	{#if selectedCategories.includes('men')}
 		<Filters
 			items={menProductTypes.map((it) => ({
 				type: 'checkbox',
 				value: it.id,
 				label: it.title
 			}))}
-			onSelected={(selectedItems) => console.log(selectedItems)}
+			onSelected={(items) => (selectedProductTypes = getSelectedValues(items, 'number'))}
 		/>
-	{:else if selectedFilterCategory === 'women'}
+	{:else if selectedCategories.includes('women')}
 		<Filters
 			items={womenProductTypes.map((it) => ({
 				type: 'checkbox',
 				value: it.id,
 				label: it.title
 			}))}
-			onSelected={(selectedItems) => console.log(selectedItems)}
+			onSelected={(items) => (selectedProductTypes = getSelectedValues(items, 'number'))}
 		/>
-	{:else if selectedFilterCategory === 'camping'}
+	{:else if selectedCategories.includes('camping')}
 		<Filters
 			items={campingProductTypes.map((it) => ({
 				type: 'checkbox',
 				value: it.id,
 				label: it.title
 			}))}
+			onSelected={(items) => (selectedProductTypes = getSelectedValues(items, 'number'))}
 		/>
-	{:else if selectedFilterCategory === 'accessories'}
+	{:else if selectedCategories.includes('accessories')}
 		<Filters
 			items={accessoriesProductTypes.map((it) => ({
 				type: 'checkbox',
 				value: it.id,
 				label: it.title
 			}))}
+			onSelected={(items) => (selectedProductTypes = getSelectedValues(items, 'number'))}
 		/>
-	{:else if selectedFilterCategory === 'brands'}
+	{:else if selectedCategories.includes('brands')}
 		<Filters
 			items={props.brands.map((it) => ({
 				type: 'checkbox',
 				value: it.id,
 				label: it.title
 			}))}
+			onSelected={(items) => (selectedBrands = getSelectedValues(items, 'number'))}
 		/>
 	{/if}
 </div>

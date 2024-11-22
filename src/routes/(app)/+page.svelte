@@ -72,7 +72,14 @@
 	}}
 /> -->
 
-<HomeFilters filters={data.filters} entities={data.entities} brands={data.brands} />
+<HomeFilters
+	filters={data.filters}
+	entities={data.entities}
+	brands={data.brands}
+	onSelected={(selection) => {
+		$inspect(selection);
+	}}
+/>
 
 <div class="products">
 	{#each products as product}
