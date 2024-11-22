@@ -7,6 +7,7 @@ import {
 	TYPESENSE_PRODUCTS_COLLECTION
 } from '$env/static/private';
 import { PUBLIC_STRIPE_KEY } from '$env/static/public';
+import type { TypesenseConfig } from '../utilities/typesense';
 import type { LayoutServerLoad } from './$types';
 import { Client } from 'typesense';
 
@@ -41,10 +42,17 @@ export const load: LayoutServerLoad = async ({ setHeaders }) => {
 		},
 		typesense: {
 			key,
-			host: TYPESENSE_HOST,
-			port: parseInt(TYPESENSE_PORT),
-			protocol: TYPESENSE_PROTOCOL,
-			productsCollection: TYPESENSE_PRODUCTS_COLLECTION
+			productsCollection: TYPESENSE_PRODUCTS_COLLECTION,
+			clientConfig: {
+				apiKey: key.value || '',
+				nodes: [
+					{
+						host: TYPESENSE_HOST,
+						port: parseInt(TYPESENSE_PORT),
+						protocol: TYPESENSE_PROTOCOL
+					}
+				]
+			} as TypesenseConfig
 		}
 	};
 };

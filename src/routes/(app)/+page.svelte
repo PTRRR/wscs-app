@@ -1,40 +1,42 @@
 <script lang="ts">
-	import { Client } from 'typesense';
 	import AddToCartButton from '../../components/AddToCartButton.svelte';
 	import type { Product, Variation } from '../../utilities/api/types';
 	import type { PageData } from './$types';
 	import HomeArticles from '../../components/HomeArticles.svelte';
 	import EntitiesHeader from '../../components/EntitiesHeader.svelte';
 	import HomeFilters from '../../components/HomeFilters.svelte';
-
-	type Hit<T> = {
-		document: T;
-	};
+	import { useSeachEngine } from '../../store';
 
 	const props: { data: PageData } = $props();
 	const { data } = props;
 
+	const { search } = useSeachEngine(
+		data.api.baseUrl,
+		data.typesense.productsCollection,
+		data.typesense.clientConfig
+	);
+
 	let searchSesult: Product[] = [];
 	const products = $derived(searchSesult.length > 0 ? searchSesult : data.products);
 
-	const client = new Client({
-		apiKey: data.typesense.key.value as string,
-		nodes: [
-			{
-				host: data.typesense.host,
-				port: data.typesense.port,
-				protocol: data.typesense.protocol
-			}
-		]
-	});
+	// const client = new Client({
+	// 	apiKey: data.typesense.key.value as string,
+	// 	nodes: [
+	// 		{
+	// 			host: data.typesense.host,
+	// 			port: data.typesense.port,
+	// 			protocol: data.typesense.protocol
+	// 		}
+	// 	]
+	// });
 
-	const search = async (query: string): Promise<{ hits: Hit<Product>[] }> => {
-		return client.collections(data.typesense.productsCollection).documents().search({
-			q: query,
-			limit: 60,
-			query_by: 'title'
-		}) as Promise<{ hits: Hit<Product>[] }>;
-	};
+	// const search = async (query: string): Promise<{ hits: Hit<Product>[] }> => {
+	// 	return client.collections(data.typesense.productsCollection).documents().search({
+	// 		q: query,
+	// 		limit: 60,
+	// 		query_by: 'title'
+	// 	}) as Promise<{ hits: Hit<Product>[] }>;
+	// };
 
 	const getFirstProductVariation = (product: Product): Variation[] => {
 		if (product.variations && (product.variations.docs || []).length > 0) {
@@ -45,6 +47,10 @@
 		}
 		return [];
 	};
+
+	$effect(() => {
+		search('shorts').then((res) => console.log(res.hits));
+	});
 </script>
 
 <svelte:head>

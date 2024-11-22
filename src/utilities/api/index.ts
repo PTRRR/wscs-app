@@ -319,4 +319,8 @@ export class WSCS {
 	getGlobalFilters(): Promise<Filter> {
 		return this.fetchPayload<Filter>(`/api/globals/filters`);
 	}
+
+	getSearchKey(): Promise<{ value?: string }> {
+		return this.fetchPayload<{ value?: string }>(`/api/search-key`);
+	}
 }

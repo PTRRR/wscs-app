@@ -1,10 +1,12 @@
 import { get, readable, writable, type Writable } from 'svelte/store';
 import { getContext, hasContext, setContext } from 'svelte';
 import type { PartialBy } from '../utilities/types';
-import type { User } from '../utilities/api/types';
+import type { Product, User } from '../utilities/api/types';
 import { createQuery, QueryClient } from '@tanstack/svelte-query';
 import { WSCS } from '../utilities/api';
 import type { Cart, CartItem } from './types';
+import { Client } from 'typesense';
+import type { TypesenseConfig } from '../utilities/typesense';
 
 const STORE_PREFIX = 'WSCS';
 const STORE_VERSION = 'v1.0.0';
@@ -86,5 +88,49 @@ export const useLocalCart = () => {
 		cart,
 		addToCart,
 		removeFromCart
+	};
+};
+
+type Hit<T> = {
+	document: T;
+};
+
+export const useSeachEngine = (
+	baseUrl: string,
+	collection: string,
+	typesenseConfig: TypesenseConfig
+) => {
+	const api = new WSCS(baseUrl);
+	const searchKey = useWritable<{ value?: string } | undefined>('searchKey', undefined);
+	const client = useWritable<Client | undefined>('searchClient', undefined);
+
+	const loadSearchKey = async () => {
+		const key = await api.getSearchKey();
+		searchKey.set(key);
+	};
+
+	const search = async (query: string, queryBy = 'title') => {
+		if (!get(searchKey)?.value) {
+			await loadSearchKey();
+		}
+
+		let localClient = get(client);
+
+		if (!localClient) {
+			localClient = new Client(typesenseConfig);
+			client.set(localClient);
+		}
+
+		return localClient.collections(collection).documents().search({
+			q: query,
+			limit: 60,
+			query_by: queryBy
+		}) as Promise<{ hits: Hit<Product>[] }>;
+	};
+
+	return {
+		searchKey,
+		loadSearchKey,
+		search
 	};
 };

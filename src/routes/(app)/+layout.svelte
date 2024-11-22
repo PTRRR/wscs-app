@@ -1,14 +1,24 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { useLocalCart, useUser } from '../../store';
+	import { type Snippet } from 'svelte';
+	import { useLocalCart, useSeachEngine, useUser } from '../../store';
 	import type { LayoutData } from './$types';
 	import { WSCS } from '../../utilities/api';
 	import type { User } from '../../utilities/api/types';
 	import type { Cart, CartItem } from '../../store/types';
 	import MainMenu from '../../components/MainMenu.svelte';
-	import EntitiesHeader from '../../components/EntitiesHeader.svelte';
 
-	export let data: LayoutData;
+	const props: {
+		children: Snippet;
+		data: LayoutData;
+	} = $props();
+
+	const { data, children } = props;
+
+	const { loadSearchKey } = useSeachEngine(
+		data.api.baseUrl,
+		data.typesense.productsCollection,
+		data.typesense.clientConfig
+	);
 
 	const api = new WSCS(data.api.baseUrl);
 
@@ -40,7 +50,7 @@
 		return { items: mergedItems };
 	};
 
-	onMount(() => {
+	$effect(() => {
 		let debounceCartUpdate: NodeJS.Timeout | undefined = undefined;
 
 		let lastCart: Cart | undefined = undefined;
@@ -75,8 +85,12 @@
 			}
 		});
 	});
+
+	$effect(() => {
+		loadSearchKey();
+	});
 </script>
 
 <MainMenu />
 
-<slot />
+{@render children()}
