@@ -23,11 +23,7 @@ export const css = (
 			if (value === undefined) return '';
 			const cssKey = kebabCase(key);
 			// Add px to number values except for specific properties
-			const cssValue =
-				typeof value === 'number' &&
-				!['opacity', 'zIndex', 'fontWeight', 'flexGrow', 'flexShrink'].includes(key)
-					? `${value}px`
-					: value;
+			const cssValue = value;
 			return `${cssKey}: ${cssValue};`;
 		})
 		.filter(Boolean)

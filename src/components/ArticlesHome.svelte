@@ -20,7 +20,7 @@
 			<a href={`/articles/${props.article.id}`}>{props.article.title}</a>
 		</div>
 		<div class="article-home__text">
-			<LexicalReader content={props.article.content} />
+			<LexicalReader content={props.article.content} maxLines={5} />
 		</div>
 	</article>
 </section>
