@@ -39,6 +39,6 @@ export const load: PageServerLoad = async ({ parent }) => {
 		article: (articlesResponse.docs || [])[0],
 		entities: entitiesResponse.docs || [],
 		brands: brandsResponse.docs || [],
-		filters: filtersResponse
+		filters: filtersResponse.filters || []
 	};
 };

@@ -44,6 +44,18 @@ export interface Config {
 		products: {
 			variations: 'variations';
 		};
+		categories: {
+			products: 'products';
+		};
+		'product-types': {
+			products: 'products';
+		};
+		tags: {
+			products: 'products';
+		};
+		brands: {
+			products: 'products';
+		};
 	};
 	collectionsSelect: {
 		users: UsersSelect<false> | UsersSelect<true>;
@@ -208,6 +220,10 @@ export interface Product {
 export interface Category {
 	id: number;
 	title?: string | null;
+	products?: {
+		docs?: (number | Product)[] | null;
+		hasNextPage?: boolean | null;
+	} | null;
 	updatedAt: string;
 	createdAt: string;
 }
@@ -218,6 +234,10 @@ export interface Category {
 export interface Tag {
 	id: number;
 	title?: string | null;
+	products?: {
+		docs?: (number | Product)[] | null;
+		hasNextPage?: boolean | null;
+	} | null;
 	updatedAt: string;
 	createdAt: string;
 }
@@ -228,6 +248,10 @@ export interface Tag {
 export interface ProductType {
 	id: number;
 	title?: string | null;
+	products?: {
+		docs?: (number | Product)[] | null;
+		hasNextPage?: boolean | null;
+	} | null;
 	updatedAt: string;
 	createdAt: string;
 }
@@ -253,6 +277,10 @@ export interface Brand {
 			version: number;
 		};
 		[k: string]: unknown;
+	} | null;
+	products?: {
+		docs?: (number | Product)[] | null;
+		hasNextPage?: boolean | null;
 	} | null;
 	updatedAt: string;
 	createdAt: string;
@@ -786,6 +814,7 @@ export interface VariationsSelect<T extends boolean = true> {
  */
 export interface CategoriesSelect<T extends boolean = true> {
 	title?: T;
+	products?: T;
 	updatedAt?: T;
 	createdAt?: T;
 }
@@ -795,6 +824,7 @@ export interface CategoriesSelect<T extends boolean = true> {
  */
 export interface ProductTypesSelect<T extends boolean = true> {
 	title?: T;
+	products?: T;
 	updatedAt?: T;
 	createdAt?: T;
 }
@@ -804,6 +834,7 @@ export interface ProductTypesSelect<T extends boolean = true> {
  */
 export interface TagsSelect<T extends boolean = true> {
 	title?: T;
+	products?: T;
 	updatedAt?: T;
 	createdAt?: T;
 }
@@ -835,6 +866,7 @@ export interface BrandsSelect<T extends boolean = true> {
 	title?: T;
 	logo?: T;
 	description?: T;
+	products?: T;
 	updatedAt?: T;
 	createdAt?: T;
 }
@@ -876,10 +908,14 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface Filter {
 	id: number;
-	menProductTypes?: (number | ProductType)[] | null;
-	womenProductTypes?: (number | ProductType)[] | null;
-	accessoriesProductTypes?: (number | ProductType)[] | null;
-	campingProductTypes?: (number | ProductType)[] | null;
+	filters?:
+		| {
+				label?: string | null;
+				tag?: (number | null) | Tag;
+				productTypes?: (number | ProductType)[] | null;
+				id?: string | null;
+		  }[]
+		| null;
 	updatedAt?: string | null;
 	createdAt?: string | null;
 }
@@ -888,10 +924,14 @@ export interface Filter {
  * via the `definition` "filters_select".
  */
 export interface FiltersSelect<T extends boolean = true> {
-	menProductTypes?: T;
-	womenProductTypes?: T;
-	accessoriesProductTypes?: T;
-	campingProductTypes?: T;
+	filters?:
+		| T
+		| {
+				label?: T;
+				tag?: T;
+				productTypes?: T;
+				id?: T;
+		  };
 	updatedAt?: T;
 	createdAt?: T;
 	globalType?: T;

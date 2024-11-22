@@ -1,41 +1,36 @@
 <script lang="ts">
-	import type { Brand, Entity, Filter } from '../utilities/api/types';
+	import type { Brand, Entity, ProductType, Tag } from '../utilities/api/types';
 	import { getApiObject } from '../utilities/api/utils';
 	import { filterNullish } from '../utilities/iterables';
 	import Filters, { type FilterElement } from './Filters.svelte';
 
+	const CUSTOM_UNDEFINED_TAG_ID = -1;
+	const CUSTOM_BRANDS_ID = -2;
+
+	type Filter = {
+		label?: string | null;
+		tag?: (number | null) | Tag;
+		productTypes?: (ProductType | number)[] | null;
+		id?: string | null;
+	};
+
 	const props: {
 		entities: Entity[];
 		brands: Brand[];
-		filters: Filter;
+		filters: Filter[];
 		onSelected?: (selection: {
 			entities: number[];
-			categories: string[];
+			tags: number[];
 			productTypes: number[];
 			brands: number[];
 		}) => void;
 	} = $props();
 
-	const menProductTypes = (props.filters.menProductTypes || [])
-		.map(getApiObject)
-		.filter(filterNullish);
-
-	const womenProductTypes = (props.filters.womenProductTypes || [])
-		.map(getApiObject)
-		.filter(filterNullish);
-
-	const accessoriesProductTypes = (props.filters.accessoriesProductTypes || [])
-		.map(getApiObject)
-		.filter(filterNullish);
-
-	const campingProductTypes = (props.filters.campingProductTypes || [])
-		.map(getApiObject)
-		.filter(filterNullish);
-
 	let selectedEntities = $state<number[]>([]);
-	let selectedCategories = $state<string[]>([]);
+	let selectedTags = $state<number[]>([]);
 	let selectedProductTypes = $state<number[]>([]);
 	let selectedBrands = $state<number[]>([]);
+	let showBrands = $state<boolean>(false);
 
 	type ValueTypeMap = {
 		number: number;
@@ -44,7 +39,7 @@
 
 	const getSelectedValues = <T extends keyof ValueTypeMap = 'number'>(
 		selectedItems: FilterElement[],
-		valueType: T
+		valueType: T = 'number' as T
 	): ValueTypeMap[T][] => {
 		const selectedValues: ValueTypeMap[T][] = [];
 
@@ -57,11 +52,39 @@
 		return selectedValues;
 	};
 
+	const getFilterTagId = (filter: Filter) => {
+		const tagId =
+			typeof filter.tag !== 'undefined'
+				? typeof filter.tag === 'number'
+					? filter.tag
+					: filter.tag?.id
+				: undefined;
+
+		return tagId;
+	};
+
+	const getFilterProductTypes = (filter?: Filter) => {
+		return (filter?.productTypes || []).map(getApiObject).filter(filterNullish);
+	};
+
+	const tagsFilterElements: FilterElement[] = $derived.by(() => {
+		return props.filters.map((it) => {
+			const tagId = getFilterTagId(it);
+			return { type: 'checkbox', value: tagId || -1, label: it.label };
+		});
+	});
+
+	const brandsFilterElements: FilterElement[] = $derived.by(() => {
+		return props.brands.map((it) => {
+			return { type: 'checkbox', value: it.id, label: it.title };
+		});
+	});
+
 	$effect(() => {
 		props.onSelected?.({
 			entities: selectedEntities,
 			brands: selectedBrands,
-			categories: selectedCategories,
+			tags: selectedTags,
 			productTypes: selectedProductTypes
 		});
 	});
@@ -71,7 +94,7 @@
 	<Filters
 		radio
 		items={props.entities.map((it) => ({ type: 'checkbox', label: it.title, value: it.id }))}
-		onSelected={(items) => (selectedEntities = getSelectedValues(items, 'number'))}
+		onSelected={(items) => (selectedEntities = getSelectedValues(items))}
 	/>
 
 	<Filters
@@ -79,106 +102,62 @@
 		items={[
 			{
 				type: 'checkbox',
-				value: 'all',
+				value: CUSTOM_UNDEFINED_TAG_ID,
 				label: 'All products',
 				default: true
 			},
+			...tagsFilterElements,
 			{
 				type: 'checkbox',
-				value: 'men',
-				label: 'Men'
-			},
-			{
-				type: 'checkbox',
-				value: 'women',
-				label: 'Women'
-			},
-			{
-				type: 'checkbox',
-				value: 'kids',
-				label: 'Kids'
-			},
-			{
-				type: 'checkbox',
-				value: 'accessories',
-				label: 'Accessories'
-			},
-			{
-				type: 'checkbox',
-				value: 'camping',
-				label: 'Camping'
-			},
-			{
-				type: 'checkbox',
-				value: 'shoes',
-				label: 'Shoes'
-			},
-			{
-				type: 'checkbox',
-				value: 'brands',
+				value: CUSTOM_BRANDS_ID,
 				label: 'Brands'
 			}
 		]}
 		onSelected={(items) => {
 			const firstItem = items[0];
+
+			// Reset the filters
+			showBrands = false;
 			selectedProductTypes = [];
+			selectedTags = [];
 
 			if (
 				typeof firstItem !== 'undefined' &&
 				firstItem.type === 'checkbox' &&
-				typeof firstItem.value === 'string'
+				typeof firstItem.value === 'number' &&
+				firstItem.value !== CUSTOM_UNDEFINED_TAG_ID &&
+				firstItem.value !== CUSTOM_BRANDS_ID
 			) {
-				selectedCategories = [firstItem.value];
-			} else {
-				selectedCategories = [];
+				selectedTags = [firstItem.value];
+			}
+
+			if (
+				typeof firstItem !== 'undefined' &&
+				firstItem.type === 'checkbox' &&
+				firstItem.value === CUSTOM_BRANDS_ID
+			) {
+				showBrands = true;
 			}
 		}}
 	/>
 
-	{#if selectedCategories.includes('men')}
+	{#each props.filters as filter}
+		{#if selectedTags.includes(getFilterTagId(filter) || CUSTOM_UNDEFINED_TAG_ID) && getFilterProductTypes(filter).length > 0}
+			<Filters
+				items={getFilterProductTypes(filter).map((it) => ({
+					type: 'checkbox',
+					value: it.id,
+					label: it.title
+				}))}
+				onSelected={(items) => (selectedProductTypes = getSelectedValues(items))}
+			/>
+		{/if}
+	{/each}
+
+	{#if showBrands}
 		<Filters
-			items={menProductTypes.map((it) => ({
-				type: 'checkbox',
-				value: it.id,
-				label: it.title
-			}))}
-			onSelected={(items) => (selectedProductTypes = getSelectedValues(items, 'number'))}
-		/>
-	{:else if selectedCategories.includes('women')}
-		<Filters
-			items={womenProductTypes.map((it) => ({
-				type: 'checkbox',
-				value: it.id,
-				label: it.title
-			}))}
-			onSelected={(items) => (selectedProductTypes = getSelectedValues(items, 'number'))}
-		/>
-	{:else if selectedCategories.includes('camping')}
-		<Filters
-			items={campingProductTypes.map((it) => ({
-				type: 'checkbox',
-				value: it.id,
-				label: it.title
-			}))}
-			onSelected={(items) => (selectedProductTypes = getSelectedValues(items, 'number'))}
-		/>
-	{:else if selectedCategories.includes('accessories')}
-		<Filters
-			items={accessoriesProductTypes.map((it) => ({
-				type: 'checkbox',
-				value: it.id,
-				label: it.title
-			}))}
-			onSelected={(items) => (selectedProductTypes = getSelectedValues(items, 'number'))}
-		/>
-	{:else if selectedCategories.includes('brands')}
-		<Filters
-			items={props.brands.map((it) => ({
-				type: 'checkbox',
-				value: it.id,
-				label: it.title
-			}))}
-			onSelected={(items) => (selectedBrands = getSelectedValues(items, 'number'))}
+			items={brandsFilterElements}
+			onSelected={(items) => (selectedBrands = getSelectedValues(items))}
 		/>
 	{/if}
 </div>
