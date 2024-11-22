@@ -22,6 +22,7 @@
 	.main-menu {
 		position: sticky;
 		top: 0;
+		z-index: 100;
 		display: flex;
 		border-bottom: solid black 1px;
 		background-color: white;
