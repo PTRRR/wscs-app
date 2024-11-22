@@ -4,8 +4,10 @@
 	import { filterNullish } from '../utilities/iterables';
 	import Filters, { type FilterElement } from './Filters.svelte';
 
+	// Used when tag ID is undefined but needs to be tracked in the UI
 	const CUSTOM_UNDEFINED_TAG_ID = -1;
 
+	// Describes a filter configuration with optional tag and product type constraints
 	type Filter = {
 		label?: string | null;
 		tag?: (number | null) | Tag;
@@ -13,6 +15,7 @@
 		id?: string | null;
 	};
 
+	// Component props defining available entities, brands, filters and selection callback
 	const props: {
 		entities: Entity[];
 		brands: Brand[];
@@ -25,32 +28,34 @@
 		}) => void;
 	} = $props();
 
+	// Track selected IDs for each filter category
 	let selectedEntities = $state<number[]>([]);
 	let selectedTags = $state<number[]>([]);
 	let selectedProductTypes = $state<number[]>([]);
 	let selectedBrands = $state<number[]>([]);
 	let showBrands = $state<boolean>(false);
 
+	// Type mapping for handling different value types in filters
 	type ValueTypeMap = {
 		number: number;
 		string: string;
 	};
 
+	// Extracts values of specified type from selected filter items
 	const getSelectedValues = <T extends keyof ValueTypeMap = 'number'>(
 		selectedItems: FilterElement[],
 		valueType: T = 'number' as T
 	): ValueTypeMap[T][] => {
 		const selectedValues: ValueTypeMap[T][] = [];
-
 		for (const item of selectedItems) {
 			if (item.type === 'checkbox' && typeof item.value === valueType) {
 				selectedValues.push(item.value as ValueTypeMap[T]);
 			}
 		}
-
 		return selectedValues;
 	};
 
+	// Extracts tag ID from a filter, handling both number and Tag object cases
 	const getFilterTagId = (filter: Filter) => {
 		const tagId =
 			typeof filter.tag !== 'undefined'
@@ -58,14 +63,15 @@
 					? filter.tag
 					: filter.tag?.id
 				: undefined;
-
 		return tagId;
 	};
 
+	// Converts filter's product types to consistent format, removing nullish values
 	const getFilterProductTypes = (filter?: Filter) => {
 		return (filter?.productTypes || []).map(getApiObject).filter(filterNullish);
 	};
 
+	// Converts filters to checkbox elements for tags filtering
 	const tagsFilterElements: FilterElement[] = $derived.by(() => {
 		return props.filters.map((it) => {
 			const tagId = getFilterTagId(it);
@@ -73,13 +79,14 @@
 		});
 	});
 
-	// TODO: Integrate brands
+	// Converts brands to checkbox elements
 	const brandsFilterElements: FilterElement[] = $derived.by(() => {
 		return props.brands.map((it) => {
 			return { type: 'checkbox', value: it.id, label: it.title };
 		});
 	});
 
+	// Triggers callback whenever any selection changes
 	$effect(() => {
 		props.onSelected?.({
 			entities: selectedEntities,
@@ -91,22 +98,21 @@
 </script>
 
 <div class="home-filters">
+	<!-- Entity selection filter -->
 	<Filters
 		radio
 		items={props.entities.map((it) => ({ type: 'checkbox', label: it.title, value: it.id }))}
 		onSelected={(items) => (selectedEntities = getSelectedValues(items))}
 	/>
 
+	<!-- Tag selection filter - resets product types when changed -->
 	<Filters
 		radio
 		items={tagsFilterElements}
 		onSelected={(items) => {
 			const firstItem = items[0];
-
-			// Reset the filters
 			selectedProductTypes = [];
 			selectedTags = [];
-
 			if (
 				typeof firstItem !== 'undefined' &&
 				firstItem.type === 'checkbox' &&
@@ -117,6 +123,7 @@
 		}}
 	/>
 
+	<!-- Product type filters - only shown for selected tag -->
 	{#each props.filters as filter}
 		{#if selectedTags.includes(getFilterTagId(filter) || CUSTOM_UNDEFINED_TAG_ID) && getFilterProductTypes(filter).length > 0}
 			<Filters
