@@ -3,18 +3,19 @@
 	import AddToCartButton from '../../components/AddToCartButton.svelte';
 	import type { Product, Variation } from '../../utilities/api/types';
 	import type { PageData } from './$types';
-	import ArticlesHome from '../../components/ArticlesHome.svelte';
+	import HomeArticles from '../../components/HomeArticles.svelte';
 	import EntitiesHeader from '../../components/EntitiesHeader.svelte';
-	import Filters from '../../components/Filters.svelte';
+	import HomeFilters from '../../components/HomeFilters.svelte';
 
 	type Hit<T> = {
 		document: T;
 	};
 
-	export let data: PageData;
+	const props: { data: PageData } = $props();
+	const { data } = props;
 
 	let searchSesult: Product[] = [];
-	$: products = searchSesult.length > 0 ? searchSesult : data.products;
+	const products = $derived(searchSesult.length > 0 ? searchSesult : data.products);
 
 	const client = new Client({
 		apiKey: data.typesense.key.value as string,
@@ -53,7 +54,7 @@
 <EntitiesHeader entities={data.entities} />
 
 {#if data.article}
-	<ArticlesHome article={data.article} />
+	<HomeArticles article={data.article} />
 {/if}
 
 <!-- <input
@@ -71,10 +72,7 @@
 	}}
 /> -->
 
-<Filters
-	filters={data.entities.map((it) => ({ type: 'checkbox', label: it.title, value: it.id }))}
-/>
-<Filters filters={data.brands.map((it) => ({ type: 'checkbox', label: it.title, value: it.id }))} />
+<HomeFilters filters={data.filters} entities={data.entities} brands={data.brands} />
 
 <div class="products">
 	{#each products as product}

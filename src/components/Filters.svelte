@@ -1,28 +1,86 @@
 <script lang="ts">
 	type CheckboxElement = {
 		type: 'checkbox';
-		label?: string;
+		label?: string | null;
 		value: string | number;
+		default?: boolean;
 	};
 
 	type LinkElement = {
 		type: 'link';
-		label?: string;
+		label?: string | null;
 		url: string;
 	};
 
+	type T = CheckboxElement | LinkElement;
+
 	const props: {
+		radio?: boolean;
 		title?: string;
-		filters: (CheckboxElement | LinkElement)[];
+		items: T[];
+		onSelected?: (items: T[]) => void;
 	} = $props();
 
-	const { filters } = props;
+	const { items, radio, onSelected } = props;
+
+	const inputElements: HTMLInputElement[] = $state([]);
+
+	const deselectAll = () => {
+		inputElements.forEach((input) => {
+			input.checked = false;
+		});
+	};
+
+	const listSelectedItems = () => {
+		const selectedInputElements = inputElements.filter((input) => input.checked);
+		const elIndexes = selectedInputElements.map((input) => parseInt(input.dataset.elIndex || ''));
+		const selectedItems = items.filter((item, index) => elIndexes.includes(index));
+		return selectedItems;
+	};
+
+	const listSelectedItemsWithDefaults = () => {
+		let selectedItems = listSelectedItems();
+		const defaultItemIndexes = items.reduce<number[]>((acc, it, index) => {
+			if (it.type === 'checkbox' && it.default) {
+				acc.push(index);
+			}
+			return acc;
+		}, []);
+
+		if (defaultItemIndexes.length > 0 && selectedItems.length === 0) {
+			defaultItemIndexes.forEach((index) => {
+				inputElements[index].checked = true;
+			});
+
+			selectedItems = listSelectedItems();
+		}
+
+		return selectedItems;
+	};
+
+	$effect(() => {
+		const selectedItems = listSelectedItemsWithDefaults();
+		onSelected?.(selectedItems);
+	});
 </script>
 
 <div class="filters">
-	{#each filters as filter}
+	{#each items as filter, index}
 		{#if filter.type === 'checkbox'}
-			<input type="checkbox" />
+			<input
+				type="checkbox"
+				bind:this={inputElements[index]}
+				data-el-index={index}
+				onclick={() => {
+					if (radio && inputElements[index].checked) {
+						deselectAll();
+						inputElements[index].checked = !inputElements[index].checked;
+					}
+
+					let selectedItems = listSelectedItemsWithDefaults();
+					onSelected?.(selectedItems);
+				}}
+			/>
 			<span>{filter.label || filter.value}</span>
 		{/if}
 	{/each}
