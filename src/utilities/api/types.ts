@@ -67,8 +67,12 @@ export interface Config {
 	db: {
 		defaultIDType: number;
 	};
-	globals: {};
-	globalsSelect: {};
+	globals: {
+		filters: Filter;
+	};
+	globalsSelect: {
+		filters: FiltersSelect<false> | FiltersSelect<true>;
+	};
 	locale: null;
 	user: User & {
 		collection: 'users';
@@ -865,6 +869,32 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 	batch?: T;
 	updatedAt?: T;
 	createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "filters".
+ */
+export interface Filter {
+	id: number;
+	menProductTypes?: (number | ProductType)[] | null;
+	womenProductTypes?: (number | ProductType)[] | null;
+	accessoriesProductTypes?: (number | ProductType)[] | null;
+	campingProductTypes?: (number | ProductType)[] | null;
+	updatedAt?: string | null;
+	createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "filters_select".
+ */
+export interface FiltersSelect<T extends boolean = true> {
+	menProductTypes?: T;
+	womenProductTypes?: T;
+	accessoriesProductTypes?: T;
+	campingProductTypes?: T;
+	updatedAt?: T;
+	createdAt?: T;
+	globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

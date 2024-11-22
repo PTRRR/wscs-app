@@ -6,6 +6,7 @@ import type {
 	Brand,
 	Category,
 	Entity,
+	Filter,
 	Media,
 	Order,
 	Product,
@@ -309,5 +310,9 @@ export class WSCS {
 
 	findArticleById(id: string | number): Promise<Article> {
 		return this.fetchPayload<Article>(`/api/articles/${id}`);
+	}
+
+	getGlobalFilters(): Promise<Filter> {
+		return this.fetchPayload<Filter>(`/api/globals/filters`);
 	}
 }

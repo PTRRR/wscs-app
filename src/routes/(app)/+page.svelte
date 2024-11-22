@@ -71,8 +71,10 @@
 	}}
 /> -->
 
-<Filters filters={data.entities.map((it) => ({ label: it.title, value: it.id }))} />
-<Filters filters={data.brands.map((it) => ({ label: it.title, value: it.id }))} />
+<Filters
+	filters={data.entities.map((it) => ({ type: 'checkbox', label: it.title, value: it.id }))}
+/>
+<Filters filters={data.brands.map((it) => ({ type: 'checkbox', label: it.title, value: it.id }))} />
 
 <div class="products">
 	{#each products as product}
