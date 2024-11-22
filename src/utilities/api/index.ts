@@ -300,6 +300,10 @@ export class WSCS {
 		return this.fetchPayload<PayloadListResponse<Entity>>(`/api/entities${getFindQuery(params)}`);
 	}
 
+	findEntityById(id: string | number): Promise<Entity> {
+		return this.fetchPayload<Entity>(`/api/entities/${id}`);
+	}
+
 	findBrands(params?: PayloadFindParams): Promise<PayloadListResponse<Brand>> {
 		return this.fetchPayload<PayloadListResponse<Brand>>(`/api/brands${getFindQuery(params)}`);
 	}

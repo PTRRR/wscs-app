@@ -8,7 +8,7 @@
 
 <section class="entities-header">
 	{#each props.entities as entity}
-		<span>{entity.title}</span>
+		<a href={`/entities/${entity.id}`}>{entity.title}</a>
 	{/each}
 </section>
 
