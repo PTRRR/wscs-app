@@ -3,8 +3,10 @@
 	import type { PageData } from './$types';
 	import { WSCS } from '../../../../utilities/api';
 	import AddToCartButton from '../../../../components/AddToCartButton.svelte';
+	import LexicalReader from '../../../../components/LexicalReader.svelte';
 
-	export let data: PageData;
+	const props: { data: PageData } = $props();
+	const { data } = props;
 
 	const api = new WSCS();
 
@@ -19,7 +21,7 @@
 
 <h1>{data.product.title}</h1>
 
-{#each data.product.variations || [] as variation}
+{#each data.product.variations?.docs || [] as variation}
 	{#if typeof variation !== 'number'}
 		<p>{variation.name}</p>
 		<p>{variation.price}</p>
@@ -30,6 +32,6 @@
 	{/if}
 {/each}
 
-<p>{data.product.description}</p>
+<LexicalReader content={data.product.description} />
 
 <a href="/checkout">Checkout</a>

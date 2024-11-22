@@ -53,3 +53,9 @@
 {#if props.node}
 	{@render type(props.node)}
 {/if}
+
+<style lang="scss">
+	p {
+		margin: 0;
+	}
+</style>
