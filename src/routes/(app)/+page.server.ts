@@ -11,7 +11,7 @@ export const load: PageServerLoad = async ({ parent }) => {
 	const [productsResponse, articlesResponse, entitiesResponse, brandsResponse, filtersResponse] =
 		await Promise.all([
 			api.findProducts({
-				limit: 60,
+				limit: 10,
 				query: {
 					_status: { equals: 'published' }
 				}
