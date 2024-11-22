@@ -35,6 +35,7 @@ export interface Config {
 		'product-types': ProductType;
 		tags: Tag;
 		orders: Order;
+		brands: Brand;
 		'payload-locked-documents': PayloadLockedDocument;
 		'payload-preferences': PayloadPreference;
 		'payload-migrations': PayloadMigration;
@@ -56,6 +57,7 @@ export interface Config {
 		'product-types': ProductTypesSelect<false> | ProductTypesSelect<true>;
 		tags: TagsSelect<false> | TagsSelect<true>;
 		orders: OrdersSelect<false> | OrdersSelect<true>;
+		brands: BrandsSelect<false> | BrandsSelect<true>;
 		'payload-locked-documents':
 			| PayloadLockedDocumentsSelect<false>
 			| PayloadLockedDocumentsSelect<true>;
@@ -188,6 +190,7 @@ export interface Product {
 	categories?: (number | Category)[] | null;
 	tags?: (number | Tag)[] | null;
 	type?: (number | null) | ProductType;
+	brand?: (number | null) | Brand;
 	entities?: (number | Entity)[] | null;
 	relatedProducts?: (number | Product)[] | null;
 	updatedAt: string;
@@ -226,6 +229,117 @@ export interface ProductType {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "brands".
+ */
+export interface Brand {
+	id: number;
+	title: string;
+	logo?: (number | null) | Media;
+	description?: {
+		root: {
+			type: string;
+			children: {
+				type: string;
+				version: number;
+				[k: string]: unknown;
+			}[];
+			direction: ('ltr' | 'rtl') | null;
+			format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+			indent: number;
+			version: number;
+		};
+		[k: string]: unknown;
+	} | null;
+	updatedAt: string;
+	createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+	id: number;
+	alt?: string | null;
+	updatedAt: string;
+	createdAt: string;
+	url?: string | null;
+	thumbnailURL?: string | null;
+	filename?: string | null;
+	mimeType?: string | null;
+	filesize?: number | null;
+	width?: number | null;
+	height?: number | null;
+	focalX?: number | null;
+	focalY?: number | null;
+	sizes?: {
+		thumbnail?: {
+			url?: string | null;
+			width?: number | null;
+			height?: number | null;
+			mimeType?: string | null;
+			filesize?: number | null;
+			filename?: string | null;
+		};
+		thumbnailWebp?: {
+			url?: string | null;
+			width?: number | null;
+			height?: number | null;
+			mimeType?: string | null;
+			filesize?: number | null;
+			filename?: string | null;
+		};
+		small?: {
+			url?: string | null;
+			width?: number | null;
+			height?: number | null;
+			mimeType?: string | null;
+			filesize?: number | null;
+			filename?: string | null;
+		};
+		smallWebp?: {
+			url?: string | null;
+			width?: number | null;
+			height?: number | null;
+			mimeType?: string | null;
+			filesize?: number | null;
+			filename?: string | null;
+		};
+		medium?: {
+			url?: string | null;
+			width?: number | null;
+			height?: number | null;
+			mimeType?: string | null;
+			filesize?: number | null;
+			filename?: string | null;
+		};
+		mediumWebp?: {
+			url?: string | null;
+			width?: number | null;
+			height?: number | null;
+			mimeType?: string | null;
+			filesize?: number | null;
+			filename?: string | null;
+		};
+		large?: {
+			url?: string | null;
+			width?: number | null;
+			height?: number | null;
+			mimeType?: string | null;
+			filesize?: number | null;
+			filename?: string | null;
+		};
+		largeWebp?: {
+			url?: string | null;
+			width?: number | null;
+			height?: number | null;
+			mimeType?: string | null;
+			filesize?: number | null;
+			filename?: string | null;
+		};
+	};
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "entities".
  */
 export interface Entity {
@@ -250,25 +364,6 @@ export interface Entity {
 	updatedAt: string;
 	createdAt: string;
 	_status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-	id: number;
-	alt?: string | null;
-	updatedAt: string;
-	createdAt: string;
-	url?: string | null;
-	thumbnailURL?: string | null;
-	filename?: string | null;
-	mimeType?: string | null;
-	filesize?: number | null;
-	width?: number | null;
-	height?: number | null;
-	focalX?: number | null;
-	focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -397,6 +492,10 @@ export interface PayloadLockedDocument {
 		| ({
 				relationTo: 'orders';
 				value: number | Order;
+		  } | null)
+		| ({
+				relationTo: 'brands';
+				value: number | Brand;
 		  } | null);
 	globalSlug?: string | null;
 	user: {
@@ -493,6 +592,90 @@ export interface MediaSelect<T extends boolean = true> {
 	height?: T;
 	focalX?: T;
 	focalY?: T;
+	sizes?:
+		| T
+		| {
+				thumbnail?:
+					| T
+					| {
+							url?: T;
+							width?: T;
+							height?: T;
+							mimeType?: T;
+							filesize?: T;
+							filename?: T;
+					  };
+				thumbnailWebp?:
+					| T
+					| {
+							url?: T;
+							width?: T;
+							height?: T;
+							mimeType?: T;
+							filesize?: T;
+							filename?: T;
+					  };
+				small?:
+					| T
+					| {
+							url?: T;
+							width?: T;
+							height?: T;
+							mimeType?: T;
+							filesize?: T;
+							filename?: T;
+					  };
+				smallWebp?:
+					| T
+					| {
+							url?: T;
+							width?: T;
+							height?: T;
+							mimeType?: T;
+							filesize?: T;
+							filename?: T;
+					  };
+				medium?:
+					| T
+					| {
+							url?: T;
+							width?: T;
+							height?: T;
+							mimeType?: T;
+							filesize?: T;
+							filename?: T;
+					  };
+				mediumWebp?:
+					| T
+					| {
+							url?: T;
+							width?: T;
+							height?: T;
+							mimeType?: T;
+							filesize?: T;
+							filename?: T;
+					  };
+				large?:
+					| T
+					| {
+							url?: T;
+							width?: T;
+							height?: T;
+							mimeType?: T;
+							filesize?: T;
+							filename?: T;
+					  };
+				largeWebp?:
+					| T
+					| {
+							url?: T;
+							width?: T;
+							height?: T;
+							mimeType?: T;
+							filesize?: T;
+							filename?: T;
+					  };
+		  };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -560,6 +743,7 @@ export interface ProductsSelect<T extends boolean = true> {
 	categories?: T;
 	tags?: T;
 	type?: T;
+	brand?: T;
 	entities?: T;
 	relatedProducts?: T;
 	updatedAt?: T;
@@ -636,6 +820,17 @@ export interface OrdersSelect<T extends boolean = true> {
 				quantity?: T;
 				id?: T;
 		  };
+	updatedAt?: T;
+	createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "brands_select".
+ */
+export interface BrandsSelect<T extends boolean = true> {
+	title?: T;
+	logo?: T;
+	description?: T;
 	updatedAt?: T;
 	createdAt?: T;
 }

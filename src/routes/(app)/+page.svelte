@@ -5,6 +5,7 @@
 	import type { PageData } from './$types';
 	import ArticlesHome from '../../components/ArticlesHome.svelte';
 	import EntitiesHeader from '../../components/EntitiesHeader.svelte';
+	import Filters from '../../components/Filters.svelte';
 
 	type Hit<T> = {
 		document: T;
@@ -55,7 +56,7 @@
 	<ArticlesHome article={data.article} />
 {/if}
 
-<input
+<!-- <input
 	type="text"
 	placeholder="Search"
 	on:input={async (event) => {
@@ -68,7 +69,10 @@
 			searchSesult = [];
 		}
 	}}
-/>
+/> -->
+
+<Filters filters={data.entities.map((it) => ({ label: it.title, value: it.id }))} />
+<Filters filters={data.brands.map((it) => ({ label: it.title, value: it.id }))} />
 
 <div class="products">
 	{#each products as product}

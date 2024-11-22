@@ -16,11 +16,12 @@
 		<Slideshow slides={[firstImage]} width="100%" height="70vh" />
 	{/if}
 	<article class="article-home__content">
-		<div class="article-home__title">
-			<a href={`/articles/${props.article.id}`}>{props.article.title}</a>
-		</div>
+		<h2 class="article-home__title">
+			{props.article.title}
+		</h2>
 		<div class="article-home__text">
 			<LexicalReader content={props.article.content} maxLines={5} />
+			<a href={`/articles/${props.article.id}`}>Read more...</a>
 		</div>
 	</article>
 </section>
@@ -44,6 +45,9 @@
 
 		&__text {
 			max-width: 40rem;
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
 		}
 	}
 </style>

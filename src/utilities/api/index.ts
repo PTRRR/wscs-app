@@ -3,6 +3,7 @@ import qs from 'qs';
 import type {
 	Article,
 	Attribute,
+	Brand,
 	Category,
 	Entity,
 	Media,
@@ -296,6 +297,10 @@ export class WSCS {
 
 	findEntities(params?: PayloadFindParams): Promise<PayloadListResponse<Entity>> {
 		return this.fetchPayload<PayloadListResponse<Entity>>(`/api/entities${getFindQuery(params)}`);
+	}
+
+	findBrands(params?: PayloadFindParams): Promise<PayloadListResponse<Brand>> {
+		return this.fetchPayload<PayloadListResponse<Brand>>(`/api/brands${getFindQuery(params)}`);
 	}
 
 	findArticles(params?: PayloadFindParams): Promise<PayloadListResponse<Article>> {
