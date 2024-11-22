@@ -15,12 +15,12 @@
 					clearTimeout(searchDebounceTimeout);
 				}
 				searchDebounceTimeout = setTimeout(() => {
-					goto(`/search?q=${searchValue}`, { keepFocus: true });
+					goto(`/search?q=${searchValue}`, { keepFocus: true, replaceState: true });
 				}, 200);
 			}}
 			onkeydown={(event) => {
 				if (event.key === 'Enter') {
-					goto(`/search?q=${searchValue}`, { keepFocus: true });
+					goto(`/search?q=${searchValue}`, { keepFocus: true, replaceState: true });
 				}
 			}}
 		/>
