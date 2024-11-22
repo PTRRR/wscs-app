@@ -5,7 +5,6 @@
 	import Filters, { type FilterElement } from './Filters.svelte';
 
 	const CUSTOM_UNDEFINED_TAG_ID = -1;
-	const CUSTOM_BRANDS_ID = -2;
 
 	type Filter = {
 		label?: string | null;
@@ -74,6 +73,7 @@
 		});
 	});
 
+	// TODO: Integrate brands
 	const brandsFilterElements: FilterElement[] = $derived.by(() => {
 		return props.brands.map((it) => {
 			return { type: 'checkbox', value: it.id, label: it.title };
@@ -99,44 +99,20 @@
 
 	<Filters
 		radio
-		items={[
-			{
-				type: 'checkbox',
-				value: CUSTOM_UNDEFINED_TAG_ID,
-				label: 'All products',
-				default: true
-			},
-			...tagsFilterElements,
-			{
-				type: 'checkbox',
-				value: CUSTOM_BRANDS_ID,
-				label: 'Brands'
-			}
-		]}
+		items={tagsFilterElements}
 		onSelected={(items) => {
 			const firstItem = items[0];
 
 			// Reset the filters
-			showBrands = false;
 			selectedProductTypes = [];
 			selectedTags = [];
 
 			if (
 				typeof firstItem !== 'undefined' &&
 				firstItem.type === 'checkbox' &&
-				typeof firstItem.value === 'number' &&
-				firstItem.value !== CUSTOM_UNDEFINED_TAG_ID &&
-				firstItem.value !== CUSTOM_BRANDS_ID
+				typeof firstItem.value === 'number'
 			) {
 				selectedTags = [firstItem.value];
-			}
-
-			if (
-				typeof firstItem !== 'undefined' &&
-				firstItem.type === 'checkbox' &&
-				firstItem.value === CUSTOM_BRANDS_ID
-			) {
-				showBrands = true;
 			}
 		}}
 	/>
@@ -153,13 +129,6 @@
 			/>
 		{/if}
 	{/each}
-
-	{#if showBrands}
-		<Filters
-			items={brandsFilterElements}
-			onSelected={(items) => (selectedBrands = getSelectedValues(items))}
-		/>
-	{/if}
 </div>
 
 <style lang="scss">
