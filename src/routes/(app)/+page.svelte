@@ -57,7 +57,7 @@
 			searchSesult = [];
 		}
 
-		$inspect(searchSesult);
+		// $inspect(searchSesult);
 	}}
 />
 

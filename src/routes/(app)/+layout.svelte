@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { type Snippet } from 'svelte';
+	import { onMount, type Snippet } from 'svelte';
 	import { useLocalCart, useSearchEngine, useUser } from '../../store';
 	import type { LayoutData } from './$types';
 	import { WSCS } from '../../utilities/api';
@@ -50,7 +50,7 @@
 		return { items: mergedItems };
 	};
 
-	$effect(() => {
+	onMount(() => {
 		let debounceCartUpdate: NodeJS.Timeout | undefined = undefined;
 
 		let lastCart: Cart | undefined = undefined;
@@ -84,9 +84,7 @@
 				isCartInitialized = false;
 			}
 		});
-	});
 
-	$effect(() => {
 		loadSearchKey();
 	});
 </script>
