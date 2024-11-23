@@ -109,7 +109,14 @@ export const useSearchEngine = (
 		searchKey.set(key);
 	};
 
-	const search = async (query: string, queryBy = 'title') => {
+	const search = async (
+		params: { query: string; queryBy?: string; filterBy?: string; limit?: number } = {
+			query: '',
+			queryBy: 'title',
+			filterBy: undefined,
+			limit: 60
+		}
+	) => {
 		if (!get(searchKey)?.value) {
 			await loadSearchKey();
 		}
@@ -121,11 +128,15 @@ export const useSearchEngine = (
 			client.set(localClient);
 		}
 
-		return localClient.collections(collection).documents().search({
-			q: query,
-			limit: 60,
-			query_by: queryBy
-		}) as Promise<{ hits: Hit<Product>[] }>;
+		return localClient
+			.collections(collection)
+			.documents()
+			.search({
+				q: params.query,
+				limit: params.limit || 60,
+				query_by: params.queryBy,
+				filter_by: params.filterBy
+			}) as Promise<{ hits: Hit<Product>[] }>;
 	};
 
 	return {
