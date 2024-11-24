@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { useLocalCart } from '../store';
 	import type { Product } from '../utilities/api/types';
 	import { getApiObject } from '../utilities/api/utils';
 	import { filterNullish } from '../utilities/iterables';
@@ -7,6 +8,10 @@
 	const props: {
 		products: Product[];
 	} = $props();
+
+	const { cart, addToCart, removeFromCart } = useLocalCart();
+
+	const isInCart = (productId: number) => $cart.items.some((it) => it.product === productId);
 
 	const products = $derived.by(() => {
 		return props.products.map((product) => {
@@ -18,7 +23,7 @@
 					.find((it) => it.isDefault) || getApiObject(productVariations[0]);
 
 			const image = getApiObject(defaultVariation?.image);
-			const src = image?.url;
+			const src = image?.sizes?.smallWebp?.url || image?.url;
 			const alt = image?.alt;
 			const srcsets = [
 				{ src: image?.sizes?.smallWebp?.url || '' },
@@ -27,7 +32,12 @@
 				{ src: image?.sizes?.medium?.url || '' }
 			];
 
-			return { id: product.id, title: product.title, image: { src, srcsets, alt } };
+			return {
+				id: product.id,
+				title: product.title,
+				image: { src, srcsets, alt },
+				variationId: defaultVariation?.id
+			};
 		});
 	});
 </script>
@@ -52,7 +62,29 @@
 			</a>
 			<div class="products-grid__footer">
 				<span>{product.title}</span>
-				<button aria-label="Add to cart">Add to cart</button>
+
+				{#if typeof product.variationId === 'number'}
+					<button
+						aria-label="Add to cart"
+						onclick={() => {
+							if (typeof product.variationId !== 'number') return;
+							if (!isInCart(product.id)) {
+								addToCart({
+									product: product.id,
+									variation: product.variationId,
+									quantity: 1
+								});
+							} else {
+								removeFromCart({
+									product: product.id,
+									variation: product.variationId
+								});
+							}
+						}}
+					>
+						{isInCart(product.id) ? 'Remove from cart' : 'Add to cart'}
+					</button>
+				{/if}
 			</div>
 		</div>
 	{/each}
@@ -67,6 +99,8 @@
 
 		&__item {
 			padding: 1rem;
+			display: flex;
+			flex-direction: column;
 		}
 
 		&__image {
@@ -100,6 +134,9 @@
 			flex-direction: column;
 			gap: 0.5rem;
 			align-items: flex-start;
+			height: 100%;
+			flex: 1 1 auto;
+			justify-content: space-between;
 
 			button {
 				cursor: pointer;
