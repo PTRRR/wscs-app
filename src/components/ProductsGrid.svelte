@@ -18,12 +18,13 @@
 					.find((it) => it.isDefault) || getApiObject(productVariations[0]);
 
 			const image = getApiObject(defaultVariation?.image);
-			const src = image?.sizes?.smallWebp?.url || image?.url;
+			const src = image?.url;
 			const alt = image?.alt;
 			const srcsets = [
 				{ src: image?.sizes?.smallWebp?.url || '' },
 				{ src: image?.sizes?.small?.url || '' },
-				{ src: image?.url || '' }
+				{ src: image?.sizes?.mediumWebp?.url || '' },
+				{ src: image?.sizes?.medium?.url || '' }
 			];
 
 			return { id: product.id, title: product.title, image: { src, srcsets, alt } };
