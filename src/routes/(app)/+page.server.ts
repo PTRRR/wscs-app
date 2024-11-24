@@ -16,7 +16,7 @@ export const load: PageServerLoad = async ({ parent }) => {
 		await Promise.all([
 			client.collections(typesense.productsCollection).documents().search({
 				q: '*',
-				limit: 60
+				limit: 30
 			}) as Promise<{ hits: Hit<SearchProduct>[] }>,
 			api.findArticles({
 				sort: '-createdAt',

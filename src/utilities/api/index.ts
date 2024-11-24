@@ -114,7 +114,7 @@ export class WSCS {
 		clearTimeout(abortTimeout);
 
 		if (res.status > 399 || json.error) {
-			throw new Error(`${res.status}: ${json.error || res.statusText}`);
+			throw new Error(`${json.error || json.message || res.statusText}`);
 		}
 
 		return json as T;
@@ -273,7 +273,7 @@ export class WSCS {
 	}
 
 	createPayementIntent() {
-		return this.fetchPayload<{ client_secret: string }>('/api/create-payment-intent', {
+		return this.fetchPayload<{ client_secret: string }>('/api/payment-intent', {
 			method: 'POST'
 		});
 	}
