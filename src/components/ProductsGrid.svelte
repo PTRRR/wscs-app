@@ -56,9 +56,13 @@
 		<div class="products-grid__item">
 			<a class="products-grid__image" href={`/products/${product.id}`} aria-label="Product image">
 				<div class="products-grid__image-content">
-					{#key product.imageUrl}
-						<img src={product.imageUrl} alt="" />
-					{/key}
+					{#if product.imageUrl}
+						{#key product.imageUrl}
+							<img src={product.imageUrl} alt="" />
+						{/key}
+					{:else}
+						<span>No image</span>
+					{/if}
 				</div>
 			</a>
 			<div class="products-grid__footer">
@@ -94,6 +98,9 @@
 			width: 100%;
 			height: 100%;
 			background-color: lightgray;
+			display: flex;
+			align-items: center;
+			justify-content: center;
 
 			img {
 				width: 100%;
