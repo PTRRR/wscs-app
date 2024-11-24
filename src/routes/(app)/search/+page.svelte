@@ -17,9 +17,7 @@
 
 	$effect(() => {
 		if (typeof props.data.q !== 'string' || props.data.q.length === 0) return;
-		search({ query: props.data.q, queryBy: 'title' }).then((res) => {
-			hits = res.hits.map(({ document }) => document);
-		});
+		search({ query: props.data.q, queryBy: 'title' }).then((res) => (hits = res));
 	});
 </script>
 
