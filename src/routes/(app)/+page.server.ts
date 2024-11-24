@@ -1,21 +1,23 @@
+import { Client } from 'typesense';
 import { WSCS } from '../../utilities/api';
 import type { PageServerLoad } from './$types';
+import { searchProductToProduct, type Hit, type SearchProduct } from '../../utilities/typesense';
 
 export const load: PageServerLoad = async ({ parent }) => {
 	const {
-		api: { baseUrl }
+		api: { baseUrl },
+		typesense
 	} = await parent();
 
 	const api = new WSCS(baseUrl);
+	const client = new Client(typesense.clientConfig);
 
 	const [productsResponse, articlesResponse, entitiesResponse, brandsResponse, filtersResponse] =
 		await Promise.all([
-			api.findProducts({
-				limit: 10,
-				query: {
-					_status: { equals: 'published' }
-				}
-			}),
+			client.collections(typesense.productsCollection).documents().search({
+				q: '*',
+				limit: 60
+			}) as Promise<{ hits: Hit<SearchProduct>[] }>,
 			api.findArticles({
 				sort: '-createdAt',
 				limit: 1,
@@ -35,7 +37,7 @@ export const load: PageServerLoad = async ({ parent }) => {
 		]);
 
 	return {
-		products: productsResponse.docs || [],
+		products: productsResponse.hits.map((it) => searchProductToProduct(it.document)),
 		article: (articlesResponse.docs || [])[0],
 		entities: entitiesResponse.docs || [],
 		brands: brandsResponse.docs || [],

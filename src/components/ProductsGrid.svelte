@@ -1,16 +1,65 @@
 <script lang="ts">
-	import type { Product } from '../utilities/api/types';
+	import type { Product, Variation } from '../utilities/api/types';
+	import { getApiObject, getApiObjectId } from '../utilities/api/utils';
+	import { filterNullish } from '../utilities/iterables';
 
 	const props: {
 		products: Product[];
 	} = $props();
+
+	let products = $state<{ id: number; imageUrl?: string; title: string }[]>(
+		props.products.map((it) => ({
+			id: it.id,
+			title: it.title
+		}))
+	);
+
+	$effect(() => {
+		const defaultVariations: Variation[] = [];
+
+		for (const product of props.products) {
+			const productVariations = product.variations?.docs || [];
+			const defaultVariation =
+				productVariations
+					.map(getApiObject)
+					.filter(filterNullish)
+					.find((it) => it.isDefault) || getApiObject(productVariations[0]);
+
+			if (defaultVariation) {
+				defaultVariations.push(defaultVariation);
+			}
+		}
+
+		products = props.products.map((product) => {
+			const variation = defaultVariations.find(
+				(variation) => getApiObjectId(variation.product) === product.id
+			);
+			return { id: product.id, title: product.title, imageUrl: getVariationImageUrl(variation) };
+		});
+	});
+
+	const getVariationImageUrl = (variation?: Variation) => {
+		const image = getApiObject(variation?.image);
+		const smallImage = image?.sizes?.smallWebp || image?.sizes?.small;
+		return smallImage
+			? smallImage?.url
+				? `http://localhost:3000${smallImage.url}`
+				: undefined
+			: image?.url
+				? `http://localhost:3000${image.url}`
+				: undefined;
+	};
 </script>
 
 <div class="products-grid">
-	{#each props.products as product}
+	{#each products as product}
 		<div class="products-grid__item">
 			<a class="products-grid__image" href={`/products/${product.id}`} aria-label="Product image">
-				<div class="products-grid__image-content"></div>
+				<div class="products-grid__image-content">
+					{#key product.imageUrl}
+						<img src={product.imageUrl} alt="" />
+					{/key}
+				</div>
 			</a>
 			<div class="products-grid__footer">
 				<span>{product.title}</span>
@@ -45,6 +94,12 @@
 			width: 100%;
 			height: 100%;
 			background-color: lightgray;
+
+			img {
+				width: 100%;
+				height: 100%;
+				border: none;
+			}
 		}
 
 		&__footer {

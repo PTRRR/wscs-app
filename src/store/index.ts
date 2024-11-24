@@ -1,12 +1,16 @@
 import { get, readable, writable, type Writable } from 'svelte/store';
 import { getContext, hasContext, setContext } from 'svelte';
 import type { PartialBy } from '../utilities/types';
-import type { Product, User } from '../utilities/api/types';
 import { createQuery, QueryClient } from '@tanstack/svelte-query';
 import { WSCS } from '../utilities/api';
 import type { Cart, CartItem } from './types';
 import { Client } from 'typesense';
-import type { TypesenseConfig } from '../utilities/typesense';
+import {
+	searchProductToProduct,
+	type Hit,
+	type SearchProduct,
+	type TypesenseConfig
+} from '../utilities/typesense';
 
 const STORE_PREFIX = 'WSCS';
 const STORE_VERSION = 'v1.0.0';
@@ -91,10 +95,6 @@ export const useLocalCart = () => {
 	};
 };
 
-type Hit<T> = {
-	document: T;
-};
-
 export const useSearchEngine = (
 	baseUrl: string,
 	collection: string,
@@ -128,7 +128,7 @@ export const useSearchEngine = (
 			client.set(localClient);
 		}
 
-		return localClient
+		const result = (await localClient
 			.collections(collection)
 			.documents()
 			.search({
@@ -136,7 +136,9 @@ export const useSearchEngine = (
 				limit: params.limit || 60,
 				query_by: params.queryBy,
 				filter_by: params.filterBy
-			}) as Promise<{ hits: Hit<Product>[] }>;
+			})) as { hits: Hit<SearchProduct>[] };
+
+		return result.hits.map((it) => searchProductToProduct(it.document));
 	};
 
 	return {

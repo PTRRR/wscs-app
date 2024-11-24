@@ -17,8 +17,8 @@
 		data.typesense.clientConfig
 	);
 
-	let searchSesult: Product[] = $state([]);
-	const products = $derived(searchSesult.length > 0 ? searchSesult : data.products);
+	let searchResults: Product[] = $state([]);
+	const products = $derived(searchResults.length > 0 ? searchResults : data.products);
 </script>
 
 <svelte:head>
@@ -50,14 +50,10 @@
 			search({
 				query: '*',
 				filterBy
-			}).then((res) => {
-				searchSesult = res.hits.map((it) => it.document);
-			});
+			}).then((res) => (searchResults = res));
 		} else {
-			searchSesult = [];
+			searchResults = [];
 		}
-
-		// $inspect(searchSesult);
 	}}
 />
 

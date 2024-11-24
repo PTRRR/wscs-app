@@ -51,7 +51,7 @@ export interface PayloadFindParams {
 	page?: number;
 	depth?: number;
 	sort?: string;
-	query?: Record<string, { [key in QueryOperators]?: string }>;
+	query?: Record<string, { [key in QueryOperators]?: string | number | string[] | number[] }>;
 }
 
 export const enum QueryOperators {
