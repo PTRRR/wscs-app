@@ -1,23 +1,15 @@
 <script lang="ts">
-	import type { Product, Variation } from '../utilities/api/types';
-	import { getApiObject, getApiObjectId } from '../utilities/api/utils';
+	import type { Product } from '../utilities/api/types';
+	import { getApiObject } from '../utilities/api/utils';
 	import { filterNullish } from '../utilities/iterables';
+	import Image from './Image.svelte';
 
 	const props: {
 		products: Product[];
 	} = $props();
 
-	let products = $state<{ id: number; imageUrl?: string; title: string }[]>(
-		props.products.map((it) => ({
-			id: it.id,
-			title: it.title
-		}))
-	);
-
-	$effect(() => {
-		const defaultVariations: Variation[] = [];
-
-		for (const product of props.products) {
+	const products = $derived.by(() => {
+		return props.products.map((product) => {
 			const productVariations = product.variations?.docs || [];
 			const defaultVariation =
 				productVariations
@@ -25,30 +17,18 @@
 					.filter(filterNullish)
 					.find((it) => it.isDefault) || getApiObject(productVariations[0]);
 
-			if (defaultVariation) {
-				defaultVariations.push(defaultVariation);
-			}
-		}
+			const image = getApiObject(defaultVariation?.image);
+			const src = image?.sizes?.smallWebp?.url || image?.url;
+			const alt = image?.alt;
+			const srcsets = [
+				{ src: image?.sizes?.smallWebp?.url || '' },
+				{ src: image?.sizes?.small?.url || '' },
+				{ src: image?.url || '' }
+			];
 
-		products = props.products.map((product) => {
-			const variation = defaultVariations.find(
-				(variation) => getApiObjectId(variation.product) === product.id
-			);
-			return { id: product.id, title: product.title, imageUrl: getVariationImageUrl(variation) };
+			return { id: product.id, title: product.title, image: { src, srcsets, alt } };
 		});
 	});
-
-	const getVariationImageUrl = (variation?: Variation) => {
-		const image = getApiObject(variation?.image);
-		const smallImage = image?.sizes?.smallWebp || image?.sizes?.small;
-		return smallImage
-			? smallImage?.url
-				? `http://localhost:3000${smallImage.url}`
-				: undefined
-			: image?.url
-				? `http://localhost:3000${image.url}`
-				: undefined;
-	};
 </script>
 
 <div class="products-grid">
@@ -56,9 +36,13 @@
 		<div class="products-grid__item">
 			<a class="products-grid__image" href={`/products/${product.id}`} aria-label="Product image">
 				<div class="products-grid__image-content">
-					{#if product.imageUrl}
-						{#key product.imageUrl}
-							<img src={product.imageUrl} alt="" />
+					{#if product.image.src}
+						{#key product.image.src}
+							<Image
+								src={product.image.src}
+								srcsets={product.image.srcsets}
+								alt={product.image.alt}
+							/>
 						{/key}
 					{:else}
 						<span>No image</span>
@@ -97,15 +81,15 @@
 			left: 0;
 			width: 100%;
 			height: 100%;
-			background-color: lightgray;
 			display: flex;
 			align-items: center;
 			justify-content: center;
 
-			img {
+			:global(picture) {
 				width: 100%;
 				height: 100%;
 				border: none;
+				object-fit: contain;
 			}
 		}
 
