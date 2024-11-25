@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { useLocalCart } from '../store';
+	import LoadingBar from './LoadingBar.svelte';
 	let searchValue = $state<string>('');
 	let searchDebounceTimeout: NodeJS.Timeout | undefined = undefined;
 
@@ -8,6 +9,8 @@
 
 	const cartTotalItems = $derived($cart.items.reduce((acc, it) => (acc += it.quantity), 0));
 </script>
+
+<LoadingBar />
 
 <header class="main-menu">
 	<div class="main-menu__main-section">
