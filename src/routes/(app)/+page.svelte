@@ -33,7 +33,7 @@
 	{/if}
 
 	<section class="home__filters">
-		<h3>Filters:</h3>
+		<h3>FILTRES:</h3>
 		<HomeFilters
 			filters={data.filters}
 			entities={data.entities}
@@ -68,6 +68,10 @@
 	.home {
 		&__filters {
 			padding: 0 2rem;
+
+			h3 {
+				font-family: Lescargot, 'Courier New', Courier, monospace;
+			}
 		}
 	}
 </style>

@@ -48,6 +48,10 @@
 
 <style lang="scss">
 	.product {
+		h1 {
+			font-family: Lescargot, 'Courier New', Courier, monospace;
+		}
+
 		&__columns {
 			display: flex;
 			align-items: flex-start;

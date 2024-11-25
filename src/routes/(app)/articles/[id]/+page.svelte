@@ -37,6 +37,7 @@
 
 		h1 {
 			text-align: center;
+			font-family: Lescargot, 'Courier New', Courier, monospace;
 		}
 
 		&__content {

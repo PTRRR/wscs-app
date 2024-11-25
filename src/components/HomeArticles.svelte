@@ -42,6 +42,7 @@
 
 		&__title {
 			font-size: 1.5rem;
+			font-family: Lescargot, 'Courier New', Courier, monospace;
 		}
 
 		&__text {
