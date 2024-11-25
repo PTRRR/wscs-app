@@ -37,7 +37,8 @@
 				id: product.id,
 				title: product.title,
 				image: { src, srcsets, alt },
-				variationId: defaultVariation?.id
+				variationId: defaultVariation?.id,
+				price: defaultVariation?.price
 			};
 		});
 	});
@@ -65,28 +66,34 @@
 			<div class="products-grid__footer">
 				<span>{product.title}</span>
 
-				{#if typeof product.variationId === 'number'}
-					<button
-						aria-label="Add to cart"
-						onclick={() => {
-							if (typeof product.variationId !== 'number') return;
-							if (!isInCart(product.id)) {
-								addToCart({
-									product: product.id,
-									variation: product.variationId,
-									quantity: 1
-								});
-							} else {
-								removeFromCart({
-									product: product.id,
-									variation: product.variationId
-								});
-							}
-						}}
-					>
-						{isInCart(product.id) ? 'Remove from cart' : 'Add to cart'}
-					</button>
-				{/if}
+				<div>
+					{#if product.price}
+						<p>€ {product.price}</p>
+					{/if}
+
+					{#if typeof product.variationId === 'number'}
+						<button
+							aria-label="Add to cart"
+							onclick={() => {
+								if (typeof product.variationId !== 'number') return;
+								if (!isInCart(product.id)) {
+									addToCart({
+										product: product.id,
+										variation: product.variationId,
+										quantity: 1
+									});
+								} else {
+									removeFromCart({
+										product: product.id,
+										variation: product.variationId
+									});
+								}
+							}}
+						>
+							{isInCart(product.id) ? 'Remove from cart' : 'Add to cart'}
+						</button>
+					{/if}
+				</div>
 			</div>
 		</div>
 	{/each}
@@ -134,11 +141,15 @@
 			padding-top: 0.5rem;
 			display: flex;
 			flex-direction: column;
-			gap: 0.5rem;
 			align-items: flex-start;
 			height: 100%;
 			flex: 1 1 auto;
 			justify-content: space-between;
+
+			p {
+				margin: 0;
+				margin-bottom: 0.2rem;
+			}
 
 			button {
 				cursor: pointer;
