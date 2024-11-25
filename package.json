@@ -41,6 +41,7 @@
 		"sst": "3.2.33",
 		"stripe": "^17.2.0",
 		"svelte-kit-sst": "2.43.5",
+		"svelte-range-slider-pips": "^3.1.4",
 		"svelte-stripe": "^1.2.1",
 		"typesense": "^1.8.2"
 	}

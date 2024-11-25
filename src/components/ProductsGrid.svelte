@@ -3,11 +3,14 @@
 	import type { Product } from '../utilities/api/types';
 	import { getApiObject } from '../utilities/api/utils';
 	import { filterNullish } from '../utilities/iterables';
+	import Button from './Button.svelte';
 	import Image from './Image.svelte';
 
 	const props: {
 		products: Product[];
 		baseUrl?: string;
+		onloadmore?: () => void;
+		isLoading?: boolean;
 	} = $props();
 
 	const { cart, addToCart, removeFromCart } = useLocalCart();
@@ -99,6 +102,19 @@
 			</div>
 		{/each}
 	</div>
+
+	{#if props.onloadmore}
+		<Button
+			onclick={props.onloadmore}
+			onintersect={(intersecting) => {
+				if (intersecting) {
+					props.onloadmore?.();
+				}
+			}}
+		>
+			{props.isLoading ? 'Loading...' : 'Load More'}
+		</Button>
+	{/if}
 </div>
 
 <style lang="scss">

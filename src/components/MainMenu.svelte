@@ -109,6 +109,7 @@
 			flex: 1 1 auto;
 			text-align: center;
 			padding: 0 2rem;
+			user-select: none;
 
 			a {
 				display: block;

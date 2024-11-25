@@ -17,8 +17,38 @@
 		data.typesense.clientConfig
 	);
 
+	let page = 1;
+	const limit = 50;
+
+	let isLoading = $state(false);
+	let canLoadMore = $state(true);
+	let filterBy = $state<string | undefined>(undefined);
 	let searchResults: Product[] = $state([]);
-	const products = $derived(searchResults.length > 0 ? searchResults : data.products);
+	const products = $derived(
+		typeof filterBy === 'undefined' ? [...data.products, ...searchResults] : searchResults
+	);
+
+	const handleSearch = async () => {
+		isLoading = true;
+
+		const res = await search({
+			query: '*',
+			filterBy,
+			limit,
+			page
+		});
+
+		canLoadMore = res.length === limit;
+		isLoading = false;
+
+		return res;
+	};
+
+	const handleLoadMore = async () => {
+		page++;
+		const res = await handleSearch();
+		searchResults = [...searchResults, ...res];
+	};
 </script>
 
 <svelte:head>
@@ -42,20 +72,20 @@
 			brands={data.brands}
 			onSelected={(selection) => {
 				const { tags, productTypes, entities } = selection;
+				page = 1;
+				canLoadMore = true;
 
-				const filterBy = [
-					productTypes.length > 0 ? `type:[${productTypes.join(',')}]` : undefined,
-					tags.length > 0 ? `tags:=[${tags.join(',')}]` : undefined,
-					entities.length > 0 ? `entities:=[${entities.join(',')}]` : undefined
-				]
-					.filter(filterNullish)
-					.join(' && ');
+				filterBy =
+					[
+						productTypes.length > 0 ? `type:[${productTypes.join(',')}]` : undefined,
+						tags.length > 0 ? `tags:=[${tags.join(',')}]` : undefined,
+						entities.length > 0 ? `entities:=[${entities.join(',')}]` : undefined
+					]
+						.filter(filterNullish)
+						.join(' && ') || undefined;
 
 				if (filterBy) {
-					search({
-						query: '*',
-						filterBy
-					}).then((res) => (searchResults = res));
+					handleSearch().then((res) => (searchResults = res));
 				} else {
 					searchResults = [];
 				}
@@ -63,7 +93,12 @@
 		/>
 	</section>
 
-	<ProductsGrid {products} baseUrl={data.api.baseUrl} />
+	<ProductsGrid
+		{products}
+		{isLoading}
+		baseUrl={data.api.baseUrl}
+		onloadmore={canLoadMore ? handleLoadMore : undefined}
+	/>
 </div>
 
 <style lang="scss">

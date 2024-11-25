@@ -110,11 +110,18 @@ export const useSearchEngine = (
 	};
 
 	const search = async (
-		params: { query: string; queryBy?: string; filterBy?: string; limit?: number } = {
+		params: {
+			query: string;
+			queryBy?: string;
+			filterBy?: string;
+			limit?: number;
+			page?: number;
+		} = {
 			query: '',
 			queryBy: 'title',
 			filterBy: undefined,
-			limit: 60
+			limit: 60,
+			page: 0
 		}
 	) => {
 		if (!get(searchKey)?.value) {
@@ -135,7 +142,8 @@ export const useSearchEngine = (
 				q: params.query,
 				limit: params.limit || 60,
 				query_by: params.queryBy,
-				filter_by: params.filterBy
+				filter_by: params.filterBy,
+				page: params.page || 0
 			})) as { hits: Hit<SearchProduct>[] };
 
 		return result.hits.map((it) => searchProductToProduct(it.document));
