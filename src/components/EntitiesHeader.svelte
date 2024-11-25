@@ -8,7 +8,11 @@
 
 <section class="entities-header">
 	{#each props.entities as entity}
-		<a href={`/entities/${entity.id}`}>{entity.title}</a>
+		{#if typeof entity.logo !== 'number'}
+			<a href={`/entities/${entity.id}`}>
+				<img src={`http://localhost:3000${entity.logo.url}`} alt={entity.title} />
+			</a>
+		{/if}
 	{/each}
 </section>
 
@@ -17,5 +21,14 @@
 		display: flex;
 		justify-content: space-between;
 		padding: 20px;
+
+		a {
+			height: 2rem;
+			display: block;
+
+			img {
+				height: 100%;
+			}
+		}
 	}
 </style>
