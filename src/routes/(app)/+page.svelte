@@ -55,15 +55,15 @@
 	<title>Words, Sounds, Colors & Shapes</title>
 </svelte:head>
 
+<div class="home__entities">
+	<EntitiesHeader baseUrl={data.api.baseUrl} entities={data.entities} />
+</div>
+
+{#if data.article}
+	<HomeArticles baseUrl={data.api.baseUrl} article={data.article} />
+{/if}
+
 <div class="home">
-	<div class="home__entities">
-		<EntitiesHeader baseUrl={data.api.baseUrl} entities={data.entities} />
-	</div>
-
-	{#if data.article}
-		<HomeArticles baseUrl={data.api.baseUrl} article={data.article} />
-	{/if}
-
 	<section class="home__filters">
 		<h3>FILTRES</h3>
 		<HomeFilters
@@ -103,9 +103,9 @@
 
 <style lang="scss">
 	.home {
-		&__filters {
-			padding: 0 var(--main-padding);
+		padding: var(--main-padding);
 
+		&__filters {
 			h3 {
 				font-family: Lescargot, 'Courier New', Courier, monospace;
 			}
