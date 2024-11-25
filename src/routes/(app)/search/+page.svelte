@@ -13,12 +13,57 @@
 		data.typesense.clientConfig
 	);
 
+	let isLoading = $state(Boolean(props.data.q));
+	let canLoadMore = $state(true);
+	let page = 1;
+	let limit = 50;
 	let hits: Product[] = $state([]);
 
+	const handleSearch = async () => {
+		if (typeof props.data.q !== 'string' || props.data.q.length === 0) return [];
+
+		isLoading = true;
+		const res = await search({ query: props.data.q, queryBy: 'title', page, limit });
+		canLoadMore = res.length === limit;
+		isLoading = false;
+		return res;
+	};
+
+	const handleLoadMore = async () => {
+		page++;
+		const res = await handleSearch();
+		hits = [...hits, ...res];
+	};
+
 	$effect(() => {
-		if (typeof props.data.q !== 'string' || props.data.q.length === 0) return;
-		search({ query: props.data.q, queryBy: 'title' }).then((res) => (hits = res));
+		hits = [];
+		page = 1;
+		canLoadMore = true;
+		handleSearch().then((res) => (hits = res));
 	});
 </script>
 
-<ProductsGrid products={hits} baseUrl={data.api.baseUrl} />
+<div class="search">
+	<ProductsGrid
+		products={hits}
+		{isLoading}
+		baseUrl={data.api.baseUrl}
+		onloadmore={canLoadMore && hits.length > 0 ? handleLoadMore : undefined}
+	/>
+
+	{#if isLoading && hits.length === 0}
+		<p>Loading...</p>
+	{:else if hits.length === 0}
+		<p>No results found</p>
+	{/if}
+</div>
+
+<style lang="scss">
+	.search {
+		padding: var(--main-padding);
+
+		p {
+			margin: 0;
+		}
+	}
+</style>

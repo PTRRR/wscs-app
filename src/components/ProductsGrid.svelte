@@ -48,85 +48,96 @@
 </script>
 
 <div class="products-grid">
-	<div class="products-grid__items">
-		{#each products as product}
-			<div class="products-grid__item">
-				<a class="products-grid__image" href={`/products/${product.id}`} aria-label="Product image">
-					<div class="products-grid__image-content">
-						{#if product.image.src}
-							{#key product.image.src}
-								<Image
-									baseUrl={props.baseUrl}
-									src={product.image.src}
-									srcsets={product.image.srcsets}
-									alt={product.image.alt}
-								/>
-							{/key}
-						{:else}
-							<span>No image</span>
-						{/if}
-					</div>
-				</a>
-				<div class="products-grid__footer">
-					<span>{product.title}</span>
+	{#if products.length > 0}
+		<div class="products-grid__content">
+			<div class="products-grid__items">
+				{#each products as product}
+					<div class="products-grid__item">
+						<a
+							class="products-grid__image"
+							href={`/products/${product.id}`}
+							aria-label="Product image"
+						>
+							<div class="products-grid__image-content">
+								{#if product.image.src}
+									{#key product.image.src}
+										<Image
+											baseUrl={props.baseUrl}
+											src={product.image.src}
+											srcsets={product.image.srcsets}
+											alt={product.image.alt}
+										/>
+									{/key}
+								{:else}
+									<span>No image</span>
+								{/if}
+							</div>
+						</a>
+						<div class="products-grid__footer">
+							<span>{product.title}</span>
 
-					<div>
-						{#if product.price}
-							<p>€ {product.price}</p>
-						{/if}
+							<div>
+								{#if product.price}
+									<p>€ {product.price}</p>
+								{/if}
 
-						{#if typeof product.variationId === 'number'}
-							<button
-								aria-label="Add to cart"
-								onclick={() => {
-									if (typeof product.variationId !== 'number') return;
-									if (!isInCart(product.id)) {
-										addToCart({
-											product: product.id,
-											variation: product.variationId,
-											quantity: 1
-										});
-									} else {
-										removeFromCart({
-											product: product.id,
-											variation: product.variationId
-										});
-									}
-								}}
-							>
-								{isInCart(product.id) ? 'Remove from cart' : 'Add to cart'}
-							</button>
-						{/if}
+								{#if typeof product.variationId === 'number'}
+									<button
+										aria-label="Add to cart"
+										onclick={() => {
+											if (typeof product.variationId !== 'number') return;
+											if (!isInCart(product.id)) {
+												addToCart({
+													product: product.id,
+													variation: product.variationId,
+													quantity: 1
+												});
+											} else {
+												removeFromCart({
+													product: product.id,
+													variation: product.variationId
+												});
+											}
+										}}
+									>
+										{isInCart(product.id) ? 'Remove from cart' : 'Add to cart'}
+									</button>
+								{/if}
+							</div>
+						</div>
 					</div>
-				</div>
+				{/each}
 			</div>
-		{/each}
-	</div>
+		</div>
+	{/if}
 
 	{#if props.onloadmore}
-		<Button
-			onclick={props.onloadmore}
-			onintersect={(intersecting) => {
-				if (intersecting) {
-					props.onloadmore?.();
-				}
-			}}
-		>
-			{props.isLoading ? 'Loading...' : 'Load More'}
-		</Button>
+		<div class="products-grid__load-more">
+			<Button
+				onclick={props.onloadmore}
+				onintersect={(intersecting) => {
+					if (intersecting) {
+						props.onloadmore?.();
+					}
+				}}
+			>
+				{props.isLoading ? 'Loading...' : 'Load More'}
+			</Button>
+		</div>
 	{/if}
 </div>
 
 <style lang="scss">
 	.products-grid {
-		overflow: hidden;
-		position: relative;
+		&__content {
+			overflow: hidden;
+			position: relative;
+		}
 
 		&__items {
 			display: grid;
 			grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 			grid-gap: 0rem;
-			padding: var(--main-padding);
 			margin: calc(var(--main-padding) * -1);
 		}
 
@@ -178,6 +189,10 @@
 			button {
 				cursor: pointer;
 			}
+		}
+
+		&__content + &__load-more {
+			margin-top: var(--main-padding);
 		}
 	}
 </style>
