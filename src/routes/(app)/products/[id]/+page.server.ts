@@ -7,9 +7,18 @@ export const load: PageServerLoad = async ({ params, parent }) => {
 	} = await parent();
 
 	const api = new WSCS(baseUrl);
-	const res = await api.findProductById(params.id);
+	const [product, variations] = await Promise.all([
+		api.findProductById(params.id),
+		api.findVariations({
+			query: {
+				product: {
+					equals: params.id
+				}
+			}
+		})
+	]);
 
 	return {
-		product: res
+		product: { ...product, variations }
 	};
 };
