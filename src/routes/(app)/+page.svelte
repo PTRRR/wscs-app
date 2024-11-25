@@ -61,7 +61,7 @@
 		/>
 	</section>
 
-	<ProductsGrid {products} />
+	<ProductsGrid {products} baseUrl={data.api.baseUrl} />
 </div>
 
 <style lang="scss">

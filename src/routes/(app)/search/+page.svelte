@@ -21,4 +21,4 @@
 	});
 </script>
 
-<ProductsGrid products={hits} />
+<ProductsGrid products={hits} baseUrl={data.api.baseUrl} />

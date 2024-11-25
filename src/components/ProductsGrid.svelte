@@ -7,6 +7,7 @@
 
 	const props: {
 		products: Product[];
+		baseUrl?: string;
 	} = $props();
 
 	const { cart, addToCart, removeFromCart } = useLocalCart();
@@ -50,6 +51,7 @@
 					{#if product.image.src}
 						{#key product.image.src}
 							<Image
+								baseUrl={props.baseUrl}
 								src={product.image.src}
 								srcsets={product.image.srcsets}
 								alt={product.image.alt}
