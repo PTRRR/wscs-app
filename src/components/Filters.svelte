@@ -20,6 +20,8 @@
 </script>
 
 <script lang="ts">
+	import Checkbox from './Checkbox.svelte';
+
 	// Component props including optional radio behavior and selection callback
 	const props: {
 		radio?: boolean; // If true, only one checkbox can be selected at a time
@@ -28,34 +30,32 @@
 		onSelected?: (items: T[]) => void; // Callback fired when selection changes
 	} = $props();
 
-	const { items, radio, onSelected } = props;
+	const { items, radio, onSelected, title } = props;
 
-	// Tracks references to all checkbox input elements for state management
-	const inputElements: HTMLInputElement[] = $state([]);
-
-	// Unchecks all checkboxes - used for radio behavior
-	const deselectAll = () => {
-		inputElements.forEach((input) => {
-			input.checked = false;
-		});
-	};
+	// Tracks references to all checkboxs for state management
+	const checkboxes: Checkbox[] = $state([]);
 
 	// Handles checkbox clicks with special handling for radio behavior
-	const handleElementClick = (index: number) => {
+	const handleElementClick = (index: number, checked: boolean) => {
 		// For radio mode: if checking a box, first uncheck all others
-		if (radio && inputElements[index].checked) {
-			deselectAll();
-			inputElements[index].checked = !inputElements[index].checked;
+		if (radio && checked) {
+			checkboxes[index].setChecked(checked);
+			checkboxes.forEach((checkbox, currentIndex) => {
+				if (currentIndex !== index) {
+					checkbox.setChecked(false);
+				}
+			});
 		}
+
 		let selectedItems = listSelectedItemsWithDefaults();
 		onSelected?.(selectedItems);
 	};
 
 	// Returns array of currently selected filter elements
 	const listSelectedItems = () => {
-		const selectedInputElements = inputElements.filter((input) => input.checked);
-		const elIndexes = selectedInputElements.map((input) => parseInt(input.dataset.elIndex || ''));
-		const selectedItems = items.filter((item, index) => elIndexes.includes(index));
+		const selectedCheckboxes = checkboxes.filter((checkbox) => checkbox.isChecked());
+		const elIndexes = selectedCheckboxes.map((checkbox) => checkbox.getValue() as number);
+		const selectedItems = items.filter((_, index) => elIndexes.includes(index));
 		return selectedItems;
 	};
 
@@ -74,7 +74,7 @@
 		// If no selection but defaults exist, select the defaults
 		if (defaultItemIndexes.length > 0 && selectedItems.length === 0) {
 			defaultItemIndexes.forEach((index) => {
-				inputElements[index].checked = true;
+				checkboxes[index].setChecked(true);
 			});
 			selectedItems = listSelectedItems();
 		}
@@ -89,24 +89,40 @@
 </script>
 
 <div class="filters">
-	{#each items as filter, index}
-		{#if filter.type === 'checkbox'}
-			<input
-				type="checkbox"
-				bind:this={inputElements[index]}
-				data-el-index={index}
-				onclick={() => handleElementClick(index)}
-			/>
-			<span>{filter.label || filter.value}</span>
-		{/if}
-	{/each}
+	{#if title}
+		<h5>{title}</h5>
+	{/if}
+
+	<div class="filters__checkboxes">
+		{#each items as filter, index}
+			{#if filter.type === 'checkbox'}
+				<Checkbox
+					bind:this={checkboxes[index]}
+					value={index}
+					label={filter.label || filter.value}
+					onchange={({ checked }) => handleElementClick(index, checked)}
+				/>
+			{/if}
+		{/each}
+	</div>
 </div>
 
 <style lang="scss">
 	.filters {
 		display: flex;
-		padding: 1rem;
+		flex-direction: column;
+		gap: 0.5rem;
+		padding: 0.5rem;
 		border: solid 1px black;
 		border-radius: 5px;
+
+		h5 {
+			margin: 0;
+		}
+
+		&__checkboxes {
+			display: flex;
+			gap: 1rem;
+		}
 	}
 </style>

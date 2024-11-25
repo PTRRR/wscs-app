@@ -33,7 +33,7 @@
 	{/if}
 
 	<section class="home__filters">
-		<h3>FILTRES:</h3>
+		<h3>FILTRES</h3>
 		<HomeFilters
 			filters={data.filters}
 			entities={data.entities}

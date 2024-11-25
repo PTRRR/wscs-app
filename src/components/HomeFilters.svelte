@@ -86,14 +86,24 @@
 		});
 	});
 
+	let onSelectDebounceTimeout: NodeJS.Timeout | undefined = undefined;
+
 	// Triggers callback whenever any selection changes
 	$effect(() => {
-		props.onSelected?.({
+		const values = {
 			entities: selectedEntities,
 			brands: selectedBrands,
 			tags: selectedTags,
 			productTypes: selectedProductTypes
-		});
+		};
+
+		if (onSelectDebounceTimeout) {
+			clearTimeout(onSelectDebounceTimeout);
+		}
+
+		onSelectDebounceTimeout = setTimeout(() => {
+			props.onSelected?.(values);
+		}, 10);
 	});
 </script>
 
@@ -101,6 +111,7 @@
 	<!-- Entity selection filter -->
 	<Filters
 		radio
+		title="BOUTIQUES"
 		items={props.entities.map((it) => ({ type: 'checkbox', label: it.title, value: it.id }))}
 		onSelected={(items) => (selectedEntities = getSelectedValues(items))}
 	/>
@@ -108,6 +119,7 @@
 	<!-- Tag selection filter - resets product types when changed -->
 	<Filters
 		radio
+		title="CLOTHING"
 		items={tagsFilterElements}
 		onSelected={(items) => {
 			const firstItem = items[0];
