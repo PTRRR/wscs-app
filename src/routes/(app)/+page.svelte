@@ -29,7 +29,7 @@
 	<EntitiesHeader entities={data.entities} />
 
 	{#if data.article}
-		<HomeArticles article={data.article} />
+		<HomeArticles baseUrl={data.api.baseUrl} article={data.article} />
 	{/if}
 
 	<section class="home__filters">

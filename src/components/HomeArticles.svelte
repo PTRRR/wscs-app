@@ -6,6 +6,7 @@
 
 	const props: {
 		article: Article;
+		baseUrl?: string;
 	} = $props();
 
 	const firstImage = getApiObject((props.article.slideshow || [])[0]);
@@ -13,7 +14,7 @@
 
 <section class="article-home">
 	{#if firstImage}
-		<Slideshow slides={[firstImage]} width="100%" height="70vh" />
+		<Slideshow baseUrl={props.baseUrl} slides={[firstImage]} width="100%" height="70vh" />
 	{/if}
 	<article class="article-home__content">
 		<h2 class="article-home__title">

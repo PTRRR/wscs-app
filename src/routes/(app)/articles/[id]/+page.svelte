@@ -6,7 +6,7 @@
 	import type { PageData } from './$types';
 
 	const props: { data: PageData } = $props();
-	const { article } = props.data;
+	const { article, api } = props.data;
 
 	const slides = (article.slideshow?.map((slide) => getApiObject(slide)) || []).filter(
 		filterNullish
@@ -18,7 +18,7 @@
 </svelte:head>
 
 <div class="article">
-	<Slideshow {slides} height="60vh" />
+	<Slideshow baseUrl={api.baseUrl} {slides} height="60vh" />
 
 	<article>
 		<h1>{article.title}</h1>

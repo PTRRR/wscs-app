@@ -2,6 +2,7 @@
 	import type { Media } from '../utilities/api/types';
 	import { css } from '../utilities/css';
 	import { joinPaths } from '../utilities/urls';
+	import Image from './Image.svelte';
 
 	const props: {
 		width?: string;
@@ -23,7 +24,16 @@
 	{#each props.slides as slide}
 		{#if slide.url}
 			<div class="slideshow__slide">
-				<img src={getSlideUrl(slide.url)} alt={slide.alt} />
+				<Image
+					baseUrl={props.baseUrl}
+					src={slide.sizes?.largeWebp?.url || slide.sizes?.large?.url || slide.url}
+					srcsets={[
+						{ src: slide.sizes?.mediumWebp?.url },
+						{ src: slide.sizes?.medium?.url },
+						{ src: slide.sizes?.small?.url },
+						{ src: slide.sizes?.smallWebp?.url }
+					]}
+				/>
 			</div>
 		{/if}
 	{/each}
@@ -43,7 +53,7 @@
 			width: 100%;
 			height: 100%;
 
-			img {
+			:global(picture) {
 				width: 100%;
 				height: 100%;
 				object-fit: cover;
