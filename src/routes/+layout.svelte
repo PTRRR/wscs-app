@@ -42,4 +42,8 @@
 		-moz-osx-font-smoothing: grayscale;
 		text-rendering: optimizeLegibility;
 	}
+
+	:root {
+		--main-padding: 1rem;
+	}
 </style>

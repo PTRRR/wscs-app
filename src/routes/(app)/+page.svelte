@@ -26,7 +26,9 @@
 </svelte:head>
 
 <div class="home">
-	<EntitiesHeader baseUrl={data.api.baseUrl} entities={data.entities} />
+	<div class="home__entities">
+		<EntitiesHeader baseUrl={data.api.baseUrl} entities={data.entities} />
+	</div>
 
 	{#if data.article}
 		<HomeArticles baseUrl={data.api.baseUrl} article={data.article} />
@@ -67,10 +69,17 @@
 <style lang="scss">
 	.home {
 		&__filters {
-			padding: 0 2rem;
+			padding: 0 var(--main-padding);
 
 			h3 {
 				font-family: Lescargot, 'Courier New', Courier, monospace;
+			}
+		}
+
+		@media screen and (max-width: 1000px) {
+			&__entities,
+			&__filters {
+				display: none;
 			}
 		}
 	}

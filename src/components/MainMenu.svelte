@@ -48,18 +48,18 @@
 			></iframe>
 		</div>
 	</div>
-	{#if $cart.items.length > 0}
-		<div class="main-menu__sub-section">
-			<a href="/cart">Cart ({cartTotalItems})</a>
-			<a href="/checkout">Checkout</a>
-		</div>
-	{/if}
 </header>
+
+{#if $cart.items.length > 0}
+	<div class="main-menu__sub-section">
+		<a href="/cart">Cart ({cartTotalItems})</a>
+		<a href="/checkout">Checkout</a>
+	</div>
+{/if}
 
 <style lang="scss">
 	.main-menu {
-		position: sticky;
-		top: -141px;
+		position: relative;
 		z-index: 100;
 		display: flex;
 		background-color: white;
@@ -71,16 +71,20 @@
 		}
 
 		&__sub-section {
+			position: sticky;
+			top: 0;
+			background-color: white;
+			z-index: 1000;
 			display: flex;
 			justify-content: flex-end;
 			border-bottom: solid black 1px;
-			padding: 0.5rem 2rem;
+			padding: 0.5rem var(--main-padding);
 			gap: 1rem;
 		}
 
 		&__section {
 			display: flex;
-			padding: 20px 0;
+			padding: var(--main-padding) 0;
 			justify-content: center;
 			align-items: center;
 
@@ -93,7 +97,7 @@
 		&__radio {
 			flex: 0 0 auto;
 			width: 20%;
-			padding: 20px;
+			padding: var(--main-padding);
 		}
 
 		&__radio {
@@ -115,6 +119,23 @@
 			img {
 				width: 100%;
 				height: 100%;
+			}
+		}
+
+		@media screen and (max-width: 1000px) {
+			&__section {
+				& + & {
+					border-left: none;
+				}
+			}
+
+			&__title {
+				padding: 0 var(--main-padding);
+			}
+
+			&__search,
+			&__radio {
+				display: none;
 			}
 		}
 	}

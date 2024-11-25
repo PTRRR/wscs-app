@@ -24,7 +24,7 @@
 	.entities-header {
 		display: flex;
 		justify-content: space-between;
-		padding: 20px;
+		padding: var(--main-padding);
 
 		a {
 			height: 2rem;
