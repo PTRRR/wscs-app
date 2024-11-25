@@ -31,7 +31,7 @@
 		</div>
 		<div class="main-menu__section main-menu__title">
 			<a href="/">
-				<img src="/logo.png" alt="" />
+				<img src="/wscs.svg" alt="" />
 			</a>
 		</div>
 		<div class="main-menu__section main-menu__radio">
@@ -101,8 +101,15 @@
 			text-align: center;
 			padding: 0 2rem;
 
+			a {
+				display: block;
+				width: 100%;
+				height: 100%;
+			}
+
 			img {
 				width: 100%;
+				height: 100%;
 			}
 		}
 	}
