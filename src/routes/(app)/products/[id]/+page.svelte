@@ -1,19 +1,11 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import type { PageData } from './$types';
-	import { WSCS } from '../../../../utilities/api';
 	import AddToCartButton from '../../../../components/AddToCartButton.svelte';
 	import LexicalReader from '../../../../components/LexicalReader.svelte';
 	import Image from '../../../../components/Image.svelte';
 
 	const props: { data: PageData } = $props();
 	const { data } = props;
-
-	const api = new WSCS();
-
-	onMount(() => {
-		api.findProducts().then((res) => console.log(res));
-	});
 </script>
 
 <svelte:head>
