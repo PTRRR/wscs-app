@@ -1,8 +1,16 @@
 <script lang="ts">
-	const props: { src: string; srcsets?: { src?: string | null }[]; alt?: string | null } = $props();
-	const { srcsets, src, alt } = props;
+	import { joinPaths } from '../utilities/urls';
+
+	const props: {
+		baseUrl?: string;
+		src: string;
+		srcsets?: { src?: string | null }[];
+		alt?: string | null;
+	} = $props();
+
+	const { baseUrl, srcsets, src, alt } = props;
 	const getUrlMimeType = (url: string) => (url.includes('webp') ? 'image/webp' : 'image/jpeg');
-	const getFullUrl = (url: string) => `http://localhost:3000${url}`;
+	const getFullUrl = (url: string) => joinPaths(baseUrl || 'http://localhost:3000', url);
 
 	let isLoaded = $state(false);
 </script>

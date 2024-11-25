@@ -1,16 +1,16 @@
 <script lang="ts">
 	import type { Media } from '../utilities/api/types';
 	import { css } from '../utilities/css';
+	import { joinPaths } from '../utilities/urls';
 
 	const props: {
 		width?: string;
 		height?: string;
 		slides: Partial<Media>[];
+		baseUrl?: string;
 	} = $props();
 
-	const getSlideUrl = (url: string) => {
-		return `http://localhost:3000/${url}`;
-	};
+	const getSlideUrl = (url: string) => joinPaths(props.baseUrl || 'http://localhost:3000', url);
 </script>
 
 <div
