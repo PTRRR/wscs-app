@@ -5,6 +5,8 @@
 	let searchDebounceTimeout: NodeJS.Timeout | undefined = undefined;
 
 	const { cart } = useLocalCart();
+
+	const cartTotalItems = $derived($cart.items.reduce((acc, it) => (acc += it.quantity), 0));
 </script>
 
 <header class="main-menu">
@@ -45,7 +47,7 @@
 	</div>
 	{#if $cart.items.length > 0}
 		<div class="main-menu__sub-section">
-			<a href="/cart">Cart</a>
+			<a href="/cart">Cart ({cartTotalItems})</a>
 			<a href="/checkout">Checkout</a>
 		</div>
 	{/if}
