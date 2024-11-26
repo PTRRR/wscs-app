@@ -158,12 +158,10 @@
 		&__items {
 			display: grid;
 			grid-template-columns: repeat(auto-fill, minmax(var(--size), 1fr));
-			grid-gap: 0rem;
-			margin: calc(var(--main-padding) * -1);
+			grid-gap: var(--main-padding);
 		}
 
 		&__item {
-			padding: var(--main-padding);
 			display: flex;
 			flex-direction: column;
 		}

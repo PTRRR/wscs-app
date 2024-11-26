@@ -19,7 +19,7 @@
 
 <style>
 	:root {
-		--main-padding: 1rem;
+		--main-padding: 1.5rem;
 
 		--button-primary-bg: #ffffff;
 		--button-primary-color: #000000;
