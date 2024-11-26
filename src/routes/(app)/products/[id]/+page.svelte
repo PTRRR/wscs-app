@@ -15,11 +15,11 @@
 <div class="product">
 	<div class="product__columns">
 		<div class="product__column">
-			{#each data.product.variations?.docs || [] as variation}
-				{#if typeof variation !== 'number' && typeof variation.image === 'object'}
+			{#each data.product.images || [] as image}
+				{#if typeof image !== 'number'}
 					<Image
 						baseUrl={data.api.baseUrl}
-						src={variation.image?.sizes?.largeWebp?.url || variation.image?.url || ''}
+						src={image?.sizes?.largeWebp?.url || image?.url || ''}
 					/>
 				{/if}
 			{/each}
