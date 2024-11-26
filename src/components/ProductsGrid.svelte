@@ -30,16 +30,21 @@
 			const src = image?.sizes?.smallWebp?.url || image?.url;
 			const alt = image?.alt;
 			const srcsets = [
-				{ src: image?.sizes?.smallWebp?.url || '' },
-				{ src: image?.sizes?.small?.url || '' },
-				{ src: image?.sizes?.mediumWebp?.url || '' },
-				{ src: image?.sizes?.medium?.url || '' }
+				{
+					src: image?.sizes?.thumbnailWebp?.url || '',
+					minWidth: image?.sizes?.thumbnailWebp?.width
+				},
+				{ src: image?.sizes?.thumbnail?.url || '', minWidth: image?.sizes?.thumbnail?.width },
+				{ src: image?.sizes?.smallWebp?.url || '', minWidth: image?.sizes?.smallWebp?.width },
+				{ src: image?.sizes?.small?.url || '', minWidth: image?.sizes?.small?.width },
+				{ src: image?.sizes?.mediumWebp?.url || '', minWidth: image?.sizes?.mediumWebp?.width },
+				{ src: image?.sizes?.medium?.url || '', minWidth: image?.sizes?.medium?.width }
 			];
 
 			return {
 				id: product.id,
 				title: product.title,
-				image: { src, srcsets, alt },
+				image: { src, srcsets, alt, width: image?.width, height: image?.height },
 				variationId: defaultVariation?.id,
 				price: defaultVariation?.price
 			};
@@ -52,7 +57,7 @@
 		<div class="products-grid__content">
 			<div class="products-grid__items">
 				{#each products as product}
-					<div class="products-grid__item">
+					<article class="products-grid__item">
 						<a
 							class="products-grid__image"
 							href={`/products/${product.id}`}
@@ -66,6 +71,8 @@
 											src={product.image.src}
 											srcsets={product.image.srcsets}
 											alt={product.image.alt}
+											width={product.image.width}
+											height={product.image.height}
 										/>
 									{/key}
 								{:else}
@@ -74,11 +81,11 @@
 							</div>
 						</a>
 						<div class="products-grid__footer">
-							<span>{product.title}</span>
+							<h3>{product.title}</h3>
 
 							<div>
 								{#if product.price}
-									<p>€ {product.price}</p>
+									<p aria-label="Price">€ {product.price}</p>
 								{/if}
 
 								{#if typeof product.variationId === 'number'}
@@ -105,7 +112,7 @@
 								{/if}
 							</div>
 						</div>
-					</div>
+					</article>
 				{/each}
 			</div>
 		</div>
@@ -180,6 +187,11 @@
 			height: 100%;
 			flex: 1 1 auto;
 			justify-content: space-between;
+
+			h3 {
+				font-size: 1rem;
+				margin: 0;
+			}
 
 			p {
 				margin: 0;

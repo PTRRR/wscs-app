@@ -64,51 +64,51 @@
 {/if}
 
 <div class="home">
-	<section class="home__filters">
-		<h3>FILTRES</h3>
-		<HomeFilters
-			filters={data.filters}
-			entities={data.entities}
-			brands={data.brands}
-			onSelected={(selection) => {
-				const { tags, productTypes, entities } = selection;
-				page = 1;
-				canLoadMore = true;
+	<section class="home__products" aria-label="Product listings">
+		<h2>Products</h2>
+		<aside class="home__filters">
+			<HomeFilters
+				filters={data.filters}
+				entities={data.entities}
+				brands={data.brands}
+				onSelected={(selection) => {
+					const { tags, productTypes, entities } = selection;
+					page = 1;
+					canLoadMore = true;
 
-				filterBy =
-					[
-						productTypes.length > 0 ? `type:[${productTypes.join(',')}]` : undefined,
-						tags.length > 0 ? `tags:=[${tags.join(',')}]` : undefined,
-						entities.length > 0 ? `entities:=[${entities.join(',')}]` : undefined
-					]
-						.filter(filterNullish)
-						.join(' && ') || undefined;
+					filterBy =
+						[
+							productTypes.length > 0 ? `type:[${productTypes.join(',')}]` : undefined,
+							tags.length > 0 ? `tags:=[${tags.join(',')}]` : undefined,
+							entities.length > 0 ? `entities:=[${entities.join(',')}]` : undefined
+						]
+							.filter(filterNullish)
+							.join(' && ') || undefined;
 
-				if (filterBy) {
-					handleSearch().then((res) => (searchResults = res));
-				} else {
-					searchResults = [];
-				}
-			}}
+					if (filterBy) {
+						handleSearch().then((res) => (searchResults = res));
+					} else {
+						searchResults = [];
+					}
+				}}
+			/>
+		</aside>
+
+		<ProductsGrid
+			{products}
+			{isLoading}
+			baseUrl={data.api.baseUrl}
+			onloadmore={canLoadMore ? handleLoadMore : undefined}
 		/>
 	</section>
-
-	<ProductsGrid
-		{products}
-		{isLoading}
-		baseUrl={data.api.baseUrl}
-		onloadmore={canLoadMore ? handleLoadMore : undefined}
-	/>
 </div>
 
 <style lang="scss">
 	.home {
 		padding: var(--main-padding);
 
-		&__filters {
-			h3 {
-				font-family: Lescargot, 'Courier New', Courier, monospace;
-			}
+		h2 {
+			font-family: Lescargot, 'Courier New', Courier, monospace;
 		}
 
 		@media screen and (max-width: 1000px) {

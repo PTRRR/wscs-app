@@ -88,9 +88,9 @@
 	});
 </script>
 
-<div class="filters">
+<fieldset class="filters">
 	{#if title}
-		<h5>{title}</h5>
+		<legend>{title}</legend>
 	{/if}
 
 	<div class="filters__checkboxes">
@@ -105,7 +105,7 @@
 			{/if}
 		{/each}
 	</div>
-</div>
+</fieldset>
 
 <style lang="scss">
 	.filters {
@@ -116,7 +116,7 @@
 		border: solid 1px black;
 		border-radius: 5px;
 
-		h5 {
+		legend {
 			margin: 0;
 		}
 

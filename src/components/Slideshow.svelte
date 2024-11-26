@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { Media } from '../utilities/api/types';
 	import { css } from '../utilities/css';
-	import { joinPaths } from '../utilities/urls';
 	import Image from './Image.svelte';
 
 	const props: {
@@ -11,7 +10,8 @@
 		baseUrl?: string;
 	} = $props();
 
-	const getSlideUrl = (url: string) => joinPaths(props.baseUrl || 'http://localhost:3000', url);
+	const getBaseImage = (image: Partial<Media>) =>
+		image.sizes?.largeWebp || image.sizes?.large || image;
 </script>
 
 <div
@@ -26,12 +26,15 @@
 			<div class="slideshow__slide">
 				<Image
 					baseUrl={props.baseUrl}
-					src={slide.sizes?.largeWebp?.url || slide.sizes?.large?.url || slide.url}
+					src={getBaseImage(slide).url || ''}
+					width={getBaseImage(slide).width}
+					height={getBaseImage(slide).height}
+					alt={slide.alt}
 					srcsets={[
-						{ src: slide.sizes?.mediumWebp?.url },
-						{ src: slide.sizes?.medium?.url },
-						{ src: slide.sizes?.small?.url },
-						{ src: slide.sizes?.smallWebp?.url }
+						{ src: slide.sizes?.mediumWebp?.url, minWidth: slide.sizes?.mediumWebp?.width },
+						{ src: slide.sizes?.medium?.url, minWidth: slide.sizes?.medium?.width },
+						{ src: slide.sizes?.small?.url, minWidth: slide.sizes?.small?.width },
+						{ src: slide.sizes?.smallWebp?.url, minWidth: slide.sizes?.smallWebp?.width }
 					]}
 				/>
 			</div>

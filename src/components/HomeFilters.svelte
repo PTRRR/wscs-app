@@ -107,7 +107,7 @@
 	});
 </script>
 
-<div class="home-filters">
+<form class="home-filters" aria-label="Product filters">
 	<!-- Entity selection filter -->
 	<Filters
 		radio
@@ -148,7 +148,7 @@
 			/>
 		{/if}
 	{/each}
-</div>
+</form>
 
 <style lang="scss">
 	.home-filters {

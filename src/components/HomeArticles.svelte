@@ -17,9 +17,9 @@
 		<Slideshow baseUrl={props.baseUrl} slides={[firstImage]} width="100%" height="70vh" />
 	{/if}
 	<article class="article-home__content">
-		<h2 class="article-home__title">
+		<h1 class="article-home__title">
 			{props.article.title}
-		</h2>
+		</h1>
 		<div class="article-home__text">
 			<LexicalReader content={props.article.content} maxLines={5} />
 			<a href={`/articles/${props.article.id}`}>Read more...</a>

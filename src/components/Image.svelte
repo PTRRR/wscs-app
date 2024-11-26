@@ -4,11 +4,14 @@
 	const props: {
 		baseUrl?: string;
 		src: string;
-		srcsets?: { src?: string | null }[];
+		srcsets?: { src?: string | null; minWidth?: number | null }[];
 		alt?: string | null;
+		width?: number | null;
+		height?: number | null;
 	} = $props();
 
-	const { baseUrl, srcsets, src, alt } = props;
+	const { baseUrl, srcsets, src, alt, width, height } = props;
+
 	const getUrlMimeType = (url: string) => (url.includes('webp') ? 'image/webp' : 'image/jpeg');
 	const getFullUrl = (url: string) => joinPaths(baseUrl || 'http://localhost:3000', url);
 
@@ -18,10 +21,21 @@
 <picture class="picture" class:picture--loading={!isLoaded}>
 	{#each srcsets || [] as srcset}
 		{#if srcset.src}
-			<source srcset={getFullUrl(srcset.src)} type={getUrlMimeType(srcset.src)} />
+			<source
+				srcset={getFullUrl(srcset.src)}
+				type={getUrlMimeType(srcset.src)}
+				media={srcset.minWidth ? `(min-width: ${srcset.minWidth}px)` : undefined}
+			/>
 		{/if}
 	{/each}
-	<img src={getFullUrl(src)} {alt} onload={() => (isLoaded = true)} />
+	<img
+		src={getFullUrl(src)}
+		alt={alt || ''}
+		{width}
+		{height}
+		onload={() => (isLoaded = true)}
+		loading="lazy"
+	/>
 </picture>
 
 <style lang="scss">
