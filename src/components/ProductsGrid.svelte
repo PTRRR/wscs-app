@@ -44,7 +44,13 @@
 			return {
 				id: product.id,
 				title: product.title,
-				image: { src, srcsets, alt, width: image?.width, height: image?.height },
+				image: {
+					src,
+					srcsets,
+					alt,
+					width: image?.sizes?.thumbnailWebp?.width,
+					height: image?.sizes?.thumbnailWebp?.height
+				},
 				variationId: defaultVariation?.id,
 				price: defaultVariation?.price
 			};
@@ -73,6 +79,7 @@
 											alt={product.image.alt}
 											width={product.image.width}
 											height={product.image.height}
+											lazyload={true}
 										/>
 									{/key}
 								{:else}

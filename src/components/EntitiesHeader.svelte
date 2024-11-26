@@ -14,6 +14,8 @@
 				<img
 					src={`${props.baseUrl || 'http://localhost:3000'}${entity.logo.url}`}
 					alt={entity.title}
+					width={entity.logo.width}
+					height={entity.logo.height}
 				/>
 			</a>
 		{/if}
@@ -32,6 +34,7 @@
 
 			img {
 				height: 100%;
+				width: auto;
 			}
 		}
 	}

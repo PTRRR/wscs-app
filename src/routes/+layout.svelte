@@ -22,12 +22,14 @@
 		font-family: Lescargot;
 		src: url(/fonts/LESCARGOT-Regular.otf);
 		font-weight: normal;
+		font-display: swap;
 	}
 
 	@font-face {
 		font-family: ACaslonPro;
 		src: url(/fonts/ACaslonPro-Regular.otf);
 		font-weight: normal;
+		font-display: swap;
 	}
 
 	:global(html, body) {

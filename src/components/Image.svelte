@@ -8,9 +8,10 @@
 		alt?: string | null;
 		width?: number | null;
 		height?: number | null;
+		lazyload?: boolean;
 	} = $props();
 
-	const { baseUrl, srcsets, src, alt, width, height } = props;
+	const { baseUrl, srcsets, src, alt, width, height, lazyload } = props;
 
 	const getUrlMimeType = (url: string) => (url.includes('webp') ? 'image/webp' : 'image/jpeg');
 	const getFullUrl = (url: string) => joinPaths(baseUrl || 'http://localhost:3000', url);
@@ -34,7 +35,7 @@
 		{width}
 		{height}
 		onload={() => (isLoaded = true)}
-		loading="lazy"
+		loading={lazyload ? 'lazy' : undefined}
 	/>
 </picture>
 
