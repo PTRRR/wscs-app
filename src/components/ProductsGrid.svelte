@@ -2,6 +2,7 @@
 	import { useLocalCart } from '../store';
 	import type { Product } from '../utilities/api/types';
 	import { getApiObject } from '../utilities/api/utils';
+	import { css } from '../utilities/css';
 	import { filterNullish } from '../utilities/iterables';
 	import Button from './Button.svelte';
 	import Image from './Image.svelte';
@@ -11,6 +12,7 @@
 		baseUrl?: string;
 		onloadmore?: () => void;
 		isLoading?: boolean;
+		size?: string;
 	} = $props();
 
 	const { cart, addToCart, removeFromCart } = useLocalCart();
@@ -58,7 +60,12 @@
 	});
 </script>
 
-<div class="products-grid">
+<div
+	class="products-grid"
+	style={css({
+		'--size': props.size || '200px'
+	})}
+>
 	{#if products.length > 0}
 		<div class="products-grid__content">
 			<div class="products-grid__items">
@@ -150,7 +157,7 @@
 
 		&__items {
 			display: grid;
-			grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+			grid-template-columns: repeat(auto-fill, minmax(var(--size), 1fr));
 			grid-gap: 0rem;
 			margin: calc(var(--main-padding) * -1);
 		}

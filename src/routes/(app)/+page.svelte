@@ -6,6 +6,7 @@
 	import HomeFilters from '../../components/HomeFilters.svelte';
 	import { useSearchEngine } from '../../store';
 	import ProductsGrid from '../../components/ProductsGrid.svelte';
+	import Range from '../../components/Range.svelte';
 	import { filterNullish } from '../../utilities/iterables';
 
 	const props: { data: PageData } = $props();
@@ -24,6 +25,7 @@
 	let canLoadMore = $state(true);
 	let filterBy = $state<string | undefined>(undefined);
 	let searchResults: Product[] = $state([]);
+
 	const products = $derived(
 		typeof filterBy === 'undefined' ? [...data.products, ...searchResults] : searchResults
 	);
@@ -49,6 +51,9 @@
 		const res = await handleSearch();
 		searchResults = [...searchResults, ...res];
 	};
+
+	let rangeValue = $state(1);
+	const productsSize = $derived(`${150 + rangeValue * 50}px`);
 </script>
 
 <svelte:head>
@@ -92,11 +97,16 @@
 					}
 				}}
 			/>
+
+			<div class="home__range">
+				<Range bind:value={rangeValue} pips={true} title="Image Size" />
+			</div>
 		</aside>
 
 		<ProductsGrid
 			{products}
 			{isLoading}
+			size={productsSize}
 			baseUrl={data.api.baseUrl}
 			onloadmore={canLoadMore ? handleLoadMore : undefined}
 		/>
@@ -109,6 +119,10 @@
 
 		h2 {
 			font-family: Lescargot, 'Courier New', Courier, monospace;
+		}
+
+		&__range {
+			width: 30%;
 		}
 
 		@media screen and (max-width: 1000px) {
