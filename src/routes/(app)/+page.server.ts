@@ -31,7 +31,8 @@ export const load: PageServerLoad = async ({ parent }) => {
 				}
 			}),
 			api.findBrands({
-				sort: 'title'
+				sort: 'title',
+				limit: 60
 			}),
 			api.getGlobalFilters()
 		]);
