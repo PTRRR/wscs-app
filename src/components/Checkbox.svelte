@@ -67,5 +67,9 @@
 			height: 100%;
 			background-color: black;
 		}
+
+		&__label {
+			transform: translate(0, 15%);
+		}
 	}
 </style>

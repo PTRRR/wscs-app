@@ -88,7 +88,7 @@
 	});
 </script>
 
-<fieldset class="filters">
+<fieldset class="filters" class:filters--title={title}>
 	{#if title}
 		<legend>{title}</legend>
 	{/if}
@@ -109,12 +109,18 @@
 
 <style lang="scss">
 	.filters {
+		--padding: 0.7rem;
+
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
-		padding: 0.5rem;
+		padding: var(--padding);
 		border: solid 1px black;
 		border-radius: 5px;
+
+		&--title {
+			padding: calc(var(--padding) * 0.5) var(--padding) var(--padding) var(--padding);
+		}
 
 		legend {
 			margin: 0;
