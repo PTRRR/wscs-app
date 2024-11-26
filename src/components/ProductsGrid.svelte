@@ -82,7 +82,7 @@
 								{/if}
 
 								{#if typeof product.variationId === 'number'}
-									<button
+									<Button
 										aria-label="Add to cart"
 										onclick={() => {
 											if (typeof product.variationId !== 'number') return;
@@ -101,7 +101,7 @@
 										}}
 									>
 										{isInCart(product.id) ? 'Remove from cart' : 'Add to cart'}
-									</button>
+									</Button>
 								{/if}
 							</div>
 						</div>
@@ -184,10 +184,6 @@
 			p {
 				margin: 0;
 				margin-bottom: 0.2rem;
-			}
-
-			button {
-				cursor: pointer;
 			}
 		}
 

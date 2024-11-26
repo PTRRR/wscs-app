@@ -4,9 +4,14 @@
 	let {
 		children,
 		onintersect,
-		onclick
-	}: { children: Snippet; onclick?: () => void; onintersect?: (intersecting: boolean) => void } =
-		$props();
+		onclick,
+		'aria-label': ariaLabel
+	}: {
+		'aria-label'?: string;
+		children: Snippet;
+		onclick?: () => void;
+		onintersect?: (intersecting: boolean) => void;
+	} = $props();
 
 	let buttonElement: HTMLButtonElement | undefined = $state(undefined);
 
@@ -36,6 +41,32 @@
 	});
 </script>
 
-<button bind:this={buttonElement} {onclick}>
-	{@render children()}
+<button class="button" bind:this={buttonElement} {onclick} aria-label={ariaLabel}>
+	<div class="button__inner">
+		{@render children()}
+	</div>
 </button>
+
+<style lang="scss">
+	.button {
+		position: relative;
+		cursor: pointer;
+		background-color: white;
+		border: solid 1px black;
+		border-radius: 4px;
+		padding: 0.4rem 0.5rem;
+		text-transform: uppercase;
+		font-family: inherit;
+		font-size: 0.7rem;
+		line-height: 1;
+
+		&:hover {
+			color: white;
+			background-color: black;
+		}
+
+		&__inner {
+			transform: translate(0, 5%);
+		}
+	}
+</style>
