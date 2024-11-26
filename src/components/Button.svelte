@@ -74,44 +74,7 @@
 </button>
 
 <style lang="scss">
-	:root {
-		--button-primary-bg: #ffffff;
-		--button-primary-color: #000000;
-		--button-primary-border: #000000;
-		--button-hover-bg: #000000;
-		--button-hover-color: #ffffff;
-		--button-disabled-opacity: 0.6;
-		--button-border-radius: 4px;
-		--button-padding: 0.4rem 0.5rem;
-	}
-
 	.button {
-		position: relative;
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		cursor: pointer;
-		background-color: var(--button-primary-bg);
-		color: var(--button-primary-color);
-		border: 1px solid var(--button-primary-border);
-		border-radius: var(--button-border-radius);
-		padding: var(--button-padding);
-		text-transform: uppercase;
-		font-family: inherit;
-		font-size: 0.7rem;
-		line-height: 1;
-		transition: all 0.2s ease-in-out;
-
-		/* &:focus {
-			outline: 1px solid var(--button-primary-border);
-			outline-offset: 2px;
-		} */
-
-		&:hover:not(.button--disabled) {
-			color: var(--button-hover-color);
-			background-color: var(--button-hover-bg);
-		}
-
 		&--disabled {
 			opacity: var(--button-disabled-opacity);
 			cursor: not-allowed;

@@ -18,6 +18,19 @@
 </QueryClientProvider>
 
 <style>
+	:root {
+		--main-padding: 1rem;
+
+		--button-primary-bg: #ffffff;
+		--button-primary-color: #000000;
+		--button-primary-border: #000000;
+		--button-hover-bg: #000000;
+		--button-hover-color: #ffffff;
+		--button-disabled-opacity: 0.6;
+		--button-border-radius: 4px;
+		--button-padding: 0.4rem 0.5rem;
+	}
+
 	@font-face {
 		font-family: Lescargot;
 		src: url(/fonts/LESCARGOT-Regular.otf);
@@ -45,7 +58,26 @@
 		text-rendering: optimizeLegibility;
 	}
 
-	:root {
-		--main-padding: 1rem;
+	:global(button) {
+		position: relative;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+		background-color: var(--button-primary-bg);
+		color: var(--button-primary-color);
+		border: 1px solid var(--button-primary-border);
+		border-radius: var(--button-border-radius);
+		padding: var(--button-padding);
+		text-transform: uppercase;
+		font-family: inherit;
+		font-size: 0.7rem;
+		line-height: 1;
+		transition: all 0.2s ease-in-out;
+
+		&:hover {
+			color: var(--button-hover-color);
+			background-color: var(--button-hover-bg);
+		}
 	}
 </style>

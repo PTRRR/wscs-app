@@ -3,6 +3,7 @@
 	import { getApiObject } from '../utilities/api/utils';
 	import { filterNullish } from '../utilities/iterables';
 	import Filters, { type FilterElement } from './Filters.svelte';
+	import Select from './Select.svelte';
 
 	// Used when tag ID is undefined but needs to be tracked in the UI
 	const CUSTOM_UNDEFINED_TAG_ID = -1;
@@ -117,23 +118,44 @@
 	/>
 
 	<!-- Tag selection filter - resets product types when changed -->
-	<Filters
-		radio
-		title="CLOTHING"
-		items={tagsFilterElements}
-		onSelected={(items) => {
-			const firstItem = items[0];
-			selectedProductTypes = [];
-			selectedTags = [];
-			if (
-				typeof firstItem !== 'undefined' &&
-				firstItem.type === 'checkbox' &&
-				typeof firstItem.value === 'number'
-			) {
-				selectedTags = [firstItem.value];
-			}
-		}}
-	/>
+	<div class="home-filters__section">
+		<Filters
+			radio
+			title="CLOTHING"
+			items={tagsFilterElements}
+			onSelected={(items) => {
+				const firstItem = items[0];
+				selectedProductTypes = [];
+				selectedTags = [];
+				if (
+					typeof firstItem !== 'undefined' &&
+					firstItem.type === 'checkbox' &&
+					typeof firstItem.value === 'number'
+				) {
+					selectedTags = [firstItem.value];
+				}
+			}}
+		/>
+
+		<div class="home-filters__select">
+			<Select
+				fillWidth
+				onselect={(res) => {
+					console.log(res);
+				}}
+				options={[
+					{
+						label: 'brands',
+						showLabel: false,
+						values: props.brands.map((it) => ({
+							label: it.title,
+							value: it.id
+						}))
+					}
+				]}
+			/>
+		</div>
+	</div>
 
 	<!-- Product type filters - only shown for selected tag -->
 	{#each props.filters as filter}
@@ -156,5 +178,20 @@
 		flex-direction: column;
 		gap: 0.5rem;
 		margin-bottom: 1rem;
+		justify-content: flex-end;
+
+		:global(.filters) {
+			flex: 1 1 auto;
+		}
+
+		&__section {
+			display: flex;
+		}
+
+		&__select {
+			padding-top: 0.5rem;
+			display: flex;
+			width: 10rem;
+		}
 	}
 </style>

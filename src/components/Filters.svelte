@@ -108,22 +108,28 @@
 </fieldset>
 
 <style lang="scss">
-	.filters {
-		--padding: 0.7rem;
+	:root {
+		--filters-padding: 0.7rem;
+		--filters-padding-small: calc(var(--filters-padding) * 0.5);
+	}
 
+	.filters {
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
-		padding: var(--padding);
+		padding: var(--filters-padding);
 		border: solid 1px black;
 		border-radius: 5px;
 
 		&--title {
-			padding: calc(var(--padding) * 0.5) var(--padding) var(--padding) var(--padding);
+			padding: var(--filters-padding-small) var(--filters-padding) var(--filters-padding)
+				var(--filters-padding);
 		}
 
 		legend {
 			margin: 0;
+			font-size: 1rem;
+			line-height: 1;
 		}
 
 		&__checkboxes {
