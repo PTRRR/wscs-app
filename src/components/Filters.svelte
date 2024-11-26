@@ -120,10 +120,12 @@
 		padding: var(--filters-padding);
 		border: solid 1px black;
 		border-radius: 5px;
+		margin: 0;
 
 		&--title {
 			padding: var(--filters-padding-small) var(--filters-padding) var(--filters-padding)
 				var(--filters-padding);
+			margin-top: -0.5rem;
 		}
 
 		legend {

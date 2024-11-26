@@ -175,7 +175,7 @@
 	.home-filters {
 		display: flex;
 		flex-direction: column;
-		gap: 0.5rem;
+		gap: 1rem;
 		margin-bottom: 1rem;
 		justify-content: flex-end;
 
@@ -185,13 +185,12 @@
 
 		&__section {
 			display: flex;
+			gap: 1rem;
 		}
 
 		&__select {
-			padding-top: 0.5rem;
 			display: flex;
 			width: 10rem;
-			gap: 0.7rem;
 		}
 	}
 </style>
