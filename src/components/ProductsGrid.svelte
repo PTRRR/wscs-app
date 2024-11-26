@@ -28,7 +28,7 @@
 					.filter(filterNullish)
 					.find((it) => it.isDefault) || getApiObject(productVariations[0]);
 
-			const image = getApiObject(defaultVariation?.image);
+			const image = getApiObject(product.images?.[0]);
 			const src = image?.sizes?.smallWebp?.url || image?.url;
 			const alt = image?.alt;
 			const srcsets = [

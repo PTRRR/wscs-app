@@ -150,7 +150,7 @@ export interface Variation {
 	name: string;
 	sku?: string | null;
 	product?: (number | null) | Product;
-	image?: (number | null) | Media;
+	images?: (number | Media)[] | null;
 	attributes?: (number | Attribute)[] | null;
 	attributeValues?:
 		| {
@@ -198,6 +198,7 @@ export interface Product {
 		};
 		[k: string]: unknown;
 	} | null;
+	images?: (number | Media)[] | null;
 	vendor?: string | null;
 	variations?: {
 		docs?: (number | Variation)[] | null;
@@ -212,78 +213,6 @@ export interface Product {
 	updatedAt: string;
 	createdAt: string;
 	_status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "categories".
- */
-export interface Category {
-	id: number;
-	title?: string | null;
-	products?: {
-		docs?: (number | Product)[] | null;
-		hasNextPage?: boolean | null;
-	} | null;
-	updatedAt: string;
-	createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "tags".
- */
-export interface Tag {
-	id: number;
-	title?: string | null;
-	products?: {
-		docs?: (number | Product)[] | null;
-		hasNextPage?: boolean | null;
-	} | null;
-	updatedAt: string;
-	createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "product-types".
- */
-export interface ProductType {
-	id: number;
-	title?: string | null;
-	products?: {
-		docs?: (number | Product)[] | null;
-		hasNextPage?: boolean | null;
-	} | null;
-	updatedAt: string;
-	createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "brands".
- */
-export interface Brand {
-	id: number;
-	title: string;
-	logo?: (number | null) | Media;
-	description?: {
-		root: {
-			type: string;
-			children: {
-				type: string;
-				version: number;
-				[k: string]: unknown;
-			}[];
-			direction: ('ltr' | 'rtl') | null;
-			format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-			indent: number;
-			version: number;
-		};
-		[k: string]: unknown;
-	} | null;
-	products?: {
-		docs?: (number | Product)[] | null;
-		hasNextPage?: boolean | null;
-	} | null;
-	updatedAt: string;
-	createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -369,6 +298,78 @@ export interface Media {
 			filename?: string | null;
 		};
 	};
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories".
+ */
+export interface Category {
+	id: number;
+	title?: string | null;
+	products?: {
+		docs?: (number | Product)[] | null;
+		hasNextPage?: boolean | null;
+	} | null;
+	updatedAt: string;
+	createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tags".
+ */
+export interface Tag {
+	id: number;
+	title?: string | null;
+	products?: {
+		docs?: (number | Product)[] | null;
+		hasNextPage?: boolean | null;
+	} | null;
+	updatedAt: string;
+	createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "product-types".
+ */
+export interface ProductType {
+	id: number;
+	title?: string | null;
+	products?: {
+		docs?: (number | Product)[] | null;
+		hasNextPage?: boolean | null;
+	} | null;
+	updatedAt: string;
+	createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "brands".
+ */
+export interface Brand {
+	id: number;
+	title: string;
+	logo?: (number | null) | Media;
+	description?: {
+		root: {
+			type: string;
+			children: {
+				type: string;
+				version: number;
+				[k: string]: unknown;
+			}[];
+			direction: ('ltr' | 'rtl') | null;
+			format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+			indent: number;
+			version: number;
+		};
+		[k: string]: unknown;
+	} | null;
+	products?: {
+		docs?: (number | Product)[] | null;
+		hasNextPage?: boolean | null;
+	} | null;
+	updatedAt: string;
+	createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -770,6 +771,7 @@ export interface ProductsSelect<T extends boolean = true> {
 	slug?: T;
 	publishedOn?: T;
 	description?: T;
+	images?: T;
 	vendor?: T;
 	variations?: T;
 	categories?: T;
@@ -790,7 +792,7 @@ export interface VariationsSelect<T extends boolean = true> {
 	name?: T;
 	sku?: T;
 	product?: T;
-	image?: T;
+	images?: T;
 	attributes?: T;
 	attributeValues?: T;
 	price?: T;
