@@ -77,7 +77,7 @@
 				entities={data.entities}
 				brands={data.brands}
 				onSelected={(selection) => {
-					const { tags, productTypes, entities } = selection;
+					const { tags, productTypes, entities, brands } = selection;
 					page = 1;
 					canLoadMore = true;
 
@@ -85,7 +85,8 @@
 						[
 							productTypes.length > 0 ? `type:[${productTypes.join(',')}]` : undefined,
 							tags.length > 0 ? `tags:=[${tags.join(',')}]` : undefined,
-							entities.length > 0 ? `entities:=[${entities.join(',')}]` : undefined
+							entities.length > 0 ? `entities:=[${entities.join(',')}]` : undefined,
+							brands.length > 0 ? `brand:[${brands.join(',')}]` : undefined
 						]
 							.filter(filterNullish)
 							.join(' && ') || undefined;
@@ -110,6 +111,10 @@
 			baseUrl={data.api.baseUrl}
 			onloadmore={canLoadMore ? handleLoadMore : undefined}
 		/>
+
+		{#if products.length === 0}
+			<p>No products found.</p>
+		{/if}
 	</section>
 </div>
 

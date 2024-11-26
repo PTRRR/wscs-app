@@ -140,10 +140,8 @@
 		<div class="home-filters__select">
 			<Select
 				fillWidth
-				onselect={(res) => {
-					console.log(res);
-				}}
 				label="Brands"
+				onselect={(res) => (selectedBrands = typeof res?.value === 'number' ? [res.value] : [])}
 				options={[
 					{
 						label: 'brands',
@@ -193,6 +191,7 @@
 			padding-top: 0.5rem;
 			display: flex;
 			width: 10rem;
+			gap: 0.7rem;
 		}
 	}
 </style>
