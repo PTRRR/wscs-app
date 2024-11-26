@@ -193,6 +193,12 @@
 			}
 		}
 
+		&__item:hover {
+			h3 {
+				text-decoration: underline;
+			}
+		}
+
 		&__footer {
 			padding-top: 0.5rem;
 			display: flex;
