@@ -16,6 +16,7 @@
 		label: string;
 		fillWidth?: boolean;
 		onselect?: (value?: Value) => void;
+		clearSelection?: boolean;
 	} = $props();
 
 	const { options } = props;
@@ -59,6 +60,18 @@
 						<div class="select__group-label" use:melt={$groupLabel(label)}>
 							{label}
 						</div>
+					{/if}
+
+					{#if props.clearSelection}
+						<button
+							class="select__option"
+							onclick={() => {
+								$open = false;
+								$selected = undefined;
+							}}
+						>
+							Clear selection
+						</button>
 					{/if}
 
 					{#each values as { value, label }}

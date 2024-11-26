@@ -141,6 +141,7 @@
 			<Select
 				fillWidth
 				label="Brands"
+				clearSelection={true}
 				onselect={(res) => (selectedBrands = typeof res?.value === 'number' ? [res.value] : [])}
 				options={[
 					{
