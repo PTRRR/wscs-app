@@ -143,6 +143,7 @@
 				onselect={(res) => {
 					console.log(res);
 				}}
+				label="Brands"
 				options={[
 					{
 						label: 'brands',

@@ -13,6 +13,7 @@
 			showLabel?: boolean;
 			values: Value[];
 		}[];
+		label: string;
 		fillWidth?: boolean;
 		onselect?: (value?: Value) => void;
 	} = $props();
@@ -47,7 +48,7 @@
 	<label for="" class="select__label"></label>
 	<button use:melt={$trigger}>
 		<span class="select__button-inner">
-			{$selectedLabel || 'Brands'}
+			{$selectedLabel || props.label}
 		</span>
 	</button>
 	{#if $open}
