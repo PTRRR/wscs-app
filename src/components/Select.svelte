@@ -3,7 +3,7 @@
 	import { fade } from 'svelte/transition';
 
 	type Value = {
-		label?: string;
+		label?: string | null;
 		value: string | number;
 	};
 
@@ -17,6 +17,7 @@
 		fillWidth?: boolean;
 		onselect?: (value?: Value) => void;
 		clearSelection?: boolean;
+		defaultSelected?: Value;
 	} = $props();
 
 	const { options } = props;
@@ -26,6 +27,12 @@
 		states: { selectedLabel, open, selected }
 	} = createSelect<string>({
 		forceVisible: true,
+		defaultSelected: props.defaultSelected
+			? {
+					label: props.defaultSelected.label || undefined,
+					value: props.defaultSelected.value.toString()
+				}
+			: undefined,
 		positioning: {
 			placement: 'bottom',
 			fitViewport: true,
@@ -46,7 +53,7 @@
 </script>
 
 <div class="select" class:select--fill-width={props.fillWidth}>
-	<label for="" class="select__label"></label>
+	<!-- <label for="" class="select__label"></label> -->
 	<button use:melt={$trigger}>
 		<span class="select__button-inner">
 			{$selectedLabel || props.label}

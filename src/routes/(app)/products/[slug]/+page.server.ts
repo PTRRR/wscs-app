@@ -23,7 +23,7 @@ export const load: PageServerLoad = async ({ params, parent }) => {
 		const product = products.docs[0];
 
 		return {
-			product: { ...product }
+			product
 		};
 	} catch (e) {
 		console.log(e);
