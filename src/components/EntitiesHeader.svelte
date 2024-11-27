@@ -10,7 +10,7 @@
 <section class="entities-header">
 	{#each props.entities as entity}
 		{#if typeof entity.logo !== 'number'}
-			<a href={`/entities/${entity.id}`}>
+			<a href={`/entities/${entity.slug}`}>
 				<img
 					src={`${props.baseUrl || 'http://localhost:3000'}${entity.logo.url}`}
 					alt={entity.title}

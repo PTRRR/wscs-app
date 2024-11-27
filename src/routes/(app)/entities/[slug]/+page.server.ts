@@ -6,10 +6,18 @@ export const load: PageServerLoad = async ({ parent, params }) => {
 		api: { baseUrl }
 	} = await parent();
 
-	const { id } = params;
+	const { slug } = params;
 
 	const api = new WSCS(baseUrl);
-	const entity = await api.findEntityById(id);
+	const entities = await api.findEntities({
+		query: {
+			slug: {
+				equals: slug
+			}
+		}
+	});
+
+	const entity = entities.docs[0];
 
 	return {
 		entity

@@ -45,6 +45,7 @@
 
 			return {
 				id: product.id,
+				slug: product.slug,
 				title: product.title,
 				image: {
 					src,
@@ -73,7 +74,7 @@
 					<article class="products-grid__item">
 						<a
 							class="products-grid__image"
-							href={`/products/${product.id}`}
+							href={`/products/${product.slug}`}
 							aria-label="Product image"
 						>
 							<div class="products-grid__image-content">

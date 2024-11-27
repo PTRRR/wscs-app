@@ -181,7 +181,7 @@ export interface Variation {
 export interface Product {
 	id: number;
 	title: string;
-	slug?: string | null;
+	slug: string;
 	publishedOn?: string | null;
 	description?: {
 		root: {
@@ -378,6 +378,7 @@ export interface Brand {
 export interface Entity {
 	id: number;
 	title: string;
+	slug: string;
 	logo: number | Media;
 	description?: {
 		root: {
@@ -433,6 +434,7 @@ export interface Attribute {
 export interface Article {
 	id: number;
 	title: string;
+	slug: string;
 	slideshow?: (number | Media)[] | null;
 	content?: {
 		root: {
@@ -716,6 +718,7 @@ export interface MediaSelect<T extends boolean = true> {
  */
 export interface ArticlesSelect<T extends boolean = true> {
 	title?: T;
+	slug?: T;
 	slideshow?: T;
 	content?: T;
 	publishedOn?: T;
@@ -756,6 +759,7 @@ export interface AttributesSelect<T extends boolean = true> {
  */
 export interface EntitiesSelect<T extends boolean = true> {
 	title?: T;
+	slug?: T;
 	logo?: T;
 	description?: T;
 	updatedAt?: T;

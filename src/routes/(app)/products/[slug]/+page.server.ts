@@ -10,19 +10,20 @@ export const load: PageServerLoad = async ({ params, parent }) => {
 	const api = new WSCS(baseUrl);
 
 	try {
-		const [product, variations] = await Promise.all([
-			api.findProductById(params.id),
-			api.findVariations({
+		const [products] = await Promise.all([
+			api.findProducts({
 				query: {
-					product: {
-						equals: params.id
+					slug: {
+						equals: params.slug
 					}
 				}
 			})
 		]);
 
+		const product = products.docs[0];
+
 		return {
-			product: { ...product, variations }
+			product: { ...product }
 		};
 	} catch (e) {
 		console.log(e);

@@ -22,7 +22,7 @@
 		</h1>
 		<div class="article-home__text">
 			<LexicalReader content={props.article.content} maxLines={5} />
-			<a href={`/articles/${props.article.id}`}>Read more...</a>
+			<a href={`/articles/${props.article.slug}`}>Read more...</a>
 		</div>
 	</article>
 </section>
