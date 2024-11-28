@@ -137,6 +137,7 @@
 
 		&__block {
 			width: 100%;
+			padding: 0 var(--main-padding);
 		}
 
 		&__text-block {

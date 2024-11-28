@@ -36,7 +36,7 @@
 <section class="articles-home">
 	{#each formattedRows as row}
 		<div class="articles-home__row">
-			{#each row || [] as { article, orientation }}
+			{#each row || [] as { article }}
 				<article class="articles-home__article" class:articles-home--full={row.length === 1}>
 					{#if article.firstImage}
 						<Slideshow baseUrl={props.baseUrl} slides={[article.firstImage]} />
@@ -96,6 +96,7 @@
 
 			#{$root}__text {
 				align-items: center;
+				padding: 0 var(--main-padding);
 			}
 
 			:global(.slideshow) {
@@ -114,6 +115,29 @@
 			display: flex;
 			flex-direction: column;
 			gap: 1rem;
+		}
+
+		@media screen and (max-width: 1000px) {
+			&__row {
+				flex-direction: column;
+				padding-top: 0;
+			}
+
+			&__article {
+				text-align: center;
+				justify-content: center;
+				align-items: center;
+				width: 100%;
+
+				#{$root}__text {
+					align-items: center;
+					padding: 0 var(--main-padding);
+				}
+
+				:global(.slideshow) {
+					height: 70vh;
+				}
+			}
 		}
 	}
 </style>

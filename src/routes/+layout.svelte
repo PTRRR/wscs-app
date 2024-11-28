@@ -56,6 +56,7 @@
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
 		text-rendering: optimizeLegibility;
+		box-sizing: border-box;
 	}
 
 	:global(button) {
