@@ -3,6 +3,7 @@
 	import { fade } from 'svelte/transition';
 
 	type Value = {
+		id?: string | number | null;
 		label?: string | null;
 		value: string | number;
 	};
@@ -41,19 +42,13 @@
 	});
 
 	selected.subscribe((value) => {
-		props.onselect?.(
-			typeof value?.value !== 'undefined'
-				? {
-						label: value?.label,
-						value: value?.value
-					}
-				: undefined
-		);
+		const allValues = props.options.map((it) => it.values).flat();
+		const selectedValue = allValues.find((it) => it.value === value?.value);
+		props.onselect?.(typeof selectedValue !== 'undefined' ? selectedValue : undefined);
 	});
 </script>
 
 <div class="select" class:select--fill-width={props.fillWidth}>
-	<!-- <label for="" class="select__label"></label> -->
 	<button use:melt={$trigger}>
 		<span class="select__button-inner">
 			{$selectedLabel || props.label}

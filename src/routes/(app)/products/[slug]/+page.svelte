@@ -1,18 +1,24 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import AddToCartButton from '../../../../components/AddToCartButton.svelte';
 	import LexicalReader from '../../../../components/LexicalReader.svelte';
 	import Image from '../../../../components/Image.svelte';
 	import { WSCS } from '../../../../utilities/api';
 	import type { Variation } from '../../../../utilities/api/types';
 	import ProductAttributes from '../../../../components/ProductAttributes.svelte';
 	import Button from '../../../../components/Button.svelte';
+	import Quantity from '../../../../components/Quantity.svelte';
+	import { useLocalCart } from '../../../../store';
 
 	const props: { data: PageData } = $props();
 	const { data } = props;
 	const api = new WSCS(data.api.baseUrl);
 	let variations = $state<Variation[]>([]);
+	let selectedVariation = $state<Variation | undefined>(undefined);
 	let readMore = $state(false);
+	let quantity = $state(1);
+	let added = $state(false);
+
+	const { addToCart } = useLocalCart();
 
 	$effect(() => {
 		api
@@ -46,24 +52,36 @@
 			{/each}
 		</div>
 
-		<section class="product__column">
-			{#if typeof data.product.brand === 'object'}
-				<span class="product__brand">{data.product.brand?.title}</span>
+		<section class="product__column product__information">
+			<div class="product__information-header">
+				{#if typeof data.product.brand === 'object'}
+					<span class="product__brand">{data.product.brand?.title}</span>
+				{/if}
+
+				<h1 class="product__title">{data.product.title}</h1>
+			</div>
+
+			{#if selectedVariation}
+				<div class="product__price-info">
+					<p class="product__price">€ {selectedVariation.price?.toFixed(2)}</p>
+					<span>Tax included.</span>
+				</div>
 			{/if}
 
-			<h1 class="product__title">{data.product.title}</h1>
-
-			<!-- {#each variations as variation}
-				<p class="product__price">€ {variation.price?.toFixed(2)}</p>
-				<span>Tax included.</span>
-
-				{#if typeof variation.price === 'number' && variation.price > 0}
-					<AddToCartButton product={data.product.id} variation={variation.id} quantity={1} />
-				{/if}
-			{/each} -->
-
 			{#if variations.length > 0}
-				<ProductAttributes {variations} />
+				<ProductAttributes
+					{variations}
+					onselection={(selection) => {
+						selectedVariation = variations.find((it) => {
+							const selectionEntries = Object.entries(selection);
+							const attributeValues = it.attributeValues as Record<string, string>;
+							return selectionEntries.every(
+								([attributeName, value]) => attributeValues[attributeName] === value?.id
+							);
+						});
+					}}
+				/>
+				<Quantity bind:value={quantity} min={1} />
 			{:else}
 				<p>Loading...</p>
 			{/if}
@@ -71,10 +89,23 @@
 			<LexicalReader content={data.product.description} maxLines={readMore ? undefined : 4} />
 
 			{#if !readMore}
-				<Button onclick={() => (readMore = true)}>Read more</Button>
+				<Button onclick={() => (readMore = true)} minimal underline>Read more...</Button>
 			{/if}
 
-			<a href="/checkout">Checkout</a>
+			<Button
+				class="product__add-to-cart"
+				disabled={!selectedVariation || added}
+				onclick={() => {
+					if (!selectedVariation) return;
+					addToCart({
+						product: data.product.id,
+						variation: selectedVariation.id,
+						quantity
+					});
+
+					added = true;
+				}}>{added ? 'Item added' : 'Add to cart'}</Button
+			>
 		</section>
 	</div>
 </div>
@@ -83,6 +114,7 @@
 	.product {
 		h1 {
 			font-family: Lescargot, 'Courier New', Courier, monospace;
+			font-size: 2rem;
 		}
 
 		&__columns {
@@ -95,8 +127,7 @@
 			width: 50%;
 			display: flex;
 			flex-direction: column;
-			gap: 1rem;
-			padding: 1rem 0;
+
 			align-items: flex-start;
 
 			:global(picture) {
@@ -104,7 +135,9 @@
 			}
 		}
 
-		&__column:nth-child(2) {
+		&__information {
+			gap: 1rem;
+			padding: 1rem;
 			position: sticky;
 			top: 36.7px;
 		}
@@ -116,5 +149,14 @@
 		&__title {
 			margin: 0;
 		}
+
+		&__price {
+			margin: 0;
+			font-size: 1.5rem;
+		}
+	}
+
+	:global(.product__add-to-cart) {
+		width: 100%;
 	}
 </style>

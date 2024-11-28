@@ -26,7 +26,7 @@
 		--button-primary-border: #000000;
 		--button-hover-bg: #000000;
 		--button-hover-color: #ffffff;
-		--button-disabled-opacity: 0.6;
+		--button-disabled-opacity: 0.3;
 		--button-border-radius: 4px;
 		--button-padding: 0.4rem 0.5rem;
 	}
@@ -71,7 +71,7 @@
 		padding: var(--button-padding);
 		text-transform: uppercase;
 		font-family: inherit;
-		font-size: 0.7rem;
+		font-size: 0.8rem;
 		line-height: 1;
 		transition: all 0.2s ease-in-out;
 

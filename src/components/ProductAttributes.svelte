@@ -5,7 +5,12 @@
 	import { filterNullish } from '../utilities/iterables';
 	import Select from './Select.svelte';
 
-	const props: { variations: Variation[] } = $props();
+	type Selection = Record<
+		string,
+		{ id?: string | number | null; label?: string | null; value: string | number } | undefined
+	>;
+
+	const props: { variations: Variation[]; onselection?: (selection: Selection) => void } = $props();
 
 	const attributes = $derived(
 		Object.values(
@@ -19,7 +24,6 @@
 		)
 	);
 
-	type Selection = Record<number, { label?: string | null; value: string | number } | undefined>;
 	let selection = $state<Selection>({});
 
 	const reduceValues = <T extends { value?: string | null }>(values: T[]) => {
@@ -29,7 +33,7 @@
 	};
 
 	const getValueForAttribute = (attribute: Attribute) => {
-		return selection[attribute.id];
+		return selection[attribute.name];
 	};
 
 	const getAttributeLabel = (attribute: Attribute) =>
@@ -40,11 +44,11 @@
 	$effect(() => {
 		const initialSelection = attributes.reduce<Selection>((acc, it) => {
 			if (it.type === 'colors') {
-				acc[it.id] = it.colors?.[0];
+				acc[it.name] = it.colors?.[0];
 			} else if (it.type === 'options') {
-				acc[it.id] = it.options?.[0];
+				acc[it.name] = it.options?.[0];
 			} else if (it.type === 'text') {
-				acc[it.id] = it.options?.[0];
+				acc[it.name] = it.options?.[0];
 			}
 			return acc;
 		}, {});
@@ -53,7 +57,7 @@
 	});
 
 	$effect(() => {
-		$inspect(selection);
+		props.onselection?.(selection);
 	});
 </script>
 
@@ -68,11 +72,15 @@
 						<!-- svelte-ignore a11y_no_static_element_interactions -->
 						<div
 							onclick={() => {
-								selection[attribute.id] = color;
+								selection[attribute.name] = color;
 							}}
 							class="product-attributes__color"
 							style={css({
-								backgroundColor: color.value
+								'--color': color.value,
+								border:
+									getValueForAttribute(attribute)?.value === color.value
+										? '1px solid #000'
+										: undefined
 							})}
 						></div>
 					{/each}
@@ -89,7 +97,7 @@
 						}
 					]}
 					onselect={(value) => {
-						selection[attribute.id] = value;
+						selection[attribute.name] = value;
 					}}
 				/>
 			{/if}
@@ -102,12 +110,13 @@
 		display: flex;
 		flex-direction: column;
 		flex-wrap: wrap;
-		gap: 1rem;
+		gap: 1.5rem;
 
 		&__attribute {
 			display: flex;
 			flex-direction: column;
 			align-items: flex-start;
+			gap: 0.5rem;
 		}
 
 		&__colors {
@@ -116,10 +125,28 @@
 		}
 
 		&__color {
-			width: 30px;
-			height: 30px;
-			border: solid 1px black;
+			width: 26px;
+			height: 26px;
+			border: solid 1px rgba(0, 0, 0, 0.2);
+			box-sizing: border-box;
 			cursor: pointer;
+			position: relative;
+
+			&::after {
+				content: '';
+				display: block;
+				position: absolute;
+				width: calc(100% - 4px);
+				height: calc(100% - 4px);
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				background-color: var(--color);
+			}
+		}
+
+		:global(.select button) {
+			min-width: 8rem;
 		}
 	}
 </style>

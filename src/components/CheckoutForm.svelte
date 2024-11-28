@@ -96,7 +96,7 @@
 				{#each products as product}
 					{#key product.id}
 						<div class="checkout-form__cart-item">
-							<a href={`/products/${product.id}`}>{product.title}</a>
+							<a href={`/products/${product.slug}`}>{product.title}</a>
 							{#each getVariationsForProduct(product) as variation}
 								{#key variation.id}
 									<p>{variation.name}</p>

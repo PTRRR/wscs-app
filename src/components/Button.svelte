@@ -11,6 +11,8 @@
 		variant?: 'primary' | 'secondary';
 		class?: string;
 		disabled?: boolean;
+		minimal?: boolean;
+		underline?: boolean;
 	}
 
 	const {
@@ -21,7 +23,9 @@
 		type = 'button',
 		variant = 'primary',
 		class: className = '',
-		disabled = false
+		disabled = false,
+		minimal = false,
+		underline = false
 	}: ButtonProps = $props();
 
 	let buttonElement: HTMLButtonElement | undefined = $state(undefined);
@@ -52,7 +56,9 @@
 			'button',
 			`${className}`,
 			variant ? `button--${variant}` : '',
-			disabled ? 'button--disabled' : ''
+			disabled ? 'button--disabled' : '',
+			minimal ? 'button--minimal' : '',
+			underline ? 'button--underline' : ''
 		]
 			.filter(filterNullish)
 			.join(' ')
@@ -81,17 +87,29 @@
 			pointer-events: none;
 		}
 
+		&--minimal {
+			border: none;
+			padding: 0;
+
+			&:hover {
+				background: none;
+				color: gray;
+			}
+		}
+
+		&--underline {
+			text-decoration: underline;
+		}
+
 		&__inner {
 			transform: translate(0, 5%);
 			// Improve text rendering
 			-webkit-font-smoothing: antialiased;
 			-moz-osx-font-smoothing: grayscale;
 		}
-	}
 
-	@media print {
 		.button {
-			border: 1px solid #000;
+			/* border: 1px solid #000; */
 			background: none;
 			color: #000;
 		}
