@@ -52,7 +52,9 @@
 			offset += limit;
 			const res = await handleSearch();
 			searchResults = [...searchResults, ...res];
-		}, 400);
+			products =
+				typeof filterBy === 'undefined' ? [...data.products, ...searchResults] : searchResults;
+		}, 200);
 	};
 
 	let rangeValue = $state(1);
