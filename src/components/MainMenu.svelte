@@ -14,6 +14,8 @@
 	<script
 		type="text/javascript"
 		src="https://player.radioking.io/scripts/iframe.bundle.js"
+		defer
+		async
 	></script>
 </svelte:head>
 
@@ -170,6 +172,10 @@
 		}
 
 		@media screen and (max-width: 1000px) {
+			&__main-section {
+				height: 60px;
+			}
+
 			&__section {
 				& + & {
 					border-left: none;
@@ -177,7 +183,7 @@
 			}
 
 			&__title {
-				padding: 0 var(--main-padding);
+				padding: 0 calc(var(--main-padding) * 0.5);
 			}
 
 			&__search,

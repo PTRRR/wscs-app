@@ -21,7 +21,7 @@ export const load: PageServerLoad = async ({ parent }) => {
 	] = await Promise.all([
 		client.collections(typesense.productsCollection).documents().search({
 			q: '*',
-			limit: 50
+			limit: 20
 		}) as Promise<{ hits: Hit<SearchProduct>[] }>,
 		api.findEntities({
 			query: {
