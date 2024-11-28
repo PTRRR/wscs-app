@@ -49,8 +49,8 @@
 		if (debounceLoadMoreTimeout) clearTimeout(debounceLoadMoreTimeout);
 
 		debounceLoadMoreTimeout = setTimeout(async () => {
-			offset += limit;
 			const res = await handleSearch();
+			offset += limit;
 			searchResults = [...searchResults, ...res];
 			products =
 				typeof filterBy === 'undefined' ? [...data.products, ...searchResults] : searchResults;
@@ -83,8 +83,6 @@
 				brands={data.brands}
 				onSelected={async (selection) => {
 					const { tags, productTypes, entities, brands } = selection;
-					offset = 0;
-					canLoadMore = true;
 
 					filterBy =
 						[
@@ -95,6 +93,9 @@
 						]
 							.filter(filterNullish)
 							.join(' && ') || undefined;
+
+					offset = typeof filterBy === 'undefined' ? data.products.length : 0;
+					canLoadMore = true;
 
 					if (filterBy) {
 						searchResults = await handleSearch();
