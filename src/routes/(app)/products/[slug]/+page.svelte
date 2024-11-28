@@ -43,7 +43,7 @@
 
 <div class="product">
 	<div class="product__columns">
-		<div class="product__column">
+		<div class="product__column product__images">
 			{#each data.product.images || [] as image}
 				{#if typeof image !== 'number'}
 					<Image
@@ -154,6 +154,30 @@
 		&__price {
 			margin: 0;
 			font-size: 1.5rem;
+		}
+
+		@media screen and (max-width: 800px) {
+			&__columns {
+				flex-direction: column;
+			}
+
+			&__images {
+				flex-direction: row;
+				height: 40vh;
+				width: 100%;
+				overflow: auto;
+
+				:global(picture) {
+					width: initial;
+					height: 100%;
+				}
+			}
+
+			&__information {
+				width: 100%;
+				position: initial;
+				padding-bottom: 4rem;
+			}
 		}
 	}
 
