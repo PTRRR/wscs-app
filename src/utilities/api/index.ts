@@ -6,6 +6,7 @@ import type {
 	Brand,
 	Category,
 	Entity,
+	FeaturedArticle,
 	Filter,
 	Media,
 	Order,
@@ -318,6 +319,10 @@ export class WSCS {
 
 	getGlobalFilters(): Promise<Filter> {
 		return this.fetchPayload<Filter>(`/api/globals/filters`);
+	}
+
+	getGlobalFeaturedArticles(): Promise<FeaturedArticle> {
+		return this.fetchPayload<FeaturedArticle>(`/api/globals/featured-articles`);
 	}
 
 	getSearchKey(): Promise<{ value?: string }> {

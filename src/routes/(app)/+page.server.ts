@@ -12,36 +12,44 @@ export const load: PageServerLoad = async ({ parent }) => {
 	const api = new WSCS(baseUrl);
 	const client = new Client(typesense.clientConfig);
 
-	const [productsResponse, articlesResponse, entitiesResponse, brandsResponse, filtersResponse] =
-		await Promise.all([
-			client.collections(typesense.productsCollection).documents().search({
-				q: '*',
-				limit: 50
-			}) as Promise<{ hits: Hit<SearchProduct>[] }>,
-			api.findArticles({
-				sort: '-createdAt',
-				limit: 1,
-				query: {
-					_status: { equals: 'published' }
-				}
-			}),
-			api.findEntities({
-				query: {
-					_status: { equals: 'published' }
-				}
-			}),
-			api.findBrands({
-				sort: 'title',
-				limit: 60
-			}),
-			api.getGlobalFilters()
-		]);
+	const [
+		productsResponse,
+		articlesResponse,
+		entitiesResponse,
+		brandsResponse,
+		filtersResponse,
+		featuredArticlesResponse
+	] = await Promise.all([
+		client.collections(typesense.productsCollection).documents().search({
+			q: '*',
+			limit: 50
+		}) as Promise<{ hits: Hit<SearchProduct>[] }>,
+		api.findArticles({
+			sort: '-createdAt',
+			limit: 1,
+			query: {
+				_status: { equals: 'published' }
+			}
+		}),
+		api.findEntities({
+			query: {
+				_status: { equals: 'published' }
+			}
+		}),
+		api.findBrands({
+			sort: 'title',
+			limit: 60
+		}),
+		api.getGlobalFilters(),
+		api.getGlobalFeaturedArticles()
+	]);
 
 	return {
 		products: productsResponse.hits.map((it) => searchProductToProduct(it.document)),
 		article: (articlesResponse.docs || [])[0],
 		entities: entitiesResponse.docs || [],
 		brands: brandsResponse.docs || [],
-		filters: filtersResponse.filters || []
+		filters: filtersResponse.filters || [],
+		featuredArticles: featuredArticlesResponse.rows || []
 	};
 };

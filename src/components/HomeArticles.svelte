@@ -1,49 +1,101 @@
 <script lang="ts">
-	import type { Article } from '../utilities/api/types';
+	import type { Article, FeaturedArticle } from '../utilities/api/types';
 	import { getApiObject } from '../utilities/api/utils';
+	import { filterNullish } from '../utilities/iterables';
 	import LexicalReader from './LexicalReader.svelte';
 	import Slideshow from './Slideshow.svelte';
 
 	const props: {
-		article: Article;
+		articles: FeaturedArticle['rows'];
 		baseUrl?: string;
 	} = $props();
 
-	const firstImage = getApiObject((props.article.slideshow || [])[0]);
-	const firstTextBloc = $derived(
-		(props.article.content?.filter((it) => it.blockType === 'Text') || [])[0]
-	);
+	const getArticleFirstImage = (article?: Article | null) =>
+		getApiObject((article?.slideshow || [])[0]);
+
+	const getArticleFirsttextBlock = (article?: Article | null) =>
+		(article?.content?.filter((it) => it.blockType === 'Text') || [])[0];
+
+	const formattedRows = $derived.by(() => {
+		return (
+			props.articles?.map((it) =>
+				(it.articles?.map(getApiObject).filter(filterNullish) || []).map((it) => ({
+					...it,
+					article: {
+						...(getApiObject(it.article) || {}),
+						firstImage: getArticleFirstImage(getApiObject(it.article)),
+						firstTextBock: getArticleFirsttextBlock(getApiObject(it.article))
+					}
+				}))
+			) || []
+		);
+	});
 </script>
 
-<section class="article-home">
-	{#if firstImage}
-		<Slideshow baseUrl={props.baseUrl} slides={[firstImage]} width="100%" height="70vh" />
-	{/if}
-	<article class="article-home__content">
-		<h1 class="article-home__title">
-			{props.article.title}
-		</h1>
+<section class="articles-home">
+	{#each formattedRows as row}
+		<div class="articles-home__row">
+			{#each row || [] as { article, orientation }}
+				<article class="articles-home__article" class:articles-home--full={row.length === 1}>
+					{#if article.firstImage}
+						<Slideshow baseUrl={props.baseUrl} slides={[article.firstImage]} />
+					{/if}
 
-		{#if firstTextBloc}
-			<div class="article-home__text">
-				<LexicalReader content={firstTextBloc.content} maxLines={5} />
-				<a href={`/articles/${props.article.slug}`}>Read more...</a>
-			</div>
-		{/if}
-	</article>
+					<h1 class="articles-home__title">
+						{article.title}
+					</h1>
+
+					{#if article.firstTextBock}
+						<div class="articles-home__text">
+							<LexicalReader content={article.firstTextBock.content} maxLines={4} />
+							<a href={`/articles/${article.slug}`}>Read more...</a>
+						</div>
+					{/if}
+				</article>
+			{/each}
+		</div>
+	{/each}
 </section>
 
 <style lang="scss">
-	.article-home {
+	.articles-home {
 		display: flex;
 		flex-direction: column;
 
-		&__content {
+		&__row {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			border-bottom: solid 1px lightgray;
+			padding: 2rem 0;
+			gap: 2rem;
+		}
+
+		&__row:first-child {
+			padding-top: 0;
+		}
+
+		&__article {
 			display: flex;
 			flex-direction: column;
+			width: 50vh;
+			/* max-width: 50vh; */
+
+			:global(.slideshow) {
+				height: 60vh;
+			}
+		}
+
+		&--full {
+			width: 100%;
+			text-align: center;
+			justify-content: center;
 			align-items: center;
-			padding: 1rem;
-			height: 100%;
+
+			:global(.slideshow) {
+				height: 70vh;
+				width: 100%;
+			}
 		}
 
 		&__title {

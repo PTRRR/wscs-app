@@ -81,9 +81,11 @@ export interface Config {
 	};
 	globals: {
 		filters: Filter;
+		'featured-articles': FeaturedArticle;
 	};
 	globalsSelect: {
 		filters: FiltersSelect<false> | FiltersSelect<true>;
+		'featured-articles': FeaturedArticlesSelect<false> | FeaturedArticlesSelect<true>;
 	};
 	locale: null;
 	user: User & {
@@ -982,6 +984,27 @@ export interface Filter {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "featured-articles".
+ */
+export interface FeaturedArticle {
+	id: number;
+	rows?:
+		| {
+				articles?:
+					| {
+							orientation?: ('horizontal' | 'vertical') | null;
+							article?: (number | null) | Article;
+							id?: string | null;
+					  }[]
+					| null;
+				id?: string | null;
+		  }[]
+		| null;
+	updatedAt?: string | null;
+	createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "filters_select".
  */
 export interface FiltersSelect<T extends boolean = true> {
@@ -991,6 +1014,27 @@ export interface FiltersSelect<T extends boolean = true> {
 				label?: T;
 				tag?: T;
 				productTypes?: T;
+				id?: T;
+		  };
+	updatedAt?: T;
+	createdAt?: T;
+	globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "featured-articles_select".
+ */
+export interface FeaturedArticlesSelect<T extends boolean = true> {
+	rows?:
+		| T
+		| {
+				articles?:
+					| T
+					| {
+							orientation?: T;
+							article?: T;
+							id?: T;
+					  };
 				id?: T;
 		  };
 	updatedAt?: T;

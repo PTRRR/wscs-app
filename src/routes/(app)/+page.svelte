@@ -65,7 +65,7 @@
 </div>
 
 {#if data.article}
-	<HomeArticles baseUrl={data.api.baseUrl} article={data.article} />
+	<HomeArticles baseUrl={data.api.baseUrl} articles={data.featuredArticles} />
 {/if}
 
 <div class="home">

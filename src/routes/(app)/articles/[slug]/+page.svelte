@@ -84,7 +84,7 @@
 </svelte:head>
 
 <div class="article">
-	<Slideshow {baseUrl} {slides} height="60vh" />
+	<Slideshow {baseUrl} {slides} height="80vh" />
 
 	<article>
 		<h1>{article.title}</h1>

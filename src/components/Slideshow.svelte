@@ -8,6 +8,7 @@
 		height?: string;
 		slides: Partial<Media>[];
 		baseUrl?: string;
+		ratio?: number | string;
 	} = $props();
 
 	const getBaseImage = (image: Partial<Media>) => image.sizes?.webp || image;
@@ -17,7 +18,8 @@
 	class="slideshow"
 	style={css({
 		'--width': props.width || '100%',
-		'--height': props.height || '100%'
+		'--height': props.height || '100%',
+		'--ratio': props.ratio || 'unset'
 	})}
 >
 	{#each props.slides as slide}
@@ -47,6 +49,7 @@
 		position: relative;
 		width: var(--width);
 		height: var(--height);
+		aspect-ratio: var(--ratio);
 		overflow: hidden;
 
 		&__slide {
