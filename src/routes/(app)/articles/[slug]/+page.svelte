@@ -96,7 +96,7 @@
 					</div>
 				{:else if block.blockType === 'Products'}
 					<div class="article__block">
-						<ProductsGrid products={block.products} size="30%" />
+						<ProductsGrid baseUrl={props.data.api.baseUrl} products={block.products} size="30%" />
 					</div>
 				{/if}
 			{/each}
