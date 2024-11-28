@@ -41,6 +41,8 @@
 
 <style lang="scss">
 	.picture {
+		display: flex;
+
 		&--loading {
 			background-color: lightgray;
 		}
