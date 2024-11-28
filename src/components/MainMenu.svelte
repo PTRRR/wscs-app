@@ -10,6 +10,13 @@
 	const cartTotalItems = $derived($cart.items.reduce((acc, it) => (acc += it.quantity), 0));
 </script>
 
+<svelte:head>
+	<script
+		type="text/javascript"
+		src="https://player.radioking.io/scripts/iframe.bundle.js"
+	></script>
+</svelte:head>
+
 <LoadingBar />
 
 <header class="main-menu">
@@ -41,10 +48,15 @@
 		</div>
 		<div class="main-menu__section main-menu__radio">
 			<!-- svelte-ignore a11y_missing_attribute -->
-			<iframe
+			<!-- <iframe
 				src="https://player.radioking.io/music-4-hikers/?c=%23FFFFFF&c2=%232F3542"
-				style="border-radius: 5px; width: 100%; height: 100%; "
+				style="border-radius: 5px; width: 100%; height: 50%; "
 				frameborder="0"
+			></iframe> -->
+			<iframe
+				src="https://player.radioking.io/music-4-hikers/?c=%23FFFFFF&c2=%232F3542&f=h&i=0&p=2&s=0&li=2&plc=NaN&h=10&l=10"
+				style="border-radius: 0px;"
+				frameBorder="0"
 			></iframe>
 		</div>
 	</div>
@@ -59,6 +71,10 @@
 
 <style lang="scss">
 	.main-menu {
+		$iframe-height: 145px;
+		$iframe-width: 1000px;
+		$iframe-scale: 0.8;
+
 		position: relative;
 		z-index: 100;
 		display: flex;
@@ -68,6 +84,7 @@
 		&__main-section {
 			display: flex;
 			border-bottom: solid black 1px;
+			height: #{$iframe-height * $iframe-scale - 5px};
 		}
 
 		&__sub-section {
@@ -87,6 +104,8 @@
 			padding: var(--main-padding) 0;
 			justify-content: center;
 			align-items: center;
+			height: 100%;
+			min-width: #{310 * $iframe-scale}px;
 
 			& + & {
 				border-left: solid 1px black;
@@ -104,11 +123,18 @@
 			display: flex;
 			justify-content: flex-end;
 			padding: 0;
+			overflow: hidden;
+			position: relative;
 
 			iframe {
-				max-height: 100px;
+				position: absolute;
+				width: #{$iframe-width};
+				height: #{$iframe-height};
 				border: none;
 				border-radius: 0;
+				top: 50%;
+				left: #{$iframe-width * (1 - $iframe-scale) * -0.5};
+				transform: translate(0%, -50%) scale(#{$iframe-scale});
 			}
 		}
 
