@@ -14,7 +14,6 @@ export const load: PageServerLoad = async ({ parent }) => {
 
 	const [
 		productsResponse,
-		articlesResponse,
 		entitiesResponse,
 		brandsResponse,
 		filtersResponse,
@@ -24,13 +23,6 @@ export const load: PageServerLoad = async ({ parent }) => {
 			q: '*',
 			limit: 50
 		}) as Promise<{ hits: Hit<SearchProduct>[] }>,
-		api.findArticles({
-			sort: '-createdAt',
-			limit: 1,
-			query: {
-				_status: { equals: 'published' }
-			}
-		}),
 		api.findEntities({
 			query: {
 				_status: { equals: 'published' }
@@ -46,7 +38,6 @@ export const load: PageServerLoad = async ({ parent }) => {
 
 	return {
 		products: productsResponse.hits.map((it) => searchProductToProduct(it.document)),
-		article: (articlesResponse.docs || [])[0],
 		entities: entitiesResponse.docs || [],
 		brands: brandsResponse.docs || [],
 		filters: filtersResponse.filters || [],

@@ -64,7 +64,7 @@
 	<EntitiesHeader baseUrl={data.api.baseUrl} entities={data.entities} />
 </div>
 
-{#if data.article}
+{#if data.featuredArticles.length > 0}
 	<HomeArticles baseUrl={data.api.baseUrl} articles={data.featuredArticles} />
 {/if}
 
