@@ -444,6 +444,17 @@ export interface Article {
 	title: string;
 	slug: string;
 	slideshow?: (number | Media)[] | null;
+	content?: (ArticleTextBlock | ArticleProductsBlock)[] | null;
+	publishedOn?: string | null;
+	updatedAt: string;
+	createdAt: string;
+	_status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ArticleTextBlock".
+ */
+export interface ArticleTextBlock {
 	content?: {
 		root: {
 			type: string;
@@ -459,10 +470,19 @@ export interface Article {
 		};
 		[k: string]: unknown;
 	} | null;
-	publishedOn?: string | null;
-	updatedAt: string;
-	createdAt: string;
-	_status?: ('draft' | 'published') | null;
+	id?: string | null;
+	blockName?: string | null;
+	blockType: 'Text';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ArticleProductsBlock".
+ */
+export interface ArticleProductsBlock {
+	products?: (number | Product)[] | null;
+	id?: string | null;
+	blockName?: string | null;
+	blockType: 'Products';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -738,7 +758,24 @@ export interface ArticlesSelect<T extends boolean = true> {
 	title?: T;
 	slug?: T;
 	slideshow?: T;
-	content?: T;
+	content?:
+		| T
+		| {
+				Text?:
+					| T
+					| {
+							content?: T;
+							id?: T;
+							blockName?: T;
+					  };
+				Products?:
+					| T
+					| {
+							products?: T;
+							id?: T;
+							blockName?: T;
+					  };
+		  };
 	publishedOn?: T;
 	updatedAt?: T;
 	createdAt?: T;

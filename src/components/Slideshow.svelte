@@ -10,8 +10,7 @@
 		baseUrl?: string;
 	} = $props();
 
-	const getBaseImage = (image: Partial<Media>) =>
-		image.sizes?.largeWebp || image.sizes?.large || image.sizes?.webp || image;
+	const getBaseImage = (image: Partial<Media>) => image.sizes?.webp || image;
 </script>
 
 <div
@@ -33,8 +32,8 @@
 					srcsets={[
 						{ src: slide.sizes?.mediumWebp?.url, maxWidth: slide.sizes?.mediumWebp?.width },
 						{ src: slide.sizes?.medium?.url, maxWidth: slide.sizes?.medium?.width },
-						{ src: slide.sizes?.small?.url, maxWidth: slide.sizes?.small?.width },
-						{ src: slide.sizes?.smallWebp?.url, maxWidth: slide.sizes?.smallWebp?.width },
+						// { src: slide.sizes?.small?.url, maxWidth: slide.sizes?.small?.width },
+						// { src: slide.sizes?.smallWebp?.url, maxWidth: slide.sizes?.smallWebp?.width },
 						{ src: slide.sizes?.webp?.url }
 					]}
 				/>

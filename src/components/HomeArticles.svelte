@@ -10,6 +10,9 @@
 	} = $props();
 
 	const firstImage = getApiObject((props.article.slideshow || [])[0]);
+	const firstTextBloc = $derived(
+		(props.article.content?.filter((it) => it.blockType === 'Text') || [])[0]
+	);
 </script>
 
 <section class="article-home">
@@ -20,10 +23,13 @@
 		<h1 class="article-home__title">
 			{props.article.title}
 		</h1>
-		<div class="article-home__text">
-			<LexicalReader content={props.article.content} maxLines={5} />
-			<a href={`/articles/${props.article.slug}`}>Read more...</a>
-		</div>
+
+		{#if firstTextBloc}
+			<div class="article-home__text">
+				<LexicalReader content={firstTextBloc.content} maxLines={5} />
+				<a href={`/articles/${props.article.slug}`}>Read more...</a>
+			</div>
+		{/if}
 	</article>
 </section>
 
