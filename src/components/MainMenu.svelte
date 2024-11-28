@@ -43,7 +43,7 @@
 			<!-- svelte-ignore a11y_missing_attribute -->
 			<iframe
 				src="https://player.radioking.io/music-4-hikers/?c=%23FFFFFF&c2=%232F3542"
-				style="border-radius: 5px; width: 100%; height: 100px; "
+				style="border-radius: 5px; width: 100%; height: 100%; "
 				frameborder="0"
 			></iframe>
 		</div>
@@ -103,6 +103,13 @@
 		&__radio {
 			display: flex;
 			justify-content: flex-end;
+			padding: 0;
+
+			iframe {
+				max-height: 100px;
+				border: none;
+				border-radius: 0;
+			}
 		}
 
 		&__title {
