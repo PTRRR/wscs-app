@@ -40,6 +40,8 @@
 		canLoadMore = res.length === limit;
 		isLoading = false;
 
+		offset += res.length;
+
 		return res;
 	};
 
@@ -50,7 +52,7 @@
 
 		debounceLoadMoreTimeout = setTimeout(async () => {
 			const res = await handleSearch();
-			offset += limit;
+
 			searchResults = [...searchResults, ...res];
 			products =
 				typeof filterBy === 'undefined' ? [...data.products, ...searchResults] : searchResults;
