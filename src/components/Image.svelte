@@ -1,10 +1,17 @@
 <script lang="ts">
+	import { filterNullish } from '../utilities/iterables';
 	import { joinPaths } from '../utilities/urls';
+
+	type Srcset = {
+		src?: string | null;
+		minWidth?: number | null;
+		maxWidth?: number | null;
+	};
 
 	const props: {
 		baseUrl?: string;
 		src: string;
-		srcsets?: { src?: string | null; minWidth?: number | null }[];
+		srcsets?: Srcset[];
 		alt?: string | null;
 		width?: number | null;
 		height?: number | null;
@@ -17,6 +24,14 @@
 	const getFullUrl = (url: string) => joinPaths(baseUrl || 'http://localhost:3000', url);
 
 	let isLoaded = $state(false);
+
+	const getSourceMediaTag = (srcset: Srcset) =>
+		[
+			srcset.minWidth ? `(min-width: ${srcset.minWidth}px)` : undefined,
+			srcset.maxWidth ? `(max-width: ${srcset.maxWidth}px)` : undefined
+		]
+			.filter(filterNullish)
+			.join(' ');
 </script>
 
 <picture class="picture" class:picture--loading={!isLoaded}>
@@ -25,7 +40,7 @@
 			<source
 				srcset={getFullUrl(srcset.src)}
 				type={getUrlMimeType(srcset.src)}
-				media={srcset.minWidth ? `(min-width: ${srcset.minWidth}px)` : undefined}
+				media={getSourceMediaTag(srcset)}
 			/>
 		{/if}
 	{/each}

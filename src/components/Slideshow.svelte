@@ -11,7 +11,7 @@
 	} = $props();
 
 	const getBaseImage = (image: Partial<Media>) =>
-		image.sizes?.largeWebp || image.sizes?.large || image;
+		image.sizes?.largeWebp || image.sizes?.large || image.sizes?.webp || image;
 </script>
 
 <div
@@ -31,10 +31,11 @@
 					height={getBaseImage(slide).height}
 					alt={slide.alt}
 					srcsets={[
-						{ src: slide.sizes?.mediumWebp?.url, minWidth: slide.sizes?.mediumWebp?.width },
-						{ src: slide.sizes?.medium?.url, minWidth: slide.sizes?.medium?.width },
-						{ src: slide.sizes?.small?.url, minWidth: slide.sizes?.small?.width },
-						{ src: slide.sizes?.smallWebp?.url, minWidth: slide.sizes?.smallWebp?.width }
+						{ src: slide.sizes?.mediumWebp?.url, maxWidth: slide.sizes?.mediumWebp?.width },
+						{ src: slide.sizes?.medium?.url, maxWidth: slide.sizes?.medium?.width },
+						{ src: slide.sizes?.small?.url, maxWidth: slide.sizes?.small?.width },
+						{ src: slide.sizes?.smallWebp?.url, maxWidth: slide.sizes?.smallWebp?.width },
+						{ src: slide.sizes?.webp?.url }
 					]}
 				/>
 			</div>
