@@ -21,14 +21,11 @@
 	let offset = data.products.length;
 	const limit = 50;
 
+	let products = $state(data.products);
 	let isLoading = $state(false);
 	let canLoadMore = $state(true);
 	let filterBy = $state<string | undefined>(undefined);
 	let searchResults: Product[] = $state([]);
-
-	const products = $derived(
-		typeof filterBy === 'undefined' ? [...data.products, ...searchResults] : searchResults
-	);
 
 	const handleSearch = async () => {
 		isLoading = true;
@@ -82,7 +79,7 @@
 				filters={data.filters}
 				entities={data.entities}
 				brands={data.brands}
-				onSelected={(selection) => {
+				onSelected={async (selection) => {
 					const { tags, productTypes, entities, brands } = selection;
 					offset = 0;
 					canLoadMore = true;
@@ -98,10 +95,13 @@
 							.join(' && ') || undefined;
 
 					if (filterBy) {
-						handleSearch().then((res) => (searchResults = res));
+						searchResults = await handleSearch();
 					} else {
 						searchResults = [];
 					}
+
+					products =
+						typeof filterBy === 'undefined' ? [...data.products, ...searchResults] : searchResults;
 				}}
 			/>
 
