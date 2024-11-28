@@ -17,6 +17,7 @@
 	let readMore = $state(false);
 	let quantity = $state(1);
 	let added = $state(false);
+	const outOfStock = $derived(selectedVariation && (selectedVariation?.inventory || 0) === 0);
 
 	const { addToCart } = useLocalCart();
 
@@ -94,7 +95,7 @@
 
 			<Button
 				class="product__add-to-cart"
-				disabled={!selectedVariation || added}
+				disabled={!selectedVariation || added || outOfStock}
 				onclick={() => {
 					if (!selectedVariation) return;
 					addToCart({
@@ -104,7 +105,7 @@
 					});
 
 					added = true;
-				}}>{added ? 'Item added' : 'Add to cart'}</Button
+				}}>{added ? 'Item added' : outOfStock ? 'Out of stock' : 'Add to cart'}</Button
 			>
 		</section>
 	</div>
