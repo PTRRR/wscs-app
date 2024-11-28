@@ -55,7 +55,8 @@
 					height: image?.sizes?.thumbnailWebp?.height
 				},
 				variationId: defaultVariation?.id,
-				price: defaultVariation?.price
+				price: defaultVariation?.price,
+				inventory: defaultVariation?.inventory || 0
 			};
 		});
 	});
@@ -106,6 +107,7 @@
 								{#if typeof product.variationId === 'number'}
 									<Button
 										aria-label="Add to cart"
+										disabled={product.inventory === 0}
 										onclick={() => {
 											if (typeof product.variationId !== 'number') return;
 											if (!isInCart(product.id)) {
@@ -122,7 +124,11 @@
 											}
 										}}
 									>
-										{isInCart(product.id) ? 'Remove from cart' : 'Add to cart'}
+										{isInCart(product.id)
+											? 'Remove from cart'
+											: product.inventory > 0
+												? 'Add to cart'
+												: 'Out of stock'}
 									</Button>
 								{/if}
 							</div>
