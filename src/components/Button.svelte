@@ -91,6 +91,10 @@
 			border: none;
 			padding: 0;
 
+			&__inner {
+				transform: none;
+			}
+
 			&:hover {
 				background: none;
 				color: gray;

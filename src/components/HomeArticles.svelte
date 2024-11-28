@@ -3,6 +3,7 @@
 	import { getApiObject } from '../utilities/api/utils';
 	import { filterNullish } from '../utilities/iterables';
 	import LexicalReader from './LexicalReader.svelte';
+	import ReadMoreButton from './ReadMoreButton.svelte';
 	import Slideshow from './Slideshow.svelte';
 
 	const props: {
@@ -48,7 +49,7 @@
 					{#if article.firstTextBock}
 						<div class="articles-home__text">
 							<LexicalReader content={article.firstTextBock.content} maxLines={4} />
-							<a href={`/articles/${article.slug}`}>Read more...</a>
+							<ReadMoreButton href={`/articles/${article.slug}`} />
 						</div>
 					{/if}
 				</article>
@@ -59,6 +60,7 @@
 
 <style lang="scss">
 	.articles-home {
+		$root: &;
 		display: flex;
 		flex-direction: column;
 
@@ -91,6 +93,10 @@
 			text-align: center;
 			justify-content: center;
 			align-items: center;
+
+			#{$root}__text {
+				align-items: center;
+			}
 
 			:global(.slideshow) {
 				height: 70vh;

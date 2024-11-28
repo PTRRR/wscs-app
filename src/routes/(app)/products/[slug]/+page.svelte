@@ -8,6 +8,7 @@
 	import Button from '../../../../components/Button.svelte';
 	import Quantity from '../../../../components/Quantity.svelte';
 	import { useLocalCart } from '../../../../store';
+	import ReadMoreButton from '../../../../components/ReadMoreButton.svelte';
 
 	const props: { data: PageData } = $props();
 	const { data } = props;
@@ -90,7 +91,7 @@
 			<LexicalReader content={data.product.description} maxLines={readMore ? undefined : 4} />
 
 			{#if !readMore}
-				<Button onclick={() => (readMore = true)} minimal underline>Read more...</Button>
+				<ReadMoreButton onclick={() => (readMore = true)} />
 			{/if}
 
 			<Button
