@@ -46,7 +46,8 @@
 			border-right: solid 1px;
 			border-color: inherit;
 			position: absolute;
-			top: calc(50% - 0.2em);
+			box-sizing: border-box;
+			top: calc(50% - 0.1em);
 			left: calc(100% + 0.6em);
 			transform: translate(-100%, -50%) rotate(45deg);
 		}
