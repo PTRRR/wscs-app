@@ -68,76 +68,76 @@
 		'--size': props.size || '200px'
 	})}
 >
-	{#if products.length > 0}
-		<div class="products-grid__content">
-			<div class="products-grid__items">
-				{#each products as product}
-					<article class="products-grid__item">
-						<a
-							class="products-grid__image"
-							href={`/products/${product.slug}`}
-							aria-label="Product image"
-						>
-							<div class="products-grid__image-content">
-								{#if product.image.src}
-									{#key product.image.src}
-										<Image
-											baseUrl={props.baseUrl}
-											src={product.image.src}
-											srcsets={product.image.srcsets}
-											alt={product.image.alt}
-											width={product.image.width}
-											height={product.image.height}
-											lazyload={true}
-										/>
-									{/key}
-								{:else}
-									<span>No image</span>
-								{/if}
-							</div>
-						</a>
-						<div class="products-grid__footer">
-							<h3>{product.title}</h3>
-
-							<div>
-								{#if product.price}
-									<p aria-label="Price">€ {product.price}</p>
-								{/if}
-
-								{#if typeof product.variationId === 'number'}
-									<Button
-										aria-label="Add to cart"
-										disabled={product.inventory === 0}
-										onclick={() => {
-											if (typeof product.variationId !== 'number') return;
-											if (!isInCart(product.id)) {
-												addToCart({
-													product: product.id,
-													variation: product.variationId,
-													quantity: 1
-												});
-											} else {
-												removeFromCart({
-													product: product.id,
-													variation: product.variationId
-												});
-											}
-										}}
-									>
-										{isInCart(product.id)
-											? 'Remove from cart'
-											: product.inventory > 0
-												? 'Add to cart'
-												: 'Out of stock'}
-									</Button>
-								{/if}
-							</div>
+	<!-- {#if products.length > 0} -->
+	<div class="products-grid__content">
+		<div class="products-grid__items">
+			{#each products as product}
+				<article class="products-grid__item">
+					<a
+						class="products-grid__image"
+						href={`/products/${product.slug}`}
+						aria-label="Product image"
+					>
+						<div class="products-grid__image-content">
+							{#if product.image.src}
+								{#key product.image.src}
+									<Image
+										baseUrl={props.baseUrl}
+										src={product.image.src}
+										srcsets={product.image.srcsets}
+										alt={product.image.alt}
+										width={product.image.width}
+										height={product.image.height}
+										lazyload={true}
+									/>
+								{/key}
+							{:else}
+								<span>No image</span>
+							{/if}
 						</div>
-					</article>
-				{/each}
-			</div>
+					</a>
+					<div class="products-grid__footer">
+						<h3>{product.title}</h3>
+
+						<div>
+							{#if product.price}
+								<p aria-label="Price">€ {product.price}</p>
+							{/if}
+
+							{#if typeof product.variationId === 'number'}
+								<Button
+									aria-label="Add to cart"
+									disabled={product.inventory === 0}
+									onclick={() => {
+										if (typeof product.variationId !== 'number') return;
+										if (!isInCart(product.id)) {
+											addToCart({
+												product: product.id,
+												variation: product.variationId,
+												quantity: 1
+											});
+										} else {
+											removeFromCart({
+												product: product.id,
+												variation: product.variationId
+											});
+										}
+									}}
+								>
+									{isInCart(product.id)
+										? 'Remove from cart'
+										: product.inventory > 0
+											? 'Add to cart'
+											: 'Out of stock'}
+								</Button>
+							{/if}
+						</div>
+					</div>
+				</article>
+			{/each}
 		</div>
-	{/if}
+	</div>
+	<!-- {/if} -->
 
 	{#if props.onloadmore}
 		<div class="products-grid__load-more">

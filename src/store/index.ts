@@ -116,12 +116,14 @@ export const useSearchEngine = (
 			filterBy?: string;
 			limit?: number;
 			page?: number;
+			offset?: number;
 		} = {
 			query: '',
 			queryBy: 'title',
 			filterBy: undefined,
 			limit: 60,
-			page: 0
+			page: 0,
+			offset: 0
 		}
 	) => {
 		if (!get(searchKey)?.value) {
@@ -143,7 +145,8 @@ export const useSearchEngine = (
 				limit: params.limit || 60,
 				query_by: params.queryBy,
 				filter_by: params.filterBy,
-				page: params.page || 0
+				page: params.page || 0,
+				offset: params.offset || 0
 			})) as { hits: Hit<SearchProduct>[] };
 
 		return result.hits.map((it) => searchProductToProduct(it.document));

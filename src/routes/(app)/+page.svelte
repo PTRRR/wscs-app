@@ -18,7 +18,7 @@
 		data.typesense.clientConfig
 	);
 
-	let page = 1;
+	let offset = data.products.length;
 	const limit = 50;
 
 	let isLoading = $state(false);
@@ -37,7 +37,7 @@
 			query: '*',
 			filterBy,
 			limit,
-			page
+			offset
 		});
 
 		canLoadMore = res.length === limit;
@@ -46,10 +46,16 @@
 		return res;
 	};
 
+	let debounceLoadMoreTimeout: NodeJS.Timeout | undefined = undefined;
+
 	const handleLoadMore = async () => {
-		page++;
-		const res = await handleSearch();
-		searchResults = [...searchResults, ...res];
+		if (debounceLoadMoreTimeout) clearTimeout(debounceLoadMoreTimeout);
+
+		debounceLoadMoreTimeout = setTimeout(async () => {
+			offset += limit;
+			const res = await handleSearch();
+			searchResults = [...searchResults, ...res];
+		}, 400);
 	};
 
 	let rangeValue = $state(1);
@@ -78,7 +84,7 @@
 				brands={data.brands}
 				onSelected={(selection) => {
 					const { tags, productTypes, entities, brands } = selection;
-					page = 1;
+					offset = 0;
 					canLoadMore = true;
 
 					filterBy =
