@@ -86,20 +86,22 @@
 					{/each}
 				</div>
 			{:else if attribute.type === 'options'}
-				<Select
-					label={attribute.label}
-					defaultSelected={attribute.options?.[0]}
-					options={[
-						{
-							label: attribute.label,
-							showLabel: false,
-							values: reduceValues(attribute.options || [])
-						}
-					]}
-					onselect={(value) => {
-						selection[attribute.name] = value;
-					}}
-				/>
+				{#if reduceValues(attribute.options || []).length > 1}
+					<Select
+						label={attribute.label}
+						defaultSelected={attribute.options?.[0]}
+						options={[
+							{
+								label: attribute.label,
+								showLabel: false,
+								values: reduceValues(attribute.options || [])
+							}
+						]}
+						onselect={(value) => {
+							selection[attribute.name] = value;
+						}}
+					/>
+				{/if}
 			{/if}
 		</div>
 	{/each}
