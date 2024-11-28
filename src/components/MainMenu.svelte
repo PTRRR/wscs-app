@@ -123,6 +123,19 @@
 			}
 		}
 
+		input {
+			font-family: inherit;
+			font-size: 1rem;
+			padding: 1rem;
+			border-radius: 5px;
+			border: solid 1px black;
+			text-transform: uppercase;
+
+			&:focus {
+				outline: none;
+			}
+		}
+
 		@media screen and (max-width: 1000px) {
 			&__section {
 				& + & {
