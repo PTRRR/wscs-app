@@ -87,7 +87,7 @@
 
 						if (typeof firstVariationImage === 'object') {
 							const element = document.querySelector(`#image-${firstVariationImage.id}`);
-							element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+							element?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 						}
 					}}
 				/>
