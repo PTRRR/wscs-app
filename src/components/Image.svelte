@@ -9,6 +9,7 @@
 	};
 
 	const props: {
+		id?: string;
 		baseUrl?: string;
 		src: string;
 		srcsets?: Srcset[];
@@ -34,7 +35,7 @@
 			.join(' ');
 </script>
 
-<picture class="picture" class:picture--loading={!isLoaded}>
+<picture id={props.id} class="picture" class:picture--loading={!isLoaded}>
 	{#each srcsets || [] as srcset}
 		{#if srcset.src}
 			<source

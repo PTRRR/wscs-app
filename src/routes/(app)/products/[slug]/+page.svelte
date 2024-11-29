@@ -47,6 +47,7 @@
 			{#each data.product.images || [] as image}
 				{#if typeof image !== 'number'}
 					<Image
+						id={`image-${image.id}`}
 						baseUrl={data.api.baseUrl}
 						src={image?.sizes?.largeWebp?.url || image?.url || ''}
 					/>
@@ -81,6 +82,13 @@
 								([attributeName, value]) => attributeValues[attributeName] === value?.id
 							);
 						});
+
+						const firstVariationImage = selectedVariation?.images?.[0];
+
+						if (typeof firstVariationImage === 'object') {
+							const element = document.querySelector(`#image-${firstVariationImage.id}`);
+							element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+						}
 					}}
 				/>
 				<Quantity bind:value={quantity} min={1} />
