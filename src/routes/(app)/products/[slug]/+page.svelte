@@ -140,7 +140,7 @@
 
 		&__information {
 			gap: 1rem;
-			padding: 1rem;
+			padding: var(--main-padding);
 			position: sticky;
 			top: 36.7px;
 		}
