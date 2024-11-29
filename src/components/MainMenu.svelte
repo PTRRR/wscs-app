@@ -85,7 +85,7 @@
 
 		&__main-section {
 			display: flex;
-			border-bottom: solid black 1px;
+			border-bottom: solid var(--light-gray) 1px;
 			height: #{$iframe-height * $iframe-scale - 5px};
 		}
 
@@ -96,7 +96,7 @@
 			z-index: 1000;
 			display: flex;
 			justify-content: flex-end;
-			border-bottom: solid black 1px;
+			border-bottom: solid var(--light-gray) 1px;
 			padding: 0.5rem var(--main-padding);
 			gap: 1rem;
 		}
@@ -110,7 +110,7 @@
 			min-width: #{310 * $iframe-scale}px;
 
 			& + & {
-				border-left: solid 1px black;
+				border-left: solid 1px var(--light-gray);
 			}
 		}
 
@@ -163,7 +163,7 @@
 			font-size: 1rem;
 			padding: 1rem;
 			border-radius: 5px;
-			border: solid 1px black;
+			border: solid 1px var(--light-gray);
 			text-transform: uppercase;
 
 			&:focus {
