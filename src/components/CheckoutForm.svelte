@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { loadStripe, type Stripe, type StripeElements } from '@stripe/stripe-js';
 	import { onMount } from 'svelte';
-	import { useLocalCart, useUser } from '../store';
+	import { useLocalCart } from '../store';
 	import type { Product, User, Variation } from '../utilities/api/types';
 	import { WSCS } from '../utilities/api';
 	import { filterDuplicate, filterNullish } from '../utilities/iterables';
-	import { Elements, LinkAuthenticationElement, PaymentElement } from 'svelte-stripe';
+	import { Address, Elements, LinkAuthenticationElement, PaymentElement } from 'svelte-stripe';
 	import { goto } from '$app/navigation';
 
 	const props: {
@@ -164,7 +164,10 @@
 									}
 								}}
 							/>
+							<h2>Address</h2>
+							<Address mode="billing" autocomplete={{ mode: 'automatic' }} />
 						</Elements>
+
 						<button type="submit">Pay</button>
 					</form>
 				{:else if paymentIntentError}
