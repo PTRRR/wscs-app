@@ -81,6 +81,7 @@
 		<aside class="home__filters">
 			<HomeFilters
 				filters={data.filters}
+				additionalFilters={data.additionalFilters}
 				entities={data.entities}
 				brands={data.brands}
 				onSelected={async (selection) => {

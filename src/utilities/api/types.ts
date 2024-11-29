@@ -24,18 +24,18 @@ export interface Config {
 		users: UserAuthOperations;
 	};
 	collections: {
-		users: User;
-		media: Media;
 		articles: Article;
-		attributes: Attribute;
-		entities: Entity;
 		products: Product;
 		variations: Variation;
-		categories: Category;
-		'product-types': ProductType;
-		tags: Tag;
-		orders: Order;
+		entities: Entity;
 		brands: Brand;
+		media: Media;
+		users: User;
+		orders: Order;
+		attributes: Attribute;
+		tags: Tag;
+		'product-types': ProductType;
+		categories: Category;
 		'payload-locked-documents': PayloadLockedDocument;
 		'payload-preferences': PayloadPreference;
 		'payload-migrations': PayloadMigration;
@@ -44,32 +44,32 @@ export interface Config {
 		products: {
 			variations: 'variations';
 		};
-		categories: {
-			products: 'products';
-		};
-		'product-types': {
+		brands: {
 			products: 'products';
 		};
 		tags: {
 			products: 'products';
 		};
-		brands: {
+		'product-types': {
+			products: 'products';
+		};
+		categories: {
 			products: 'products';
 		};
 	};
 	collectionsSelect: {
-		users: UsersSelect<false> | UsersSelect<true>;
-		media: MediaSelect<false> | MediaSelect<true>;
 		articles: ArticlesSelect<false> | ArticlesSelect<true>;
-		attributes: AttributesSelect<false> | AttributesSelect<true>;
-		entities: EntitiesSelect<false> | EntitiesSelect<true>;
 		products: ProductsSelect<false> | ProductsSelect<true>;
 		variations: VariationsSelect<false> | VariationsSelect<true>;
-		categories: CategoriesSelect<false> | CategoriesSelect<true>;
-		'product-types': ProductTypesSelect<false> | ProductTypesSelect<true>;
-		tags: TagsSelect<false> | TagsSelect<true>;
-		orders: OrdersSelect<false> | OrdersSelect<true>;
+		entities: EntitiesSelect<false> | EntitiesSelect<true>;
 		brands: BrandsSelect<false> | BrandsSelect<true>;
+		media: MediaSelect<false> | MediaSelect<true>;
+		users: UsersSelect<false> | UsersSelect<true>;
+		orders: OrdersSelect<false> | OrdersSelect<true>;
+		attributes: AttributesSelect<false> | AttributesSelect<true>;
+		tags: TagsSelect<false> | TagsSelect<true>;
+		'product-types': ProductTypesSelect<false> | ProductTypesSelect<true>;
+		categories: CategoriesSelect<false> | CategoriesSelect<true>;
 		'payload-locked-documents':
 			| PayloadLockedDocumentsSelect<false>
 			| PayloadLockedDocumentsSelect<true>;
@@ -116,102 +116,15 @@ export interface UserAuthOperations {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
+ * via the `definition` "articles".
  */
-export interface User {
-	id: number;
-	name?: string | null;
-	roles?: ('admin' | 'customer')[] | null;
-	purchases?: (number | Variation)[] | null;
-	stripeCustomerID?: string | null;
-	cart?: {
-		stripePaymentIntentID?: string | null;
-		items?: CartItems;
-	};
-	skipSync?: boolean | null;
-	updatedAt: string;
-	createdAt: string;
-	enableAPIKey?: boolean | null;
-	apiKey?: string | null;
-	apiKeyIndex?: string | null;
-	email: string;
-	resetPasswordToken?: string | null;
-	resetPasswordExpiration?: string | null;
-	salt?: string | null;
-	hash?: string | null;
-	loginAttempts?: number | null;
-	lockUntil?: string | null;
-	password?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "variations".
- */
-export interface Variation {
-	id: number;
-	name: string;
-	sku?: string | null;
-	product?: (number | null) | Product;
-	images?: (number | Media)[] | null;
-	attributes?: (number | Attribute)[] | null;
-	attributeValues?:
-		| {
-				[k: string]: unknown;
-		  }
-		| unknown[]
-		| string
-		| number
-		| boolean
-		| null;
-	price?: number | null;
-	inventory?: number | null;
-	dimensions?: {
-		height?: number | null;
-		length?: number | null;
-		width?: number | null;
-	};
-	isDefault?: boolean | null;
-	skipSync?: boolean | null;
-	stripeProductID?: string | null;
-	updatedAt: string;
-	createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "products".
- */
-export interface Product {
+export interface Article {
 	id: number;
 	title: string;
 	slug: string;
+	slideshow?: (number | Media)[] | null;
+	content?: (ArticleTextBlock | ArticleProductsBlock)[] | null;
 	publishedOn?: string | null;
-	description?: {
-		root: {
-			type: string;
-			children: {
-				type: string;
-				version: number;
-				[k: string]: unknown;
-			}[];
-			direction: ('ltr' | 'rtl') | null;
-			format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-			indent: number;
-			version: number;
-		};
-		[k: string]: unknown;
-	} | null;
-	images?: (number | Media)[] | null;
-	vendor?: string | null;
-	variations?: {
-		docs?: (number | Variation)[] | null;
-		hasNextPage?: boolean | null;
-	} | null;
-	categories?: (number | Category)[] | null;
-	tags?: (number | Tag)[] | null;
-	type?: (number | null) | ProductType;
-	brand?: (number | null) | Brand;
-	entities?: (number | Entity)[] | null;
-	relatedProducts?: (number | Product)[] | null;
 	updatedAt: string;
 	createdAt: string;
 	_status?: ('draft' | 'published') | null;
@@ -308,6 +221,141 @@ export interface Media {
 			filename?: string | null;
 		};
 	};
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ArticleTextBlock".
+ */
+export interface ArticleTextBlock {
+	content?: {
+		root: {
+			type: string;
+			children: {
+				type: string;
+				version: number;
+				[k: string]: unknown;
+			}[];
+			direction: ('ltr' | 'rtl') | null;
+			format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+			indent: number;
+			version: number;
+		};
+		[k: string]: unknown;
+	} | null;
+	id?: string | null;
+	blockName?: string | null;
+	blockType: 'Text';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ArticleProductsBlock".
+ */
+export interface ArticleProductsBlock {
+	products?: (number | Product)[] | null;
+	id?: string | null;
+	blockName?: string | null;
+	blockType: 'Products';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products".
+ */
+export interface Product {
+	id: number;
+	title: string;
+	slug: string;
+	publishedOn?: string | null;
+	description?: {
+		root: {
+			type: string;
+			children: {
+				type: string;
+				version: number;
+				[k: string]: unknown;
+			}[];
+			direction: ('ltr' | 'rtl') | null;
+			format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+			indent: number;
+			version: number;
+		};
+		[k: string]: unknown;
+	} | null;
+	images?: (number | Media)[] | null;
+	vendor?: string | null;
+	variations?: {
+		docs?: (number | Variation)[] | null;
+		hasNextPage?: boolean | null;
+	} | null;
+	categories?: (number | Category)[] | null;
+	tags?: (number | Tag)[] | null;
+	type?: (number | null) | ProductType;
+	brand?: (number | null) | Brand;
+	entities?: (number | Entity)[] | null;
+	relatedProducts?: (number | Product)[] | null;
+	updatedAt: string;
+	createdAt: string;
+	_status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "variations".
+ */
+export interface Variation {
+	id: number;
+	name: string;
+	sku?: string | null;
+	product?: (number | null) | Product;
+	images?: (number | Media)[] | null;
+	attributes?: (number | Attribute)[] | null;
+	attributeValues?:
+		| {
+				[k: string]: unknown;
+		  }
+		| unknown[]
+		| string
+		| number
+		| boolean
+		| null;
+	price?: number | null;
+	inventory?: number | null;
+	dimensions?: {
+		height?: number | null;
+		length?: number | null;
+		width?: number | null;
+	};
+	isDefault?: boolean | null;
+	skipSync?: boolean | null;
+	stripeProductID?: string | null;
+	updatedAt: string;
+	createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "attributes".
+ */
+export interface Attribute {
+	id: number;
+	label: string;
+	name: string;
+	type?: ('text' | 'options' | 'colors') | null;
+	isVirtual?: boolean | null;
+	text?: string | null;
+	options?:
+		| {
+				label?: string | null;
+				value: string;
+				id?: string | null;
+		  }[]
+		| null;
+	colors?:
+		| {
+				label: string;
+				value: string;
+				id?: string | null;
+		  }[]
+		| null;
+	updatedAt: string;
+	createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -411,80 +459,32 @@ export interface Entity {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "attributes".
+ * via the `definition` "users".
  */
-export interface Attribute {
+export interface User {
 	id: number;
-	label: string;
-	name: string;
-	type?: ('text' | 'options' | 'colors') | null;
-	isVirtual?: boolean | null;
-	text?: string | null;
-	options?:
-		| {
-				label?: string | null;
-				value: string;
-				id?: string | null;
-		  }[]
-		| null;
-	colors?:
-		| {
-				label: string;
-				value: string;
-				id?: string | null;
-		  }[]
-		| null;
+	name?: string | null;
+	roles?: ('admin' | 'customer')[] | null;
+	purchases?: (number | Variation)[] | null;
+	stripeCustomerID?: string | null;
+	cart?: {
+		stripePaymentIntentID?: string | null;
+		items?: CartItems;
+	};
+	skipSync?: boolean | null;
 	updatedAt: string;
 	createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "articles".
- */
-export interface Article {
-	id: number;
-	title: string;
-	slug: string;
-	slideshow?: (number | Media)[] | null;
-	content?: (ArticleTextBlock | ArticleProductsBlock)[] | null;
-	publishedOn?: string | null;
-	updatedAt: string;
-	createdAt: string;
-	_status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ArticleTextBlock".
- */
-export interface ArticleTextBlock {
-	content?: {
-		root: {
-			type: string;
-			children: {
-				type: string;
-				version: number;
-				[k: string]: unknown;
-			}[];
-			direction: ('ltr' | 'rtl') | null;
-			format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-			indent: number;
-			version: number;
-		};
-		[k: string]: unknown;
-	} | null;
-	id?: string | null;
-	blockName?: string | null;
-	blockType: 'Text';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ArticleProductsBlock".
- */
-export interface ArticleProductsBlock {
-	products?: (number | Product)[] | null;
-	id?: string | null;
-	blockName?: string | null;
-	blockType: 'Products';
+	enableAPIKey?: boolean | null;
+	apiKey?: string | null;
+	apiKeyIndex?: string | null;
+	email: string;
+	resetPasswordToken?: string | null;
+	resetPasswordExpiration?: string | null;
+	salt?: string | null;
+	hash?: string | null;
+	loginAttempts?: number | null;
+	lockUntil?: string | null;
+	password?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -515,24 +515,8 @@ export interface PayloadLockedDocument {
 	id: number;
 	document?:
 		| ({
-				relationTo: 'users';
-				value: number | User;
-		  } | null)
-		| ({
-				relationTo: 'media';
-				value: number | Media;
-		  } | null)
-		| ({
 				relationTo: 'articles';
 				value: number | Article;
-		  } | null)
-		| ({
-				relationTo: 'attributes';
-				value: number | Attribute;
-		  } | null)
-		| ({
-				relationTo: 'entities';
-				value: number | Entity;
 		  } | null)
 		| ({
 				relationTo: 'products';
@@ -543,24 +527,40 @@ export interface PayloadLockedDocument {
 				value: number | Variation;
 		  } | null)
 		| ({
-				relationTo: 'categories';
-				value: number | Category;
+				relationTo: 'entities';
+				value: number | Entity;
 		  } | null)
 		| ({
-				relationTo: 'product-types';
-				value: number | ProductType;
+				relationTo: 'brands';
+				value: number | Brand;
 		  } | null)
 		| ({
-				relationTo: 'tags';
-				value: number | Tag;
+				relationTo: 'media';
+				value: number | Media;
+		  } | null)
+		| ({
+				relationTo: 'users';
+				value: number | User;
 		  } | null)
 		| ({
 				relationTo: 'orders';
 				value: number | Order;
 		  } | null)
 		| ({
-				relationTo: 'brands';
-				value: number | Brand;
+				relationTo: 'attributes';
+				value: number | Attribute;
+		  } | null)
+		| ({
+				relationTo: 'tags';
+				value: number | Tag;
+		  } | null)
+		| ({
+				relationTo: 'product-types';
+				value: number | ProductType;
+		  } | null)
+		| ({
+				relationTo: 'categories';
+				value: number | Category;
 		  } | null);
 	globalSlug?: string | null;
 	user: {
@@ -606,39 +606,107 @@ export interface PayloadMigration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users_select".
+ * via the `definition` "articles_select".
  */
-export interface UsersSelect<T extends boolean = true> {
-	name?: T;
-	roles?: T;
-	purchases?: T;
-	stripeCustomerID?: T;
-	cart?:
+export interface ArticlesSelect<T extends boolean = true> {
+	title?: T;
+	slug?: T;
+	slideshow?: T;
+	content?:
 		| T
 		| {
-				stripePaymentIntentID?: T;
-				items?:
+				Text?:
 					| T
 					| {
-							product?: T;
-							variation?: T;
-							quantity?: T;
+							content?: T;
 							id?: T;
+							blockName?: T;
+					  };
+				Products?:
+					| T
+					| {
+							products?: T;
+							id?: T;
+							blockName?: T;
 					  };
 		  };
-	skipSync?: T;
+	publishedOn?: T;
 	updatedAt?: T;
 	createdAt?: T;
-	enableAPIKey?: T;
-	apiKey?: T;
-	apiKeyIndex?: T;
-	email?: T;
-	resetPasswordToken?: T;
-	resetPasswordExpiration?: T;
-	salt?: T;
-	hash?: T;
-	loginAttempts?: T;
-	lockUntil?: T;
+	_status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products_select".
+ */
+export interface ProductsSelect<T extends boolean = true> {
+	title?: T;
+	slug?: T;
+	publishedOn?: T;
+	description?: T;
+	images?: T;
+	vendor?: T;
+	variations?: T;
+	categories?: T;
+	tags?: T;
+	type?: T;
+	brand?: T;
+	entities?: T;
+	relatedProducts?: T;
+	updatedAt?: T;
+	createdAt?: T;
+	_status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "variations_select".
+ */
+export interface VariationsSelect<T extends boolean = true> {
+	name?: T;
+	sku?: T;
+	product?: T;
+	images?: T;
+	attributes?: T;
+	attributeValues?: T;
+	price?: T;
+	inventory?: T;
+	dimensions?:
+		| T
+		| {
+				height?: T;
+				length?: T;
+				width?: T;
+		  };
+	isDefault?: T;
+	skipSync?: T;
+	stripeProductID?: T;
+	updatedAt?: T;
+	createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "entities_select".
+ */
+export interface EntitiesSelect<T extends boolean = true> {
+	title?: T;
+	slug?: T;
+	logo?: T;
+	description?: T;
+	updatedAt?: T;
+	createdAt?: T;
+	_status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "brands_select".
+ */
+export interface BrandsSelect<T extends boolean = true> {
+	title?: T;
+	logo?: T;
+	description?: T;
+	products?: T;
+	updatedAt?: T;
+	createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -754,34 +822,59 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "articles_select".
+ * via the `definition` "users_select".
  */
-export interface ArticlesSelect<T extends boolean = true> {
-	title?: T;
-	slug?: T;
-	slideshow?: T;
-	content?:
+export interface UsersSelect<T extends boolean = true> {
+	name?: T;
+	roles?: T;
+	purchases?: T;
+	stripeCustomerID?: T;
+	cart?:
 		| T
 		| {
-				Text?:
+				stripePaymentIntentID?: T;
+				items?:
 					| T
 					| {
-							content?: T;
+							product?: T;
+							variation?: T;
+							quantity?: T;
 							id?: T;
-							blockName?: T;
-					  };
-				Products?:
-					| T
-					| {
-							products?: T;
-							id?: T;
-							blockName?: T;
 					  };
 		  };
-	publishedOn?: T;
+	skipSync?: T;
 	updatedAt?: T;
 	createdAt?: T;
-	_status?: T;
+	enableAPIKey?: T;
+	apiKey?: T;
+	apiKeyIndex?: T;
+	email?: T;
+	resetPasswordToken?: T;
+	resetPasswordExpiration?: T;
+	salt?: T;
+	hash?: T;
+	loginAttempts?: T;
+	lockUntil?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "orders_select".
+ */
+export interface OrdersSelect<T extends boolean = true> {
+	orderedBy?: T;
+	stripePaymentIntentID?: T;
+	total?: T;
+	items?:
+		| T
+		| {
+				product?: T;
+				variation?: T;
+				price?: T;
+				quantity?: T;
+				id?: T;
+		  };
+	updatedAt?: T;
+	createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -812,70 +905,9 @@ export interface AttributesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "entities_select".
+ * via the `definition` "tags_select".
  */
-export interface EntitiesSelect<T extends boolean = true> {
-	title?: T;
-	slug?: T;
-	logo?: T;
-	description?: T;
-	updatedAt?: T;
-	createdAt?: T;
-	_status?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "products_select".
- */
-export interface ProductsSelect<T extends boolean = true> {
-	title?: T;
-	slug?: T;
-	publishedOn?: T;
-	description?: T;
-	images?: T;
-	vendor?: T;
-	variations?: T;
-	categories?: T;
-	tags?: T;
-	type?: T;
-	brand?: T;
-	entities?: T;
-	relatedProducts?: T;
-	updatedAt?: T;
-	createdAt?: T;
-	_status?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "variations_select".
- */
-export interface VariationsSelect<T extends boolean = true> {
-	name?: T;
-	sku?: T;
-	product?: T;
-	images?: T;
-	attributes?: T;
-	attributeValues?: T;
-	price?: T;
-	inventory?: T;
-	dimensions?:
-		| T
-		| {
-				height?: T;
-				length?: T;
-				width?: T;
-		  };
-	isDefault?: T;
-	skipSync?: T;
-	stripeProductID?: T;
-	updatedAt?: T;
-	createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "categories_select".
- */
-export interface CategoriesSelect<T extends boolean = true> {
+export interface TagsSelect<T extends boolean = true> {
 	title?: T;
 	products?: T;
 	updatedAt?: T;
@@ -893,42 +925,10 @@ export interface ProductTypesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "tags_select".
+ * via the `definition` "categories_select".
  */
-export interface TagsSelect<T extends boolean = true> {
+export interface CategoriesSelect<T extends boolean = true> {
 	title?: T;
-	products?: T;
-	updatedAt?: T;
-	createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "orders_select".
- */
-export interface OrdersSelect<T extends boolean = true> {
-	orderedBy?: T;
-	stripePaymentIntentID?: T;
-	total?: T;
-	items?:
-		| T
-		| {
-				product?: T;
-				variation?: T;
-				price?: T;
-				quantity?: T;
-				id?: T;
-		  };
-	updatedAt?: T;
-	createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "brands_select".
- */
-export interface BrandsSelect<T extends boolean = true> {
-	title?: T;
-	logo?: T;
-	description?: T;
 	products?: T;
 	updatedAt?: T;
 	createdAt?: T;
@@ -973,9 +973,16 @@ export interface Filter {
 	id: number;
 	filters?:
 		| {
-				label?: string | null;
+				label: string;
 				tag?: (number | null) | Tag;
 				productTypes?: (number | ProductType)[] | null;
+				id?: string | null;
+		  }[]
+		| null;
+	additionalFilters?:
+		| {
+				label: string;
+				tag?: (number | null) | Tag;
 				id?: string | null;
 		  }[]
 		| null;
@@ -1014,6 +1021,13 @@ export interface FiltersSelect<T extends boolean = true> {
 				label?: T;
 				tag?: T;
 				productTypes?: T;
+				id?: T;
+		  };
+	additionalFilters?:
+		| T
+		| {
+				label?: T;
+				tag?: T;
 				id?: T;
 		  };
 	updatedAt?: T;

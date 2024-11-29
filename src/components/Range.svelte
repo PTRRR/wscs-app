@@ -98,12 +98,12 @@
 		&__track {
 			width: 100%;
 			height: 1px;
-			background-color: black;
+			background-color: var(--light-gray);
 		}
 
 		&__track-tail {
 			height: 1px;
-			background-color: black;
+			background-color: var(--light-gray);
 		}
 
 		&__thumb {
@@ -112,6 +112,7 @@
 			justify-content: center;
 			height: calc(var(--thumb-height) * 2);
 			cursor: pointer;
+			z-index: 10;
 
 			&:focus {
 				outline: none;
@@ -137,7 +138,7 @@
 		&__pip {
 			height: 10px;
 			width: 1px;
-			background-color: black;
+			background-color: var(--light-gray);
 			transform: translate(0, -100%);
 		}
 	}

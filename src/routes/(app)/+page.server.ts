@@ -41,6 +41,7 @@ export const load: PageServerLoad = async ({ parent }) => {
 		entities: entitiesResponse.docs || [],
 		brands: brandsResponse.docs || [],
 		filters: filtersResponse.filters || [],
+		additionalFilters: filtersResponse.additionalFilters || [],
 		featuredArticles: featuredArticlesResponse.rows || []
 	};
 };

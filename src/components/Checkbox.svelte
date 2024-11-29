@@ -53,7 +53,7 @@
 			display: inline-block;
 			width: 1rem;
 			height: 1rem;
-			border: 1px solid black;
+			border: 1px solid var(--light-gray);
 			position: relative;
 			transition: all 0.2s ease;
 		}

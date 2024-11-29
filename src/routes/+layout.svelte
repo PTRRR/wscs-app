@@ -29,6 +29,8 @@
 		--button-disabled-opacity: 0.3;
 		--button-border-radius: 4px;
 		--button-padding: 0.4rem 0.5rem;
+
+		--light-gray: #aeaea3;
 	}
 
 	@font-face {

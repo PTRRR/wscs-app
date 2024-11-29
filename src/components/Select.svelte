@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { createSelect, melt } from '@melt-ui/svelte';
 	import { fade } from 'svelte/transition';
+	import { css } from '../utilities/css';
 
 	type Value = {
 		id?: string | number | null;
@@ -19,6 +20,7 @@
 		onselect?: (value?: Value) => void;
 		clearSelection?: boolean;
 		defaultSelected?: Value;
+		borderColor?: string;
 	} = $props();
 
 	const { options } = props;
@@ -34,10 +36,11 @@
 					value: props.defaultSelected.value.toString()
 				}
 			: undefined,
+
 		positioning: {
 			placement: 'bottom',
 			fitViewport: true,
-			sameWidth: true
+			boundary: 'clippingAncestors'
 		}
 	});
 
@@ -48,7 +51,13 @@
 	});
 </script>
 
-<div class="select" class:select--fill-width={props.fillWidth}>
+<div
+	class="select"
+	class:select--fill-width={props.fillWidth}
+	style={css({
+		'--border-color': props.borderColor || 'black'
+	})}
+>
 	<button use:melt={$trigger}>
 		<span class="select__button-inner">
 			{$selectedLabel || props.label}
@@ -57,7 +66,13 @@
 	{#if $open}
 		<div class="select__menu" use:melt={$menu} transition:fade={{ duration: 150 }}>
 			{#each options as { label, values, showLabel }}
-				<div use:melt={$group(label)} class="select__group">
+				<div
+					use:melt={$group(label)}
+					class="select__group"
+					style={css({
+						'--border-color': props.borderColor || 'black'
+					})}
+				>
 					{#if showLabel}
 						<div class="select__group-label" use:melt={$groupLabel(label)}>
 							{label}
@@ -100,8 +115,14 @@
 			}
 		}
 
+		:global(button) {
+			border-color: var(--border-color);
+		}
+
 		&__menu {
 			overflow: auto;
+			z-index: 10000;
+			max-height: 40vh !important;
 		}
 
 		&__group {
@@ -112,6 +133,7 @@
 
 		&__option {
 			width: 100%;
+			border-color: var(--border-color);
 		}
 
 		&__button-inner {

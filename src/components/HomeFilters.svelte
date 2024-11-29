@@ -2,7 +2,7 @@
 	import type { Brand, Entity, ProductType, Tag } from '../utilities/api/types';
 	import { getApiObject } from '../utilities/api/utils';
 	import { filterNullish } from '../utilities/iterables';
-	import Filters, { type FilterElement } from './Filters.svelte';
+	import Filters, { type FilterElement, type Section } from './Filters.svelte';
 	import Select from './Select.svelte';
 
 	// Used when tag ID is undefined but needs to be tracked in the UI
@@ -16,11 +16,18 @@
 		id?: string | null;
 	};
 
+	type AdditionalFilter = {
+		label?: string | null;
+		tag?: (number | null) | Tag;
+		id?: string | null;
+	};
+
 	// Component props defining available entities, brands, filters and selection callback
 	const props: {
 		entities: Entity[];
 		brands: Brand[];
 		filters: Filter[];
+		additionalFilters: AdditionalFilter[];
 		onSelected?: (selection: {
 			entities: number[];
 			tags: number[];
@@ -28,6 +35,15 @@
 			brands: number[];
 		}) => void;
 	} = $props();
+
+	const additionalFilters = $derived(
+		props.additionalFilters
+			.map((it) => ({ ...it, tag: getApiObject(it.tag) }))
+			.filter((it) => typeof it.tag !== 'undefined' && typeof it.label === 'string') as {
+			label?: string | null;
+			tag?: Tag;
+		}[]
+	);
 
 	// Track selected IDs for each filter category
 	let selectedEntities = $state<number[]>([]);
@@ -73,11 +89,27 @@
 	};
 
 	// Converts filters to checkbox elements for tags filtering
-	const tagsFilterElements: FilterElement[] = $derived.by(() => {
-		return props.filters.map((it) => {
+	const tagsFilterSections: Section[] = $derived.by(() => {
+		const tags = props.filters.map((it) => {
 			const tagId = getFilterTagId(it);
-			return { type: 'checkbox', value: tagId || -1, label: it.label };
+			return { type: 'checkbox', value: tagId || -1, label: it.label } as FilterElement;
 		});
+
+		const additionalTags = additionalFilters.map(
+			(it) =>
+				({
+					type: 'checkbox',
+					value: it.tag?.id,
+					label: it.label
+				}) as FilterElement
+		);
+
+		return [
+			{ title: 'CLOTHING', elements: tags },
+			...additionalTags.map((it) => ({
+				elements: [{ ...it, label: it.label?.toLocaleUpperCase() }]
+			}))
+		];
 	});
 
 	// Converts brands to checkbox elements
@@ -112,8 +144,12 @@
 	<!-- Entity selection filter -->
 	<Filters
 		radio
-		title="BOUTIQUES"
-		items={props.entities.map((it) => ({ type: 'checkbox', label: it.title, value: it.id }))}
+		sections={[
+			{
+				title: 'BOUTIQUES',
+				elements: props.entities.map((it) => ({ type: 'checkbox', label: it.title, value: it.id }))
+			}
+		]}
 		onSelected={(items) => (selectedEntities = getSelectedValues(items))}
 	/>
 
@@ -121,8 +157,7 @@
 	<div class="home-filters__section">
 		<Filters
 			radio
-			title="CLOTHING"
-			items={tagsFilterElements}
+			sections={tagsFilterSections}
 			onSelected={(items) => {
 				const firstItem = items[0];
 				selectedProductTypes = [];
@@ -137,11 +172,12 @@
 			}}
 		/>
 
-		<div class="home-filters__select">
+		<div class="home-filters__additional home-filters__brands">
 			<Select
 				fillWidth
 				label="Brands"
 				clearSelection={true}
+				borderColor="var(--light-gray)"
 				onselect={(res) => (selectedBrands = typeof res?.value === 'number' ? [res.value] : [])}
 				options={[
 					{
@@ -161,11 +197,16 @@
 	{#each props.filters as filter}
 		{#if selectedTags.includes(getFilterTagId(filter) || CUSTOM_UNDEFINED_TAG_ID) && getFilterProductTypes(filter).length > 0}
 			<Filters
-				items={getFilterProductTypes(filter).map((it) => ({
-					type: 'checkbox',
-					value: it.id,
-					label: it.title
-				}))}
+				radio
+				sections={[
+					{
+						elements: getFilterProductTypes(filter).map((it) => ({
+							type: 'checkbox',
+							value: it.id,
+							label: it.title
+						}))
+					}
+				]}
 				onSelected={(items) => (selectedProductTypes = getSelectedValues(items))}
 			/>
 		{/if}
@@ -189,8 +230,11 @@
 			gap: 1rem;
 		}
 
-		&__select {
+		&__additional {
 			display: flex;
+		}
+
+		&__brands {
 			width: 10rem;
 		}
 	}
