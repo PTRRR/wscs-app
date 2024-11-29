@@ -5,6 +5,7 @@
 	let searchValue = $state<string>('');
 	let searchDebounceTimeout: NodeJS.Timeout | undefined = undefined;
 
+	const props: { baseUrl: string } = $props();
 	const { cart } = useLocalCart();
 
 	const cartTotalItems = $derived($cart.items.reduce((acc, it) => (acc += it.quantity), 0));
@@ -67,7 +68,7 @@
 {#if $cart.items.length > 0}
 	<div class="main-menu__sub-section">
 		<a href="/cart">Cart ({cartTotalItems})</a>
-		<a href="/checkout">Checkout</a>
+		<a href={`${props.baseUrl}/api/checkout-session`} data-sveltekit-reload>Checkout</a>
 	</div>
 {/if}
 

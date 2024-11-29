@@ -12,6 +12,30 @@ const config = {
 		// If your environment is not supported, or you settled on a specific environment, switch out the adapter.
 		// See https://kit.svelte.dev/docs/adapters for more information about adapters.
 		adapter: adapter()
+		// csp: {
+		// 	mode: 'auto',
+		// 	directives: {
+		// 		'script-src': [
+		// 			'self',
+		// 			// 'unsafe-inline',
+		// 			'https://js.stripe.com',
+		// 			'https://player.radioking.io'
+		// 		],
+		// 		'script-src-elem': [
+		// 			'self',
+		// 			// 'unsafe-inline',
+		// 			'https://player.radioking.io',
+		// 			'https://hcaptcha.com',
+		// 			'https://*.hcaptcha.com',
+		// 			'https://js.stripe.com/v3',
+		// 			'sha256-/5Guo2nzv5n/w6ukZpOBZOtTJBJPSkJ6mhHpnBgm3Ls=',
+		// 			'https://maps.googleapis.com',
+		// 			'sha256-xk0yZ4x/LOHDUIa2QBFwUJp6S6DmfOCn2Tvuo9PRuj4=',
+		// 			'https://m.stripe.network',
+		// 			'sha256-/5Guo2nzv5n/w6ukZpOBZOtTJBJPSkJ6mhHpnBgm3Ls='
+		// 		]
+		// 	}
+		// }
 	}
 };
 

@@ -89,6 +89,6 @@
 	});
 </script>
 
-<MainMenu />
+<MainMenu baseUrl={data.api.baseUrl} />
 
 {@render children()}

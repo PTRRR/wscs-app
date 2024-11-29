@@ -31,10 +31,21 @@
 		);
 	};
 
+	const getCartItemForVariation = (variation: Variation) => {
+		const productId =
+			typeof variation.product === 'number' ? variation.product : variation.product?.id;
+		const variationId = variation.id;
+		const cartItem = $cart.items.find(
+			(it) => it.product === productId && it.variation === variationId
+		);
+		return cartItem;
+	};
+
 	const getProductTotal = $derived.by(
 		() => (product: Product) =>
 			getVariationsForProduct(product).reduce((acc, variation) => {
-				return (acc += variation?.price || 0);
+				const cartItem = getCartItemForVariation(variation);
+				return (acc += (variation?.price || 0) * (cartItem?.quantity || 0));
 			}, 0)
 	);
 
@@ -108,7 +119,8 @@
 							<a href={`/products/${product.slug}`}>{product.title}</a>
 							{#each getVariationsForProduct(product) as variation}
 								{#key variation.id}
-									<p>{variation.name}</p>
+									<!-- <p>{variation.name}</p> -->
+									<p>Quantity: {getCartItemForVariation(variation)?.quantity}</p>
 								{/key}
 							{/each}
 							<p>Price: {getProductTotal(product)}€</p>
