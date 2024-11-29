@@ -41,7 +41,7 @@
 	<title>{data.product.title}</title>
 </svelte:head>
 
-<div class="product">
+<div class="product" class:product--single-image={(data.product.images?.length || 0) < 2}>
 	<div class="product__columns">
 		<div class="product__column product__images">
 			{#each data.product.images || [] as image}
@@ -114,6 +114,8 @@
 
 <style lang="scss">
 	.product {
+		$root: &;
+
 		h1 {
 			font-family: Lescargot, 'Courier New', Courier, monospace;
 			font-size: 2rem;
@@ -170,6 +172,14 @@
 				:global(picture) {
 					width: initial;
 					height: 100%;
+				}
+
+				#{$root}--single-image & {
+					:global(picture) {
+						object-fit: contain;
+						width: 100%;
+						height: 100%;
+					}
 				}
 			}
 

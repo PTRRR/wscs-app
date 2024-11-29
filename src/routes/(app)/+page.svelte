@@ -143,6 +143,7 @@
 		}
 
 		@media screen and (max-width: 1000px) {
+			&__entities,
 			&__range {
 				display: none;
 			}
