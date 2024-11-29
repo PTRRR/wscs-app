@@ -4,7 +4,7 @@
 	import { useLocalCart, useUser } from '../store';
 	import type { Product, User, Variation } from '../utilities/api/types';
 	import { WSCS } from '../utilities/api';
-	import { filterDuplicate } from '../utilities/iterables';
+	import { filterDuplicate, filterNullish } from '../utilities/iterables';
 	import { Elements, LinkAuthenticationElement, PaymentElement } from 'svelte-stripe';
 	import { goto } from '$app/navigation';
 
@@ -65,18 +65,27 @@
 			const productIds = cart.items.map((item) => item.product).filter(filterDuplicate);
 			const variationIds = cart.items.map((item) => item.variation).filter(filterDuplicate);
 
-			Promise.all([
-				api.findVariations({
-					depth: 0,
-					query: { id: { in: variationIds.join(',') } }
-				}),
-				api.findProducts({
-					depth: 0,
-					query: { id: { in: productIds.join(',') } }
-				})
-			]).then(([{ docs: _variations }, { docs: _products }]) => {
-				variations = _variations || [];
-				products = _products || [];
+			const variationsPromise =
+				variationIds.length > 0
+					? api
+							.findVariations({
+								depth: 0,
+								query: { id: { in: variationIds.join(',') } }
+							})
+							.then(({ docs: _variations }) => (variations = _variations || []))
+					: undefined;
+
+			const productsPromise =
+				productIds.length > 0
+					? api
+							.findProducts({
+								depth: 0,
+								query: { id: { in: productIds.join(',') } }
+							})
+							.then(({ docs: _products }) => (products = _products || []))
+					: undefined;
+
+			Promise.all([variationsPromise, productsPromise].filter(filterNullish)).then(() => {
 				loadingCart = false;
 			});
 		});
