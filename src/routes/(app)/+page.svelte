@@ -143,8 +143,7 @@
 		}
 
 		@media screen and (max-width: 1000px) {
-			&__entities,
-			&__filters {
+			&__range {
 				display: none;
 			}
 		}

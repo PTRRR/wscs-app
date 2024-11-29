@@ -154,7 +154,7 @@
 	/>
 
 	<!-- Tag selection filter - resets product types when changed -->
-	<div class="home-filters__section">
+	<div class="home-filters__section home-filters__tags">
 		<Filters
 			radio
 			sections={tagsFilterSections}
@@ -221,13 +221,9 @@
 		margin-bottom: 1rem;
 		justify-content: flex-end;
 
-		:global(.filters) {
-			flex: 1 1 auto;
-		}
-
 		&__section {
 			display: flex;
-			gap: 1rem;
+			gap: 0.5rem;
 		}
 
 		&__additional {
@@ -236,6 +232,23 @@
 
 		&__brands {
 			width: 10rem;
+
+			:global(button) {
+				padding: var(--filters-padding);
+				font-size: 1rem;
+				justify-content: left;
+			}
+		}
+
+		&__tags {
+			flex-direction: row;
+			flex-wrap: wrap;
+		}
+
+		@media screen and (max-width: 800px) {
+			:global(fieldset) {
+				flex: 1 1 auto;
+			}
 		}
 	}
 </style>

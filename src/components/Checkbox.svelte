@@ -18,7 +18,7 @@
 	};
 </script>
 
-<label class="checkbox">
+<label class="checkbox" class:checkbox--long-label={(label || '').toString().length > 21}>
 	<input
 		type="checkbox"
 		bind:checked
@@ -36,6 +36,7 @@
 
 <style lang="scss">
 	.checkbox {
+		$root: &;
 		display: flex;
 		align-items: center;
 		gap: 0.3rem;
@@ -56,6 +57,7 @@
 			border: 1px solid var(--light-gray);
 			position: relative;
 			transition: all 0.2s ease;
+			flex: 0 0 auto;
 		}
 
 		input:checked + &__custom::after {
@@ -70,6 +72,11 @@
 
 		&__label {
 			transform: translate(0, 15%);
+			white-space: nowrap;
+
+			#{$root}--long-label & {
+				white-space: wrap;
+			}
 		}
 	}
 </style>

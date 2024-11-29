@@ -99,7 +99,7 @@
 </script>
 
 {#each props.sections as section}
-	<fieldset class="filters">
+	<fieldset class="filters" class:filters--many={section.elements.length > 1}>
 		{#if section.title}
 			<legend>{section.title}</legend>
 		{/if}
@@ -126,6 +126,8 @@
 	}
 
 	.filters {
+		$root: &;
+
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
@@ -134,6 +136,14 @@
 		border-radius: 5px;
 		margin: 0;
 		position: relative;
+		flex: 0 0 auto;
+
+		&--many {
+			flex: 1 1 auto;
+			#{$root}__checkboxes {
+				flex-wrap: wrap;
+			}
+		}
 
 		legend {
 			margin: 0;
@@ -149,6 +159,19 @@
 		&__checkboxes {
 			display: flex;
 			gap: 1rem;
+			width: 100%;
+
+			:global(.checkbox) {
+				width: 100%;
+				max-width: max-content;
+				flex: 0 1 auto;
+			}
+		}
+
+		@media screen and (max-width: 600px) {
+			&__checkboxes {
+				flex-wrap: wrap;
+			}
 		}
 	}
 </style>
