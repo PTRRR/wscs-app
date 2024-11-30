@@ -4,8 +4,10 @@
 
 	const { cart } = useLocalCart();
 
-	onMount(() => {
-		cart.set({ items: [] });
+	$effect(() => {
+		if ($cart.items.length > 0) {
+			cart.set({ items: [] });
+		}
 	});
 </script>
 
