@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { PageData } from './$types';
-	import { WSCS } from '../../../utilities/api';
+
+	import { WSCS } from '../../../../utilities/api';
 	import { goto } from '$app/navigation';
+	import type { PageData } from './$types';
 
 	export let data: PageData;
 
@@ -34,7 +35,7 @@
 					password: passwordValue,
 					passwordConfirg: repeatpasswordValue
 				});
-				goto('/login');
+				goto('/checkout/login');
 			} catch (error) {
 				console.error(error);
 			} finally {

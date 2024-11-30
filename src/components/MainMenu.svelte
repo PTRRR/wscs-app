@@ -1,14 +1,16 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { useLocalCart } from '../store';
+	import { useLocalCart, useUser } from '../store';
 	import LoadingBar from './LoadingBar.svelte';
 	let searchValue = $state<string>('');
 	let searchDebounceTimeout: NodeJS.Timeout | undefined = undefined;
 
 	const props: { baseUrl: string } = $props();
 	const { cart } = useLocalCart();
+	const { query: user } = useUser(props.baseUrl);
 
 	const cartTotalItems = $derived($cart.items.reduce((acc, it) => (acc += it.quantity), 0));
+	const isUserLoggedIn = $derived(Boolean($user.data?.user));
 </script>
 
 <svelte:head>
@@ -68,7 +70,16 @@
 {#if $cart.items.length > 0}
 	<div class="main-menu__sub-section">
 		<a href="/cart">Cart ({cartTotalItems})</a>
-		<a href={`${props.baseUrl}/api/checkout-session`} data-sveltekit-reload>Checkout</a>
+
+		{#if $user.isFetched}
+			{#if isUserLoggedIn}
+				<a href={`${props.baseUrl}/api/checkout-session`} data-sveltekit-reload>Checkout</a>
+			{:else}
+				<a href="/checkout/login">Checkout</a>
+			{/if}
+		{:else}
+			<span>Loading...</span>
+		{/if}
 	</div>
 {/if}
 

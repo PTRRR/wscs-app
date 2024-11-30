@@ -3,8 +3,8 @@
 	import { useUser } from '../store';
 	import { WSCS } from '../utilities/api';
 
-	const props: { baseUrl: string } = $props();
-	const { baseUrl } = props;
+	const props: { baseUrl: string; onlogin?: () => void } = $props();
+	const { baseUrl, onlogin } = props;
 
 	const { query: user, invalidate: invalidateUser } = useUser(baseUrl);
 
@@ -12,6 +12,12 @@
 
 	let email: string = $state('');
 	let password: string = $state('');
+
+	$effect(() => {
+		if ($user.isSuccess && $user.data.user) {
+			onlogin?.();
+		}
+	});
 </script>
 
 <div class="login-form">
@@ -38,5 +44,5 @@
 		</form>
 	{/if}
 
-	<a href="/signup">Sign up</a>
+	<a href="/checkout/signup">Sign up</a>
 </div>
