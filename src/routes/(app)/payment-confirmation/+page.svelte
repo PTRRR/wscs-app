@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { useLocalCart } from '../../../store';
 
 	const { cart } = useLocalCart();
