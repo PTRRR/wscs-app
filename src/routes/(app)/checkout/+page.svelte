@@ -2,7 +2,6 @@
 	import { useUser } from '../../../store';
 	import type { PageData } from './$types';
 	import LoginForm from '../../../components/LoginForm.svelte';
-	import CheckoutForm from '../../../components/CheckoutForm.svelte';
 
 	const props: { data: PageData } = $props();
 	const { data } = props;
@@ -22,13 +21,7 @@
 			<p>Please login in order to checkout</p>
 			<LoginForm baseUrl={data.api.baseUrl} />
 		</div>
-	{:else if $user.isFetched && typeof $user.data?.user !== 'undefined'}
-		<CheckoutForm
-			baseUrl={data.api.baseUrl}
-			user={$user.data.user}
-			stripePublicKey={data.stripe.publicKey}
-		/>
-	{/if}
+	{:else if $user.isFetched && typeof $user.data?.user !== 'undefined'}{/if}
 </div>
 
 <style lang="scss">

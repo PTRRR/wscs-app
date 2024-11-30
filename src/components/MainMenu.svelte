@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
 	import { useLocalCart, useUser } from '../store';
 	import LoadingBar from './LoadingBar.svelte';
+	import isMobile from '../utilities/devices';
 	let searchValue = $state<string>('');
 	let searchDebounceTimeout: NodeJS.Timeout | undefined = undefined;
 
@@ -11,16 +13,25 @@
 
 	const cartTotalItems = $derived($cart.items.reduce((acc, it) => (acc += it.quantity), 0));
 	const isUserLoggedIn = $derived(Boolean($user.data?.user));
+	let loadRadio = $state(false);
+
+	onMount(() => {
+		if (!isMobile()) {
+			requestAnimationFrame(() => {
+				loadRadio = true;
+			});
+		}
+	});
 </script>
 
-<svelte:head>
+<!-- <svelte:head>
 	<script
 		type="text/javascript"
 		src="https://player.radioking.io/scripts/iframe.bundle.js"
 		defer
 		async
 	></script>
-</svelte:head>
+</svelte:head> -->
 
 <LoadingBar />
 
@@ -58,11 +69,13 @@
 				style="border-radius: 5px; width: 100%; height: 50%; "
 				frameborder="0"
 			></iframe> -->
-			<iframe
-				src="https://player.radioking.io/music-4-hikers/?c=%23FFFFFF&c2=%232F3542&f=h&i=0&p=2&s=0&li=2&plc=NaN&h=10&l=10"
-				style="border-radius: 0px;"
-				frameBorder="0"
-			></iframe>
+			{#if loadRadio}
+				<iframe
+					src="https://player.radioking.io/music-4-hikers/?c=%23FFFFFF&c2=%232F3542&f=h&i=0&p=2&s=0&li=2&plc=NaN&h=10&l=10"
+					style="border-radius: 0px;"
+					frameBorder="0"
+				></iframe>
+			{/if}
 		</div>
 	</div>
 </header>

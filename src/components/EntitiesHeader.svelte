@@ -16,6 +16,7 @@
 					alt={entity.title}
 					width={entity.logo.width}
 					height={entity.logo.height}
+					loading="lazy"
 				/>
 			</a>
 		{/if}

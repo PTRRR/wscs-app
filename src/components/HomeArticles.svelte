@@ -135,7 +135,7 @@
 				}
 
 				:global(.slideshow) {
-					height: 70vh;
+					height: 50vh;
 				}
 			}
 		}
