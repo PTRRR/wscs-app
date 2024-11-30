@@ -69,9 +69,8 @@
 
 {#if $cart.items.length > 0}
 	<div class="main-menu__sub-section">
-		<a href="/cart">Cart ({cartTotalItems})</a>
-
 		{#if $user.isFetched}
+			<a href="/cart">Cart ({cartTotalItems})</a>
 			{#if isUserLoggedIn}
 				<a href={`${props.baseUrl}/api/checkout-session`} data-sveltekit-reload>Checkout</a>
 			{:else}
