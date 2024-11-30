@@ -75,6 +75,17 @@ export default $config({
 						});
 
 						args.orderedCacheBehaviors.push({
+							pathPattern: 'api/media/file*',
+							targetOriginId: 'payload-origin',
+							viewerProtocolPolicy: 'redirect-to-https',
+							allowedMethods: ['GET', 'HEAD', 'OPTIONS', 'PUT', 'POST', 'PATCH', 'DELETE'],
+							cachedMethods: ['GET', 'HEAD'],
+							compress: true,
+							cachePolicyId: '658327ea-f89d-4fab-a63d-7e88639e58f6', // Got this value form existing behaviours
+							functionAssociations: []
+						});
+
+						args.orderedCacheBehaviors.push({
 							pathPattern: 'api*',
 							targetOriginId: 'payload-origin',
 							viewerProtocolPolicy: 'redirect-to-https',
