@@ -8,9 +8,13 @@
 	import ProductsGrid from '../../components/ProductsGrid.svelte';
 	import Range from '../../components/Range.svelte';
 	import { filterNullish } from '../../utilities/iterables';
+	import { Client } from 'typesense';
+	import { onMount } from 'svelte';
+	import { searchProductToProduct, type Hit, type SearchProduct } from '../../utilities/typesense';
 
 	const props: { data: PageData } = $props();
 	const { data } = props;
+	const client = new Client(data.typesense.clientConfig);
 
 	const { search } = useSearchEngine(
 		data.api.baseUrl,
@@ -61,6 +65,20 @@
 
 	let rangeValue = $state(1);
 	const productsSize = $derived(`${150 + rangeValue * 50}px`);
+
+	onMount(async () => {
+		// We refetch products in order to get the freshest data as cache might deliver
+		// old data such as for product inventary
+		const { hits } = (await client
+			.collections(data.typesense.productsCollection)
+			.documents()
+			.search({
+				q: '*',
+				limit: 20
+			})) as { hits: Hit<SearchProduct>[] };
+
+		products = hits.map((it) => searchProductToProduct(it.document));
+	});
 </script>
 
 <svelte:head>

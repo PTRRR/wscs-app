@@ -33,6 +33,7 @@
 			})
 			.then(({ docs }) => {
 				variations = docs;
+				console.log(docs);
 			});
 	});
 </script>
