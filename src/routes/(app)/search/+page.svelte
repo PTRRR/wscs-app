@@ -44,26 +44,30 @@
 </script>
 
 <div class="search">
+	{#if isLoading && hits.length === 0}
+		<h4>Searching...</h4>
+	{:else if hits.length === 0}
+		<h4>No results found for: {props.data.q}</h4>
+	{:else if hits.length > 0}
+		<h4>Search results for: {props.data.q}</h4>
+	{/if}
+
 	<ProductsGrid
 		products={hits}
 		{isLoading}
 		baseUrl={data.api.baseUrl}
 		onloadmore={canLoadMore && hits.length > 0 ? handleLoadMore : undefined}
 	/>
-
-	{#if isLoading && hits.length === 0}
-		<p>Loading...</p>
-	{:else if hits.length === 0}
-		<p>No results found</p>
-	{/if}
 </div>
 
 <style lang="scss">
 	.search {
 		padding: var(--main-padding);
 
-		p {
+		h4 {
+			font-size: 2rem;
 			margin: 0;
+			margin-bottom: 1rem;
 		}
 	}
 </style>
